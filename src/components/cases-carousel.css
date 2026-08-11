@@ -1,0 +1,407 @@
+:root {
+  --cases-navy: #1a6552;
+  --cases-pearl: linear-gradient(
+    135deg,
+    oklch(0.86 0.03 168) 0%,
+    oklch(0.94 0.018 166) 22%,
+    oklch(0.8 0.038 168) 48%,
+    oklch(0.93 0.02 166) 72%,
+    oklch(0.83 0.034 170) 100%
+  );
+  --cases-gold: linear-gradient(
+    135deg,
+    #c7a977 0%,
+    #e8d3a8 38%,
+    #fdf3cf 68%,
+    #b0986c 100%
+  );
+  --cases-gold-fg: oklch(0.34 0.05 70);
+  --cases-ink: oklch(0.3 0.022 168);
+  --cases-ink-soft: oklch(0.56 0.022 168);
+}
+
+.cases-carousel {
+  width: 100%;
+  color: var(--cases-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.cases-carousel .stage {
+  position: relative;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 30px 0;
+  -webkit-mask: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+  mask: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+}
+
+.cases-carousel .rows {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.cases-carousel .track {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  padding: 0 22px;
+  align-items: stretch;
+  will-change: transform;
+}
+
+.cases-carousel .track-left {
+  animation: cases-scroll-left 78s linear infinite;
+}
+
+.cases-carousel .track-right {
+  animation: cases-scroll-right 92s linear infinite;
+}
+
+.cases-carousel .stage:hover .track {
+  animation-play-state: paused;
+}
+
+@keyframes cases-scroll-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.3333%);
+  }
+}
+
+@keyframes cases-scroll-right {
+  from {
+    transform: translateX(-33.3333%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cases-carousel .track {
+    animation: none;
+  }
+}
+
+.cases-carousel .jcard,
+.cases-carousel .card-grad {
+  flex: 0 0 auto;
+  width: 212px;
+  height: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  box-shadow:
+    0 1px 2px oklch(0.45 0.05 165 / 0.06),
+    0 14px 30px -16px oklch(0.45 0.06 165 / 0.34);
+}
+
+.cases-carousel .jcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 5px 0;
+  background: #fff;
+}
+
+.cases-carousel .jcard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 62px 0;
+  border-radius: 8px 8px 0 0;
+  padding: 1px;
+  background: var(--cases-pearl);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.cases-carousel .jcard-frame {
+  position: relative;
+  flex: 1 1 auto;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px oklch(0.45 0.03 165 / 0.07);
+}
+
+.cases-carousel .jcard-doc {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  background: #fff;
+}
+
+.cases-carousel .jcard-frame::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    oklch(1 0 0 / 0) 22%,
+    oklch(1 0 0 / 0.85) 72%,
+    #fff 100%
+  );
+  pointer-events: none;
+}
+
+.cases-carousel .jcard-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 130px;
+  height: 130px;
+  overflow: hidden;
+  z-index: 7;
+  pointer-events: none;
+  border-top-right-radius: 8px;
+}
+
+.cases-carousel .jcard-ribbon span {
+  position: absolute;
+  top: 24px;
+  right: -34px;
+  width: 150px;
+  transform: rotate(45deg);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  color: var(--cases-gold-fg);
+  padding: 9px 0;
+  box-shadow: 0 3px 8px -2px oklch(0.5 0.06 70 / 0.45);
+  background-image:
+    linear-gradient(
+      100deg,
+      transparent 32%,
+      oklch(1 0.03 95 / 0.55) 42%,
+      oklch(1 0.05 100 / 1) 48%,
+      oklch(1 0.12 105 / 0.98) 51%,
+      oklch(1 0.05 100 / 1) 54%,
+      oklch(1 0.03 95 / 0.55) 60%,
+      transparent 70%
+    ),
+    var(--cases-gold);
+  background-size:
+    260% 100%,
+    auto;
+  background-repeat: no-repeat;
+  background-position:
+    -150% 0,
+    0 0;
+  animation: cases-ribbon-shine 3.4s ease-in-out infinite;
+}
+
+@keyframes cases-ribbon-shine {
+  0% {
+    background-position:
+      -150% 0,
+      0 0;
+  }
+  55%,
+  100% {
+    background-position:
+      260% 0,
+      0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cases-carousel .jcard-ribbon span {
+    animation: none;
+    background-position:
+      0 0,
+      0 0;
+    background-image: var(--cases-gold);
+  }
+}
+
+.cases-carousel .jcard-ribbon span::before,
+.cases-carousel .jcard-ribbon span::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  border: 3px solid transparent;
+  border-top-color: #a8915f;
+}
+
+.cases-carousel .jcard-ribbon span::before {
+  left: 6px;
+}
+
+.cases-carousel .jcard-ribbon span::after {
+  right: 6px;
+}
+
+.cases-carousel .jcard-cap {
+  position: relative;
+  flex: 0 0 auto;
+  margin: 5px -5px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 23px 10px 12px;
+  text-align: center;
+  background:
+    linear-gradient(
+      140deg,
+      transparent 38%,
+      oklch(1 0 0 / 0.45) 50%,
+      transparent 62%
+    ),
+    var(--cases-pearl);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.5);
+}
+
+.cases-carousel .jcard-seal {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: oklch(0.32 0.04 168);
+  background: radial-gradient(
+    120% 120% at 34% 26%,
+    oklch(0.995 0.004 168) 0%,
+    oklch(0.9 0.02 168) 42%,
+    oklch(0.76 0.036 170) 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1px 2px oklch(1 0 0 / 0.9),
+    inset 0 0 0 1px oklch(1 0 0 / 0.35),
+    inset 0 -5px 10px -5px oklch(0.55 0.045 170 / 0.5),
+    0 4px 9px -3px oklch(0.5 0.04 168 / 0.5);
+  text-shadow: 0 1px 0 oklch(1 0 0 / 0.7);
+}
+
+.cases-carousel .jcard-seal b,
+.cases-carousel .jcard-seal i {
+  font-style: normal;
+  display: inline;
+}
+
+.cases-carousel .cap-case {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  color: var(--cases-ink);
+  white-space: nowrap;
+}
+
+.cases-carousel .cap-sub {
+  font-size: 7.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  word-spacing: 0.25em;
+  text-indent: 0.2em;
+  white-space: nowrap;
+  color: var(--cases-ink-soft);
+  opacity: 0.7;
+}
+
+.cases-carousel .card-grad {
+  background: linear-gradient(158deg, #eff5f2 0%, #dceae4 46%, #c4dcd3 100%);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cases-carousel .card-grad .g-tag {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--cases-navy);
+  line-height: 1;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.62);
+  align-self: flex-start;
+  padding: 7px 13px;
+  border-radius: 999px;
+}
+
+.cases-carousel .card-grad .g-h {
+  margin-top: auto;
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+  color: #132a23;
+  text-wrap: balance;
+}
+
+.cases-carousel .card-grad .g-h .em {
+  color: var(--cases-navy);
+  white-space: nowrap;
+}
+
+.cases-carousel .card-grad .g-b {
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.5;
+  color: #405a52;
+  text-wrap: pretty;
+}
+
+.cases-carousel .card-grad.deep {
+  background: linear-gradient(158deg, #24705a 0%, #1a6552 52%, #0e4436 100%);
+}
+
+.cases-carousel .card-grad.deep .g-tag {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.cases-carousel .card-grad.deep .g-h {
+  color: #fff;
+}
+
+.cases-carousel .card-grad.deep .g-h .em {
+  color: #9fd3c0;
+}
+
+.cases-carousel .card-grad.deep .g-b {
+  color: #c3dbd3;
+}
