@@ -415,16 +415,16 @@ function ApplyNowButton() {
       onMouseLeave={() => setHovered(false)}
       className="relative inline-flex w-fit overflow-hidden rounded-[40px] no-underline"
     >
-      {/* Button — gap 25, pad 10×15; clip is on <a> */}
+      {/* Button — slightly larger pill */}
       <div
         ref={btnRef}
-        className="relative flex items-center gap-[25px] rounded-[40px] bg-[#242424] px-[15px] py-[10px]"
+        className="relative flex items-center gap-[25px] rounded-[40px] bg-[#242424] px-[18px] py-3"
       >
         {/* Text — clips exit/enter */}
         <span className="relative z-[4] overflow-hidden">
           {/* Default — cream; on hover → absolute top -30 */}
           <motion.span
-            className="block whitespace-nowrap text-[14px] leading-[1.5] font-semibold tracking-[-0.03em]"
+            className="block whitespace-nowrap text-[15px] leading-[1.5] font-semibold tracking-[-0.03em] min-[1200px]:text-[16px]"
             style={{
               fontFamily: FONT,
               color: CREAM,
@@ -440,11 +440,11 @@ function ApplyNowButton() {
             }
             transition={spring}
           >
-            상담 신청
+            함께 방법을 찾아보기
           </motion.span>
           {/* Hover — dark; default absolute bottom -30, scale .9 rotate -30 */}
           <motion.span
-            className="block whitespace-nowrap text-[14px] leading-[1.5] font-semibold tracking-[-0.03em]"
+            className="block whitespace-nowrap text-[15px] leading-[1.5] font-semibold tracking-[-0.03em] min-[1200px]:text-[16px]"
             style={{
               fontFamily: FONT,
               color: DARK,
@@ -460,7 +460,7 @@ function ApplyNowButton() {
             }
             transition={spring}
           >
-            상담 신청
+            함께 방법을 찾아보기
           </motion.span>
         </span>
 
@@ -509,8 +509,8 @@ function ApplyNowButton() {
  * Kora Bottom hiring row — breakpoints match Framer:
  * ≥1200 desktop · 810–1199 tablet · <810 mobile
  */
-const HIRE_LINE_1 = ["지금,", "상담을"] as const;
-const HIRE_LINE_2 = ["신청해", "보세요."] as const;
+const HIRE_LINE_1 = ["한", "사람의"] as const;
+const HIRE_LINE_2 = ["소중한", "삶이", "걸린", "일로."] as const;
 
 function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
   const copyRef = useRef<HTMLDivElement | null>(null);
@@ -600,14 +600,14 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
         ref={copyRef}
         className="flex w-full flex-col items-start gap-5 min-[810px]:w-[320px] min-[810px]:flex-none min-[810px]:gap-[30px] min-[1200px]:w-auto min-[1200px]:min-w-0 min-[1200px]:flex-[1_0_0%]"
       >
-        <div className="flex w-full max-w-[230px] flex-col items-start gap-[15px] min-[810px]:max-w-[330px] min-[810px]:gap-5">
+        <div className="flex w-full max-w-[280px] flex-col items-start gap-[15px] min-[810px]:max-w-[400px] min-[810px]:gap-5 min-[1200px]:max-w-[520px]">
           <motion.h3
-            className="w-full text-[25px] leading-[1.1] font-[585] tracking-[-0.04em] break-keep min-[810px]:text-[30px] min-[1200px]:text-[45px]"
-            style={{ fontFamily: FONT }}
+            className="w-full text-[25px] leading-[1.1] font-bold tracking-[-0.04em] break-keep min-[810px]:text-[30px] min-[1200px]:text-[45px]"
+            style={{ fontFamily: FONT, fontVariationSettings: '"wght" 700' }}
             variants={wordContainer}
             initial="hidden"
             animate={show ? "show" : "hidden"}
-            aria-label="지금, 상담을 신청해 보세요."
+            aria-label="한 사람의 소중한 삶이 걸린 일로."
           >
             {renderLine(HIRE_LINE_1)}
             <br />
@@ -642,7 +642,7 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
               ease: easeOut,
             }}
           >
-            사건 초기부터 종결까지, 이로운이 일상의 회복을 함께합니다.
+            이로운 변호사들, 이로운 파트너스.
           </motion.p>
         </div>
 

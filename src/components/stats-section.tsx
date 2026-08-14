@@ -4,9 +4,8 @@ import {
   motion,
   useInView,
   useReducedMotion,
-  type Variants,
 } from "framer-motion";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -23,111 +22,6 @@ const WITH_WIDTH = "100%";
 const WITHOUT_WIDTH = "66%";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
-
-type Segment = { text: string; tone: "muted" | "green" };
-
-const BODY_SEGMENTS: Segment[] = [
-  {
-    text: "이로운과 함께한 의뢰인들은 사건 초기부터\n",
-    tone: "muted",
-  },
-  {
-    text: "종결까지 ",
-    tone: "muted",
-  },
-  {
-    text: "평균 승소·조정 성공률 47% 상승",
-    tone: "green",
-  },
-  {
-    text: " 효과를 경험했습니다.\n상담·증거 정리·변론까지 한 흐름으로 대응한 결과입니다.",
-    tone: "muted",
-  },
-];
-
-function CharReveal({
-  segments,
-  inView,
-  reduceMotion,
-  className,
-}: {
-  segments: Segment[];
-  inView: boolean;
-  reduceMotion: boolean | null;
-  className?: string;
-}) {
-  const chars = useMemo(() => {
-    const out: { ch: string; tone: Segment["tone"]; key: string }[] = [];
-    let i = 0;
-    for (const seg of segments) {
-      for (const ch of seg.text) {
-        out.push({ ch, tone: seg.tone, key: `${i}-${ch}` });
-        i += 1;
-      }
-    }
-    return out;
-  }, [segments]);
-
-  const container: Variants = {
-    hidden: {},
-    show: {
-      transition: reduceMotion
-        ? { duration: 0 }
-        : { staggerChildren: 0.012, delayChildren: 0.12 },
-    },
-  };
-
-  const child: Variants = reduceMotion
-    ? {
-        hidden: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
-        show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
-      }
-    : {
-        hidden: {
-          opacity: 0.001,
-          y: 2,
-          scale: 0.9,
-          filter: "blur(5px)",
-        },
-        show: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.7, ease: easeOut },
-        },
-      };
-
-  return (
-    <motion.p
-      className={className}
-      style={{ fontFamily: FONT_WANTED }}
-      variants={container}
-      initial="hidden"
-      animate={inView || reduceMotion ? "show" : "hidden"}
-      aria-label={segments.map((s) => s.text).join("")}
-    >
-      {chars.map((c, idx) =>
-        c.ch === "\n" ? (
-          <br key={`${c.key}-${idx}`} />
-        ) : c.ch === " " ? (
-          <span key={`${c.key}-${idx}`}> </span>
-        ) : (
-          <motion.span
-            key={`${c.key}-${idx}`}
-            variants={child}
-            className="inline-block will-change-[opacity,transform,filter]"
-            style={{
-              color: c.tone === "green" ? EROUN_GREEN : TEXT_MUTED,
-            }}
-          >
-            {c.ch}
-          </motion.span>
-        ),
-      )}
-    </motion.p>
-  );
-}
 
 function ChartBar({
   label,
@@ -272,48 +166,6 @@ export function StatsSection() {
           </div>
 
           <div className="flex w-full flex-col items-start gap-[30px] md:gap-[50px]">
-            <div className="flex w-full max-w-[750px] flex-col gap-5">
-              <CharReveal
-                segments={BODY_SEGMENTS}
-                inView={headerInView}
-                reduceMotion={reduceMotion}
-                className="text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] md:text-[25px]"
-              />
-
-              <motion.p
-                className="text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-[#616161] will-change-[opacity,transform,filter]"
-                style={{ fontFamily: FONT_WANTED, color: TEXT_MUTED }}
-                initial={
-                  reduceMotion
-                    ? false
-                    : {
-                        opacity: 0.001,
-                        y: 2,
-                        scale: 0.9,
-                        filter: "blur(5px)",
-                      }
-                }
-                animate={
-                  headerInView || reduceMotion
-                    ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                    : {
-                        opacity: 0.001,
-                        y: 2,
-                        scale: 0.9,
-                        filter: "blur(5px)",
-                      }
-                }
-                transition={{
-                  duration: reduceMotion ? 0 : 0.7,
-                  delay: reduceMotion ? 0 : 0.45,
-                  ease: easeOut,
-                }}
-              >
-                *형사·민사·가사 등 주요 사건 유형 기준으로, 표준 6개월 수행
-                기간의 상담·진행 결과입니다.
-              </motion.p>
-            </div>
-
             <div ref={chartRef} className="relative w-full px-[15px] py-10">
               <div className="relative w-full pt-12 pb-5">
                 <motion.div
@@ -349,7 +201,7 @@ export function StatsSection() {
 
                 <div className="relative z-[1] flex flex-col gap-4">
                   <ChartBar
-                    label="누적 사건처리 규모"
+                    label="지금까지 지켜온 금액"
                     valueLabel="557,821,000원+"
                     width={WITH_WIDTH}
                     variant="with"
@@ -358,7 +210,7 @@ export function StatsSection() {
                     reduceMotion={reduceMotion}
                   />
                   <ChartBar
-                    label="누적 상담건수"
+                    label="소중한 삶의 이야기"
                     valueLabel="37,000건+"
                     width={WITHOUT_WIDTH}
                     variant="without"

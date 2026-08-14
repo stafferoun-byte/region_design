@@ -114,11 +114,11 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
       };
 
   return (
-    <section className="changes-section relative z-20 bg-white">
+    <section className="changes-section relative z-20" style={{ backgroundColor: "#FCFCFA" }}>
       <div className="relative">
         <div
-          className="sticky top-0 min-h-svh w-full overflow-x-clip bg-white"
-          style={{ perspective: 1200 }}
+          className="sticky top-0 min-h-svh w-full overflow-x-clip"
+          style={{ perspective: 1200, backgroundColor: "#FCFCFA" }}
         >
           {/* Headline — splits hard L/R */}
           <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center overflow-x-clip">
@@ -162,8 +162,8 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
           </div>
 
           <motion.div
-            style={{ opacity: casesOpacity }}
-            className="relative z-[1] flex min-h-svh flex-col justify-center bg-white py-12 md:py-16"
+            style={{ opacity: casesOpacity, backgroundColor: "#FCFCFA" }}
+            className="relative z-[1] flex min-h-svh flex-col justify-center py-12 md:py-16"
           >
             <WinningCases
               reveal={casesReveal}
@@ -265,7 +265,7 @@ export default function Home() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={`${logo.alt}-${index}`}
-                    src={`${logo.src}?v=3`}
+                    src={`${logo.src}?v=4`}
                     alt={logo.alt}
                     className="h-12 w-auto object-contain"
                   />
