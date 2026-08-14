@@ -367,7 +367,11 @@ function WishTitleReveal({
       <span key={`${w.text}-${i}`}>
         <motion.span
           variants={word}
-          className="inline-block"
+          className={
+            w.color === "#5DC39B"
+              ? "inline-block text-[#5DC39B]"
+              : "inline-block text-black"
+          }
           style={{ color: w.color }}
         >
           {w.text}
