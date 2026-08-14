@@ -10,7 +10,6 @@ import {
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
-import { FloatingCta } from "@/components/floating-cta";
 import { StatsSection } from "@/components/stats-section";
 import { TeamSection } from "@/components/team-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
@@ -39,58 +38,67 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   });
 
   /**
-   * Soft bidirectional split — shorter travel so reverse rejoin isn’t harsh.
+   * Strong L/R split (Kora-style). Headline must fully clear before
+   * the cases title appears — otherwise the same copy double-renders
+   * and looks like a horizontal tear through the glyphs.
    */
   const line1X = useTransform(
     splitProgress,
-    [0, 0.35, 0.7, 1],
-    reduceMotion ? [0, 0, 0, 0] : [0, -40, -380, -900],
+    [0, 1],
+    reduceMotion ? [0, 0] : [0, -2000],
   );
   const line1RotateY = useTransform(
     splitProgress,
-    [0, 0.35, 0.7, 1],
-    reduceMotion ? [0, 0, 0, 0] : [0, -8, -28, -40],
+    [0, 1],
+    reduceMotion ? [0, 0] : [0, -60],
   );
   const line1Scale = useTransform(
     splitProgress,
-    [0, 0.35, 0.7, 1],
-    reduceMotion ? [1, 1, 1, 1] : [1, 1.04, 1.16, 1.3],
+    [0, 1],
+    reduceMotion ? [1, 1] : [1, 1.5],
   );
   const line1Opacity = useTransform(
     splitProgress,
-    [0, 0.3, 0.55, 0.75],
-    reduceMotion ? [0, 0, 0, 0] : [1, 0.85, 0.2, 0],
+    [0, 0.55, 0.85],
+    reduceMotion ? [0, 0, 0] : [1, 0.35, 0],
   );
 
   const line2X = useTransform(
     splitProgress,
-    [0, 0.35, 0.7, 1],
-    reduceMotion ? [0, 0, 0, 0] : [0, 40, 380, 900],
+    [0, 1],
+    reduceMotion ? [0, 0] : [0, 2000],
   );
   const line2RotateY = useTransform(
     splitProgress,
-    [0, 0.35, 0.7, 1],
-    reduceMotion ? [0, 0, 0, 0] : [0, 8, 28, 40],
+    [0, 1],
+    reduceMotion ? [0, 0] : [0, 60],
   );
   const line2Scale = useTransform(
     splitProgress,
-    [0, 0.35, 0.7, 1],
-    reduceMotion ? [1, 1, 1, 1] : [1, 1.04, 1.16, 1.3],
+    [0, 1],
+    reduceMotion ? [1, 1] : [1, 1.5],
   );
   const line2Opacity = useTransform(
     splitProgress,
-    [0, 0.3, 0.55, 0.75],
-    reduceMotion ? [0, 0, 0, 0] : [1, 0.85, 0.2, 0],
+    [0, 0.55, 0.85],
+    reduceMotion ? [0, 0, 0] : [1, 0.35, 0],
   );
 
   const casesOpacity = useTransform(
     splitProgress,
-    [0.25, 0.55, 0.8],
-    reduceMotion ? [1, 1, 1] : [0, 0.7, 1],
+    [0.45, 0.75, 1],
+    reduceMotion ? [1, 1, 1] : [0, 0.85, 1],
+  );
+
+  /** Cases section title — only after overlay headline is gone */
+  const casesTitleOpacity = useTransform(
+    splitProgress,
+    [0.72, 0.9],
+    reduceMotion ? [1, 1] : [0, 1],
   );
 
   useMotionValueEvent(splitProgress, "change", (v) => {
-    if (reduceMotion || v >= 0.4) {
+    if (reduceMotion || v >= 0.55) {
       setCasesReveal((prev) => prev || true);
     }
   });
@@ -109,10 +117,10 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
     <section className="changes-section relative z-20 bg-white">
       <div className="relative">
         <div
-          className="sticky top-0 min-h-svh w-full bg-white [overflow-x:clip]"
+          className="sticky top-0 min-h-svh w-full overflow-x-clip bg-white"
           style={{ perspective: 1200 }}
         >
-          {/* Headline — splits L/R in place */}
+          {/* Headline — splits hard L/R */}
           <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center overflow-x-clip">
             <div className="w-[min(900px,calc(100%-40px))]">
               <motion.div
@@ -157,7 +165,10 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
             style={{ opacity: casesOpacity }}
             className="relative z-[1] flex min-h-svh flex-col justify-center bg-white py-12 md:py-16"
           >
-            <WinningCases reveal={casesReveal} />
+            <WinningCases
+              reveal={casesReveal}
+              titleOpacity={casesTitleOpacity}
+            />
           </motion.div>
         </div>
 
@@ -320,13 +331,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* CTA sits on first screen only — scrolls away (not viewport-fixed) */}
-      <div className="pointer-events-none absolute top-0 right-0 left-0 z-[60] h-svh">
-        <div className="pointer-events-auto absolute right-8 bottom-8 md:right-12 md:bottom-12 xl:right-16 xl:bottom-14">
-          <FloatingCta />
-        </div>
-      </div>
 
       {/* Track ends when zoom/dim finish — next section covers right then */}
       <div
