@@ -42,3 +42,5 @@ next-env.d.ts
 
 # large source video backup (use public/videos/hero.mp4)
 /public/videos/hero-original.mp4
+
+.vercel

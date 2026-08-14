@@ -27,6 +27,7 @@ export default function RootLayout({
     <html
       lang="ko"
       className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <link
@@ -39,7 +40,7 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
         />
       </head>
-      <body className="min-h-full bg-white">
+      <body className="min-h-full bg-white" suppressHydrationWarning>
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
