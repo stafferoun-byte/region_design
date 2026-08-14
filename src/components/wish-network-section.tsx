@@ -21,9 +21,9 @@ const TITLE_LINE_1 = [
 ] as const;
 
 const TITLE_LINE_2 = [
-  { text: "이로운", color: "#000000" },
-  { text: "파트너스", color: "#000000" },
-  { text: "변호사들", color: "#000000", glue: true },
+  { text: "이로운", color: "#5DC39B" },
+  { text: "파트너스", color: "#5DC39B" },
+  { text: "변호사들", color: "#5DC39B", glue: true },
   { text: "의", color: "#000000" },
   { text: "소망이기도", color: "#000000" },
   { text: "합니다.", color: "#000000" },
@@ -507,7 +507,8 @@ export function WishNetworkSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-20 w-full overflow-x-clip bg-white px-5 pt-[40px] md:px-10 md:pt-[52px] xl:px-12 xl:pt-[64px]"
+      className="relative z-20 w-full overflow-x-clip px-5 pt-[40px] pb-[100px] md:px-10 md:pt-[52px] md:pb-[130px] xl:px-12 xl:pt-[64px] xl:pb-[160px]"
+      style={{ backgroundColor: "#FCFCFA" }}
       aria-label="이로운 파트너스"
     >
       <WishTitleReveal inView={!!inView} reduceMotion={reduceMotion} />

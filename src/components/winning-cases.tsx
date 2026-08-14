@@ -13,11 +13,12 @@ const INK2 = "#363636";
  * Soft brand-tinted cards — mint wash + stone, tied to #5DC39B
  */
 const CARD_COLORS = [
-  "#F1F8F5",
-  "#F8F6F2",
-  "#EFF2EE",
-  "#E6F0EB",
-  "#F5F3EF",
+  "#EBEBE1",
+  "#E1E3D4",
+  "#EFE3D5",
+  "#D1C9BC",
+  "#CDC6BA",
+  "#E9E9E7",
 ] as const;
 const CATEGORY_COLOR = "#5A7A70";
 
@@ -94,7 +95,7 @@ function CaseCard({
         className="flex h-full w-full flex-col px-[18px] pt-8 pb-5 no-underline min-[1072px]:px-[27px] min-[1072px]:pt-11 min-[1072px]:pb-[30px]"
       >
         <p
-          className="mb-3 text-[13px] leading-none font-medium tracking-[-0.02em] min-[1072px]:mb-4 min-[1072px]:text-[15px]"
+          className="mb-3 text-[13px] leading-none font-semibold tracking-[-0.02em] min-[1072px]:mb-4 min-[1072px]:text-[15px]"
           style={{ fontFamily: FONT, color: CATEGORY_COLOR }}
         >
           {item.category}
@@ -175,7 +176,7 @@ function NavArrows({
         type="button"
         aria-label={labelPrev}
         onClick={onPrev}
-        className="flex size-5 items-center justify-center text-[#1A6552]"
+        className="flex size-5 items-center justify-center text-[#5DC39B]"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path
@@ -191,7 +192,7 @@ function NavArrows({
         type="button"
         aria-label={labelNext}
         onClick={onNext}
-        className="flex size-5 items-center justify-center text-[#1A6552]"
+        className="flex size-5 items-center justify-center text-[#5DC39B]"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path
@@ -314,7 +315,8 @@ export function WinningCases({
   return (
     <section
       id="cases"
-      className="w-full overflow-x-clip bg-white pl-8 md:pl-12 xl:pl-20"
+      className="w-full overflow-x-clip pl-8 md:pl-12 xl:pl-20"
+      style={{ backgroundColor: "#FCFCFA" }}
       aria-label="승소사례"
     >
       <motion.div
@@ -341,7 +343,12 @@ export function WinningCases({
             <a
               href="#cases"
               className="mr-3 inline-flex h-8 items-center justify-center rounded-full border px-3.5 text-[12px] font-light tracking-[1px] no-underline"
-              style={{ borderColor: TEAL, color: TEAL, fontFamily: FONT }}
+              style={{
+                borderColor: TEAL,
+                backgroundColor: TEAL,
+                color: "#FFFFFF",
+                fontFamily: FONT,
+              }}
             >
               MORE
             </a>
@@ -368,7 +375,12 @@ export function WinningCases({
                 <a
                   href="#cases"
                   className="mr-4 inline-flex h-8 w-[96px] items-center justify-center rounded-full border text-[13px] font-light tracking-[1px] no-underline xl:mr-6"
-                  style={{ borderColor: TEAL, color: TEAL, fontFamily: FONT }}
+                  style={{
+                    borderColor: TEAL,
+                    backgroundColor: TEAL,
+                    color: "#FFFFFF",
+                    fontFamily: FONT,
+                  }}
                 >
                   MORE
                 </a>
