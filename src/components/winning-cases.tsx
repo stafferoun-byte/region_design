@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type MotionValue, type Variants } from "framer-motion";
 import { useState } from "react";
 
 const FONT =
@@ -299,7 +299,14 @@ function CasesTitleReveal({
   );
 }
 
-export function WinningCases({ reveal = true }: { reveal?: boolean }) {
+export function WinningCases({
+  reveal = true,
+  titleOpacity,
+}: {
+  reveal?: boolean;
+  /** When set, delays the section title until the overlay split headline is gone */
+  titleOpacity?: MotionValue<number>;
+}) {
   const [reverse, setReverse] = useState(false);
   const reduceMotion = useReducedMotion();
   const show = reveal || !!reduceMotion;
@@ -310,9 +317,12 @@ export function WinningCases({ reveal = true }: { reveal?: boolean }) {
       className="w-full overflow-x-clip bg-white pl-8 md:pl-12 xl:pl-20"
       aria-label="승소사례"
     >
-      <div className="pr-8 md:pr-12 xl:pr-20">
+      <motion.div
+        className="pr-8 md:pr-12 xl:pr-20"
+        style={titleOpacity ? { opacity: titleOpacity } : undefined}
+      >
         <CasesTitleReveal show={show} reduceMotion={reduceMotion} />
-      </div>
+      </motion.div>
 
       <div className="relative mx-auto mt-16 w-full max-w-[1920px] md:mt-20 xl:mt-24">
         {/* Mobile */}
