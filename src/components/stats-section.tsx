@@ -28,19 +28,15 @@ type Segment = { text: string; tone: "muted" | "green" };
 
 const BODY_SEGMENTS: Segment[] = [
   {
-    text: "이로운과 함께한 의뢰인들은 사건 초기부터\n",
+    text: "우리 앞의 ",
     tone: "muted",
   },
   {
-    text: "종결까지 ",
-    tone: "muted",
-  },
-  {
-    text: "평균 승소·조정 성공률 47% 상승",
+    text: "의뢰인이 가족이라면,\n우리는 어떤 조언",
     tone: "green",
   },
   {
-    text: " 효과를 경험했습니다.\n상담·증거 정리·변론까지 한 흐름으로 대응한 결과입니다.",
+    text: "을 건넸을까.\n\n이로운 파트너스는 언제나\n이 질문에서 변론을 시작합니다.",
     tone: "muted",
   },
 ];
@@ -173,8 +169,7 @@ function ChartBar({
           }}
         />
         <motion.div
-          className="relative z-[1] flex h-full items-end justify-between"
-          style={{ padding: "8px 18px 12px" }}
+          className="relative z-[1] h-full"
           initial={reduceMotion ? false : { opacity: 0 }}
           animate={show ? { opacity: 1 } : { opacity: 0 }}
           transition={{
@@ -184,7 +179,7 @@ function ChartBar({
           }}
         >
           <span
-            className="shrink-0 text-[18px] leading-[1.4] font-bold tracking-[-0.03em] md:text-[22px]"
+            className="absolute bottom-3 left-[18px] shrink-0 text-[16px] leading-[1.4] font-bold tracking-[-0.03em] md:text-[18px]"
             style={{
               fontFamily: FONT_WANTED,
               color: labelColor,
@@ -193,7 +188,7 @@ function ChartBar({
             {label}
           </span>
           <span
-            className="shrink-0 text-[28px] leading-none font-bold tracking-[-0.045em] md:text-[36px]"
+            className="absolute top-1/2 right-3 shrink-0 -translate-y-1/2 text-[36px] leading-none font-bold tracking-[-0.06em] md:right-4 md:text-[44px] md:tracking-[-0.07em]"
             style={{
               fontFamily: FONT_WANTED,
               color: labelColor,
@@ -279,39 +274,6 @@ export function StatsSection() {
                 reduceMotion={reduceMotion}
                 className="text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] md:text-[25px]"
               />
-
-              <motion.p
-                className="text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-[#616161] will-change-[opacity,transform,filter]"
-                style={{ fontFamily: FONT_WANTED, color: TEXT_MUTED }}
-                initial={
-                  reduceMotion
-                    ? false
-                    : {
-                        opacity: 0.001,
-                        y: 2,
-                        scale: 0.9,
-                        filter: "blur(5px)",
-                      }
-                }
-                animate={
-                  headerInView || reduceMotion
-                    ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                    : {
-                        opacity: 0.001,
-                        y: 2,
-                        scale: 0.9,
-                        filter: "blur(5px)",
-                      }
-                }
-                transition={{
-                  duration: reduceMotion ? 0 : 0.7,
-                  delay: reduceMotion ? 0 : 0.45,
-                  ease: easeOut,
-                }}
-              >
-                *형사·민사·가사 등 주요 사건 유형 기준으로, 표준 6개월 수행
-                기간의 상담·진행 결과입니다.
-              </motion.p>
             </div>
 
             <div ref={chartRef} className="relative w-full px-[15px] py-10">
@@ -349,7 +311,7 @@ export function StatsSection() {
 
                 <div className="relative z-[1] flex flex-col gap-4">
                   <ChartBar
-                    label="지금까지 지켜온 금액"
+                    label="누적 사건처리 규모"
                     valueLabel="557,821,000원+"
                     width={WITH_WIDTH}
                     variant="with"
@@ -358,7 +320,7 @@ export function StatsSection() {
                     reduceMotion={reduceMotion}
                   />
                   <ChartBar
-                    label="소중한 삶의 이야기"
+                    label="누적 상담건수"
                     valueLabel="37,000건+"
                     width={WITHOUT_WIDTH}
                     variant="without"

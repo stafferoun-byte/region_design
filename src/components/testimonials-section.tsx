@@ -1,8 +1,12 @@
 "use client";
 
-import { useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+} from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 /** Match site stack; Kora uses Manrope — layout/tokens stay 1:1 */
 const FONT =
@@ -14,6 +18,8 @@ const BLACK = "#242424";
 const CREAM = "#F5F5E9";
 const CARD = "#FFFFFA";
 const OVERLAY = "#292929";
+
+const easeOut = [0.22, 1, 0.36, 1] as const;
 
 const HERO_BG = "/images/testimonials/lawyers-hero.png";
 
@@ -249,6 +255,19 @@ export function TestimonialsSection() {
   /** Default open: first card (Kora SSR "1 Open") */
   const [openIndex, setOpenIndex] = useState(0);
 
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<HTMLDivElement | null>(null);
+  const heroInView = useInView(heroRef, { once: true, amount: 0.28 });
+  const cardsInView = useInView(cardsRef, { once: true, amount: 0.2 });
+
+  const show = heroInView || !!reduceMotion;
+  const showCards = cardsInView || !!reduceMotion;
+
+  /** Kora Appear spring */
+  const appear = reduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 120, damping: 22, mass: 0.9 };
+
   const gridColumns =
     openIndex === 0
       ? "2fr 1fr 1fr"
@@ -262,36 +281,76 @@ export function TestimonialsSection() {
       style={{ fontFamily: FONT }}
       aria-labelledby="testimonials-heading"
     >
-      {/* Featured testimonial — max 1600, px 20/40/60 */}
       <div className="w-full max-w-[1600px] px-5 md:px-10 xl:px-[60px]">
         <div
+          ref={heroRef}
           className="relative isolate aspect-[4/3] w-full overflow-hidden"
           style={{ borderRadius: 40 }}
         >
-          {/* Native img: skip next/image recompression so the PNG stays sharp */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={HERO_BG}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover object-center"
-            decoding="async"
-          />
+          {/* Image — Kora: scale 1.08 → 1 on appear */}
+          <motion.div
+            className="absolute inset-0 origin-center will-change-transform"
+            initial={reduceMotion ? false : { scale: 1.08 }}
+            animate={show ? { scale: 1 } : { scale: 1.08 }}
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : { duration: 1.35, ease: easeOut }
+            }
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={HERO_BG}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              decoding="async"
+            />
+          </motion.div>
+
           <div
             className="absolute inset-0"
             style={{ backgroundColor: OVERLAY, opacity: 0.18 }}
             aria-hidden
           />
 
-          {/* Watermark — large title top-left over hero (Kora visual) */}
-          <h2
+          {/* Title — Kora Appear: opacity + y + blur */}
+          <motion.h2
             id="testimonials-heading"
-            className="pointer-events-none absolute top-6 left-5 z-10 text-[36px] leading-none font-medium tracking-[-0.04em] text-[#FAFAF7]/90 select-none md:top-8 md:left-10 md:text-[56px] xl:top-10 xl:left-10 xl:text-[72px]"
+            className="pointer-events-none absolute top-10 left-5 z-20 max-w-[11em] text-[clamp(42px,5.2vw,68px)] leading-[1.15] font-bold tracking-[-0.05em] break-keep text-white select-none md:top-14 md:left-10 xl:top-16 xl:left-12"
+            initial={
+              reduceMotion
+                ? false
+                : { opacity: 0, y: 24, filter: "blur(12px)" }
+            }
+            animate={
+              show
+                ? { opacity: 1, y: 0, filter: "blur(0px)" }
+                : { opacity: 0, y: 24, filter: "blur(12px)" }
+            }
+            transition={{
+              ...appear,
+              delay: reduceMotion ? 0 : 0.05,
+            }}
           >
-            고객 후기
-          </h2>
+            함께 한 분들의 이야기
+          </motion.h2>
 
-          {/* Glass card — Kora: blur 10px, #ffffff59, radius 30, width 375, pad 30 */}
-          <div className="absolute top-[74%] left-5 z-10 w-[min(100%-2.5rem,320px)] -translate-y-1/2 md:left-10 md:w-[375px] xl:left-12">
+          {/* Glass card — Kora Appear, delayed after title */}
+          <motion.div
+            className="absolute top-[52%] left-5 z-10 w-[min(100%-2.5rem,320px)] -translate-y-1/2 md:left-10 md:w-[375px] xl:left-12"
+            initial={
+              reduceMotion ? false : { opacity: 0, y: 40, filter: "blur(10px)" }
+            }
+            animate={
+              show
+                ? { opacity: 1, y: 0, filter: "blur(0px)" }
+                : { opacity: 0, y: 40, filter: "blur(10px)" }
+            }
+            transition={{
+              ...appear,
+              delay: reduceMotion ? 0 : 0.18,
+            }}
+          >
             <div
               className="flex flex-col gap-[30px] rounded-[30px] p-[30px] shadow-[0_0_0_1px_#ffffff80]"
               style={{
@@ -325,30 +384,26 @@ export function TestimonialsSection() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Rating — Kora: absolute bottom 60 right 60 */}
-          <div className="absolute right-5 bottom-5 z-10 text-right md:right-5 md:bottom-5 xl:right-[60px] xl:bottom-[60px]">
-            <div className="flex items-baseline justify-end gap-0.5 leading-none">
-              <p className="text-[50px] font-semibold tracking-[-0.04em] text-[#FAFAF5] md:text-[64px] xl:text-[80px]">
-                <span>4</span>
-                <span style={{ color: ACCENT }}>.</span>
-                <span>9</span>
-              </p>
-              <p className="text-[20px] font-semibold tracking-[-0.04em] text-[#E2E3E7] md:text-[25px]">
-                /5
-              </p>
-            </div>
-            <p className="mt-0 text-[13px] leading-tight font-semibold tracking-[-0.025em] text-[#FAFAF5]">
-              검증된 후기 300건 기준
-            </p>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* More testimonials — cream shell + 4-col grid (open spans 2) */}
-      <div className="w-full max-w-[1600px] px-5 md:px-10 xl:px-[60px]">
-        {/* Mobile stack */}
+      <motion.div
+        ref={cardsRef}
+        className="w-full max-w-[1600px] px-5 md:px-10 xl:px-[60px]"
+        initial={
+          reduceMotion ? false : { opacity: 0, y: 32, filter: "blur(8px)" }
+        }
+        animate={
+          showCards
+            ? { opacity: 1, y: 0, filter: "blur(0px)" }
+            : { opacity: 0, y: 32, filter: "blur(8px)" }
+        }
+        transition={{
+          ...appear,
+          delay: reduceMotion ? 0 : 0.08,
+        }}
+      >
         <div
           className="flex flex-col gap-[10px] p-[10px] md:hidden"
           style={{ backgroundColor: CREAM, borderRadius: 40 }}
@@ -364,7 +419,6 @@ export function TestimonialsSection() {
           ))}
         </div>
 
-        {/* Desktop: Kora grid 4 cols, active spans 2 → visual 2:1:1 */}
         <div
           className="hidden gap-[10px] p-[10px] md:grid"
           style={{
@@ -386,7 +440,7 @@ export function TestimonialsSection() {
             />
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

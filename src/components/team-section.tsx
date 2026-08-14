@@ -26,7 +26,7 @@ const TEAM = [
     id: "inheritance",
     concern: "상속 문제로 고민하고 있어요.",
     name: "상속 전문센터 전국 0.2% 전문성",
-    role: "유류분반환청구 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 유언무효·특별수익",
+    role: "유류분반환 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 특별수익",
     bio: "상속 분쟁의 초기 대응부터 판결·조정까지, 전국 상위 전문성으로 권리를 지킵니다.",
     image: "/images/practice/inheritance.png",
   },
@@ -50,7 +50,7 @@ const TEAM = [
     id: "family",
     concern: "이혼을 고민하고 있어요.",
     name: "이혼·가사 전문센터 이로운 결과를 설계",
-    role: "이혼재산분할 · 상간자소송 · 위자료 · 양육권·친권 · 친양자입양 · 친생자관계부존재",
+    role: "이혼재산분할 · 상간소송 · 위자료 · 양육권 · 친양자입양 · 친생자관계부존재",
     bio: "감정보다 절차와 합의에 집중해, 가족과 일상을 다시 세울 해법을 설계합니다.",
     image: "/images/practice/family.png",
   },
@@ -282,7 +282,7 @@ function TeamRow({
               {active ? (
                 <motion.span
                   key="detail-title"
-                  className="block text-[17px] leading-[1.35] font-[585] tracking-[-0.03em] break-keep md:text-[20px]"
+                  className="block text-[20px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
                   style={{ fontFamily: FONT, color: DARK }}
                   initial={reduceMotion ? false : { opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -306,7 +306,7 @@ function TeamRow({
               )}
             </AnimatePresence>
             <span
-              className="block text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] break-keep transition-colors duration-200"
+              className="block truncate whitespace-nowrap text-[16px] leading-[1.5] font-semibold tracking-[-0.03em] transition-colors duration-200 md:text-[17px] xl:text-[18px]"
               style={{
                 fontFamily: FONT,
                 color: active ? "#616161" : "rgba(255,255,255,0.55)",
@@ -418,7 +418,7 @@ function ApplyNowButton() {
       {/* Button — slightly larger pill */}
       <div
         ref={btnRef}
-        className="relative flex items-center gap-[25px] rounded-[40px] bg-[#242424] px-[18px] py-3"
+        className="relative flex items-center gap-[25px] rounded-[40px] bg-[#3D3D3D] px-[18px] py-3"
       >
         {/* Text — clips exit/enter */}
         <span className="relative z-[4] overflow-hidden">
@@ -470,12 +470,13 @@ function ApplyNowButton() {
         */}
         <motion.span
           aria-hidden
-          className="z-[4] size-[10px] shrink-0 rounded-[30px] bg-[#242424]"
-          style={
-            hovered
+          className="z-[4] size-[10px] shrink-0 rounded-[30px]"
+          style={{
+            backgroundColor: "#5DC39B",
+            ...(hovered
               ? { position: "relative", order: 2 }
-              : { position: "absolute", bottom: 17, right: 15 }
-          }
+              : { position: "absolute", bottom: 17, right: 15 }),
+          }}
           initial={false}
           animate={{ scale: hovered ? 1 : 0 }}
           transition={spring}
