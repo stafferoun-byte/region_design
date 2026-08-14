@@ -2,174 +2,98 @@
 
 import {
   motion,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
+import { FloatingCta } from "@/components/floating-cta";
 import { StatsSection } from "@/components/stats-section";
 import { TeamSection } from "@/components/team-section";
+import { TestimonialsSection } from "@/components/testimonials-section";
+import { WinningCases } from "@/components/winning-cases";
+import { WishNetworkSection } from "@/components/wish-network-section";
 
 /** Existing hero institution logos — reuse project assets as-is */
 const partnerLogos = [
   { src: "/images/partners/supreme-court.png", alt: "대법원" },
   { src: "/images/partners/seoul-central.png", alt: "서울중앙지방검찰청" },
   { src: "/images/partners/seoul-southern.png", alt: "서울남부지방검찰청" },
-  { src: "/images/partners/namyangju-court.png", alt: "의정부지방법원 남양주지원" },
+  { src: "/images/partners/namyangju-court.png", alt: "의정부지방법원" },
   { src: "/images/partners/seoul-family.png", alt: "서울가정법원" },
-  { src: "/images/partners/seoul-central-district.png", alt: "서울중앙지방검찰청 로고" },
 ];
-
-const TEAM_IMAGE = "/images/lawyer-popout01.png";
 
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
-const EXPERT_CARDS = [
-  {
-    branch: "남양주점",
-    name: "이로운 변호사",
-    address: "경기 남양주시 다산중앙로82번안길 152",
-    phone: "1800-9730",
-  },
-  {
-    branch: "서울점",
-    name: "이로운 변호사",
-    address: "서울 사무소 · 2026년 9월 오픈 예정",
-    phone: "1800-9730",
-  },
-  {
-    branch: "상담센터",
-    name: "이로운 변호사",
-    address: "전국 상담 · 방문 예약 가능",
-    phone: "1800-9730",
-  },
-  {
-    branch: "형사센터",
-    name: "이로운 변호사",
-    address: "형사 · 성범죄 · 보이스피싱 대응",
-    phone: "1800-9730",
-  },
-  {
-    branch: "상속센터",
-    name: "이로운 변호사",
-    address: "상속 · 유류분 · 유언 자문",
-    phone: "1800-9730",
-  },
-] as const;
-
-type ExpertCardData = (typeof EXPERT_CARDS)[number];
-
-function ExpertCard({ card }: { card: ExpertCardData }) {
-  return (
-    <div className="flex h-[300px] w-[210px] shrink-0 flex-col gap-3 rounded-[20px] bg-white p-3 shadow-[0_1px_6px_rgba(0,0,0,0.03)] md:h-[320px] md:w-[230px] md:gap-4 md:p-4">
-      <div className="mx-auto h-[110px] w-[68%] shrink-0 rounded-[16px] bg-[#eef1f5] md:h-[128px]" />
-      <div className="flex shrink-0 flex-col gap-1.5 pt-5 md:pt-6">
-        <div className="flex flex-col">
-          <p
-            className="text-[13px] leading-[1.4] text-[#181d27] md:text-[14px]"
-            style={{ fontFamily: FONT_WANTED }}
-          >
-            {card.branch}
-          </p>
-          <p
-            className="text-[15px] leading-[1.4] font-medium text-[#181d27] md:text-[16px]"
-            style={{ fontFamily: FONT_WANTED }}
-          >
-            {card.name}
-          </p>
-        </div>
-        <div className="flex flex-col gap-0.5">
-          <p
-            className="text-[12px] leading-[1.4] text-[#717680] md:text-[13px]"
-            style={{ fontFamily: FONT_WANTED }}
-          >
-            {card.address}
-          </p>
-          <p
-            className="text-[12px] leading-[1.4] text-[#181d27] md:text-[13px]"
-            style={{ fontFamily: FONT_WANTED }}
-          >
-            {card.phone}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TeamImageCard() {
-  return (
-    <div className="relative w-full overflow-visible">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={TEAM_IMAGE}
-        alt="이로운 법률사무소"
-        className="h-auto w-full object-contain"
-      />
-    </div>
-  );
-}
-
 function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   const cardTriggerRef = useRef<HTMLDivElement | null>(null);
+  const [casesReveal, setCasesReveal] = useState(!!reduceMotion);
 
-  // Headline splits → experts fades in (same sticky frame)
   const { scrollYProgress: splitProgress } = useScroll({
     target: cardTriggerRef,
     offset: ["start end", "start start"],
   });
 
+  /**
+   * Soft bidirectional split — shorter travel so reverse rejoin isn’t harsh.
+   */
   const line1X = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, -2000],
+    [0, 0.35, 0.7, 1],
+    reduceMotion ? [0, 0, 0, 0] : [0, -40, -380, -900],
   );
   const line1RotateY = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, -60],
+    [0, 0.35, 0.7, 1],
+    reduceMotion ? [0, 0, 0, 0] : [0, -8, -28, -40],
   );
   const line1Scale = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [1, 1] : [1, 1.5],
+    [0, 0.35, 0.7, 1],
+    reduceMotion ? [1, 1, 1, 1] : [1, 1.04, 1.16, 1.3],
   );
   const line1Opacity = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [1, 0],
+    [0, 0.3, 0.55, 0.75],
+    reduceMotion ? [0, 0, 0, 0] : [1, 0.85, 0.2, 0],
   );
 
   const line2X = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, 2000],
+    [0, 0.35, 0.7, 1],
+    reduceMotion ? [0, 0, 0, 0] : [0, 40, 380, 900],
   );
   const line2RotateY = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, 60],
+    [0, 0.35, 0.7, 1],
+    reduceMotion ? [0, 0, 0, 0] : [0, 8, 28, 40],
   );
   const line2Scale = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [1, 1] : [1, 1.5],
+    [0, 0.35, 0.7, 1],
+    reduceMotion ? [1, 1, 1, 1] : [1, 1.04, 1.16, 1.3],
   );
   const line2Opacity = useTransform(
     splitProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [1, 0],
+    [0, 0.3, 0.55, 0.75],
+    reduceMotion ? [0, 0, 0, 0] : [1, 0.85, 0.2, 0],
   );
 
-  // Appear in place (opacity only — no slide-up)
-  const expertsOpacity = useTransform(
+  const casesOpacity = useTransform(
     splitProgress,
-    [0.2, 0.7],
-    reduceMotion ? [1, 1] : [0, 1],
+    [0.25, 0.55, 0.8],
+    reduceMotion ? [1, 1, 1] : [0, 0.7, 1],
   );
+
+  useMotionValueEvent(splitProgress, "change", (v) => {
+    if (reduceMotion || v >= 0.4) {
+      setCasesReveal((prev) => prev || true);
+    }
+  });
 
   const enterTransition = reduceMotion
     ? { duration: 0 }
@@ -192,11 +116,9 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
           <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center overflow-x-clip">
             <div className="w-[min(900px,calc(100%-40px))]">
               <motion.div
-                initial={
-                  reduceMotion ? false : { opacity: 0, y: -300, scale: 1.1 }
-                }
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: false, amount: 0.5 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
                 transition={enterTransition}
                 className="flex flex-col items-center gap-1 will-change-transform md:gap-2"
               >
@@ -224,64 +146,21 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                   }}
                   className="origin-center text-center text-[35px] leading-[1.15] font-semibold tracking-[-0.06em] text-[#3D3D3D] will-change-transform md:text-[60px] md:font-bold xl:text-[80px]"
                 >
-                  이로운 파트너스의 진심<span className="ml-[0.08em] text-[0.72em]">.</span>
+                  이로운 파트너스의 진심
+                  <span className="ml-[0.08em] text-[0.72em]">.</span>
                 </motion.div>
               </motion.div>
             </div>
           </div>
 
-          {/* Experts — fades in after split (no inset clip box) */}
           <motion.div
-            style={{ opacity: expertsOpacity }}
-            className="relative z-[1] flex min-h-svh flex-col bg-white pt-28 pb-10 md:pt-32"
+            style={{ opacity: casesOpacity }}
+            className="relative z-[1] flex min-h-svh flex-col justify-center bg-white py-12 md:py-16"
           >
-            <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-24 px-5 md:gap-28 md:px-8">
-              {/* Copy stays up */}
-              <div className="flex w-full flex-col items-center gap-3 text-center">
-                <h3
-                  className="text-[clamp(34px,4.2vw,52px)] leading-[1.28] font-bold tracking-[-0.06em] text-black"
-                  style={{ fontFamily: FONT_WANTED }}
-                >
-                  일상의 회복을 위한
-                  <br />
-                  이로운 파트너스의 진심.
-                </h3>
-                <p
-                  className="mt-1 text-[clamp(16px,1.8vw,22px)] leading-[1.3] font-semibold tracking-[-0.04em] text-[#616161]"
-                  style={{ fontFamily: FONT_WANTED }}
-                >
-                  승소 판결문으로 증명합니다.
-                </p>
-              </div>
-            </div>
-
-            {/* Photo fixed left — cards marquee only in the space to the right */}
-            <div className="mx-auto mt-24 w-full max-w-[1440px] px-5 md:mt-28 md:px-8">
-              <div className="grid w-full grid-cols-[min(320px,32%)_minmax(0,1fr)] grid-rows-[auto_auto] gap-x-5 md:gap-x-8">
-                <div className="col-start-1 row-start-1">
-                  <TeamImageCard />
-                </div>
-
-                <div className="col-start-2 row-start-1 self-end bg-transparent [overflow-x:clip] [overflow-y:visible]">
-                  <div className="expert-marquee-track flex w-max items-end gap-3 md:gap-4">
-                    {[...EXPERT_CARDS, ...EXPERT_CARDS].map((card, i) => (
-                      <ExpertCard key={`${card.branch}-${i}`} card={card} />
-                    ))}
-                  </div>
-                </div>
-
-                <p
-                  className="col-start-1 row-start-2 mt-2 text-center text-[14px] leading-[1.4] font-medium text-[#181d27]"
-                  style={{ fontFamily: FONT_WANTED }}
-                >
-                  이로운 법률사무소
-                </p>
-              </div>
-            </div>
+            <WinningCases reveal={casesReveal} />
           </motion.div>
         </div>
 
-        {/* Scroll track: split + reveal, then hold */}
         <div
           ref={cardTriggerRef}
           className="pointer-events-none h-[100svh] w-full"
@@ -296,6 +175,11 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
 export default function Home() {
   const heroTransitionRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: heroTransitionRef,
@@ -322,6 +206,18 @@ export default function Home() {
     [0.14, 0.4],
     [0, reduceMotion ? 0 : -24],
   );
+
+  // Avoid hydration mismatch from browser extensions injecting styles
+  // (e.g. user-select) into SSR HTML before React hydrates.
+  if (!mounted) {
+    return (
+      <main
+        id="top"
+        className="relative min-h-svh bg-white text-[#161616]"
+        suppressHydrationWarning
+      />
+    );
+  }
 
   return (
     <main id="top" className="relative bg-white text-[#161616]">
@@ -352,13 +248,13 @@ export default function Home() {
             className="institution-logo-strip pointer-events-none absolute right-auto bottom-[52px] left-[44px] z-[1] max-w-[58%] sm:bottom-[56px] sm:left-[48px]"
             style={{ opacity: logoOpacity, y: logoY }}
           >
-            <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_88%,transparent)]">
+            <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]">
               <div className="marquee-track flex min-w-max items-center gap-20">
                 {[...partnerLogos, ...partnerLogos].map((logo, index) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={`${logo.alt}-${index}`}
-                    src={`${logo.src}?v=2`}
+                    src={`${logo.src}?v=3`}
                     alt={logo.alt}
                     className="h-12 w-auto object-contain"
                   />
@@ -385,6 +281,7 @@ export default function Home() {
                 width={240}
                 height={56}
                 className="h-12 w-auto shrink-0 object-contain"
+                style={{ width: "auto" }}
                 priority
               />
               <nav className="hidden items-center gap-2 text-[16px] font-medium tracking-[-0.03em] text-black lg:flex">
@@ -424,6 +321,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA sits on first screen only — scrolls away (not viewport-fixed) */}
+      <div className="pointer-events-none absolute top-0 right-0 left-0 z-[60] h-svh">
+        <div className="pointer-events-auto absolute right-8 bottom-8 md:right-12 md:bottom-12 xl:right-16 xl:bottom-14">
+          <FloatingCta />
+        </div>
+      </div>
+
       {/* Track ends when zoom/dim finish — next section covers right then */}
       <div
         ref={heroTransitionRef}
@@ -433,10 +337,22 @@ export default function Home() {
 
       <ChangesSection reduceMotion={reduceMotion} />
 
-      {/* Covers sticky hero so the video never peeks under later sections */}
-      <div className="relative z-20 overflow-x-clip bg-white">
+      {/* Green team box rises from below over the wish network */}
+      <div className="relative z-20">
+        <div className="sticky top-0 z-0 bg-white">
+          <WishNetworkSection />
+          {/* Bottom breathing room — does not shrink the network */}
+          <div className="h-[120px] md:h-[160px] xl:h-[200px]" aria-hidden />
+        </div>
+        <div className="pointer-events-none h-[90svh] md:h-[110svh]" aria-hidden />
+        <div className="relative z-10">
+          <TeamSection />
+        </div>
+      </div>
+
+      <div className="relative z-20 bg-white">
         <StatsSection />
-        <TeamSection />
+        <TestimonialsSection />
         <SiteFooter />
       </div>
     </main>

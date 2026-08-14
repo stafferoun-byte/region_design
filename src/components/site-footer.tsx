@@ -14,9 +14,6 @@ const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
 /** Kora tokens */
-const EROUN_GREEN = "#5DC39B";
-const CREAM = "#F5F5E9";
-
 const NAV_LINKS = [
   { href: "#partners", label: "이로운 파트너스" },
   { href: "#practice", label: "업무분야" },
@@ -222,8 +219,8 @@ export function SiteFooter() {
     >
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 z-0 size-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
-        style={{ scale: circleScale, backgroundColor: EROUN_GREEN }}
+        className="pointer-events-none absolute top-1/2 left-1/2 z-0 size-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#5DC39B] will-change-transform"
+        style={{ scale: circleScale }}
       />
 
       {/*
@@ -232,8 +229,8 @@ export function SiteFooter() {
       */}
       <div className="relative z-[1] w-full px-5 pt-5 pb-10 md:pb-12">
         <motion.div
-          className="flex w-full origin-center flex-col overflow-hidden rounded-[40px] will-change-transform"
-          style={{ scale: cardScale, backgroundColor: CREAM }}
+          className="flex w-full origin-center flex-col overflow-hidden rounded-[40px] bg-[#F5F5E9] will-change-transform"
+          style={{ scale: cardScale }}
         >
           {/* Outer Container — padding-top only: 120 / 90 / 60 */}
           <div className="flex w-full flex-col pt-[60px] md:pt-[90px] xl:pt-[120px]">
@@ -252,12 +249,16 @@ export function SiteFooter() {
                       width={260}
                       height={64}
                       className="h-14 w-auto -translate-x-[calc(100%*132/842)] object-contain md:h-16"
+                      style={{ width: "auto" }}
                     />
                   </a>
                 </div>
 
                 {/* Pitch + contact — spans logo + address rows on desktop */}
-                <div className="flex w-full flex-col gap-12 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:gap-14">
+                <div
+                  id="consult"
+                  className="flex w-full flex-col gap-12 scroll-mt-28 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:gap-14"
+                >
                   <p
                     className="max-w-[600px] text-[20px] leading-[1.45] font-[650] tracking-[-0.04em] text-[#242424] md:text-[24px]"
                     style={{ fontFamily: FONT_WANTED }}
@@ -390,10 +391,9 @@ export function SiteFooter() {
                     Eroun
                   </p>
                   <motion.p
-                    className="absolute bottom-0 left-0 w-full origin-bottom-left whitespace-nowrap text-[clamp(100px,18vw,400px)] leading-[0.68] font-semibold tracking-[-0.05em] select-none will-change-transform"
+                    className="absolute bottom-0 left-0 w-full origin-bottom-left whitespace-nowrap text-[clamp(100px,18vw,400px)] leading-[0.68] font-semibold tracking-[-0.05em] text-[#5DC39B] select-none will-change-transform"
                     style={{
                       fontFamily: FONT_WANTED,
-                      color: EROUN_GREEN,
                       scale: wordmarkScale,
                     }}
                   >

@@ -154,14 +154,23 @@
     background: transparent;
   }
 
-  .expert-marquee-track:hover {
-    animation-play-state: paused;
+  .cases-marquee-track {
+    animation: marquee 48s linear infinite;
+    will-change: transform;
+  }
+
+  /* Clay Slack — dashes crawl along the path while waves bounce */
+  .wish-dash-flow {
+    animation: wish-dash-flow 12s linear infinite;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track,
-  .expert-marquee-track {
+  .expert-marquee-track,
+  .cases-marquee-track,
+  .wish-dot-flow,
+  .wish-dash-flow {
     animation: none;
   }
 }
@@ -173,5 +182,25 @@
 
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes wish-dot-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: calc(var(--wish-flow-distance, 200px) * -1);
+  }
+}
+
+@keyframes wish-dash-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -126px;
   }
 }

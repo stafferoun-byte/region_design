@@ -1,0 +1,19 @@
+{
+  "W": 1024,
+  "H": 477,
+  "note": "Left (0-5) from Clay still; right (6-11) locked from prior tuning.",
+  "circles": [
+    { "x": 7.5, "y": 44.0, "rPx": 36, "sizePct": 7.0, "group": "mint" },
+    { "x": 11.0, "y": 76.0, "rPx": 35, "sizePct": 6.8, "group": "purple" },
+    { "x": 17.0, "y": 12.6, "rPx": 37, "sizePct": 7.2, "group": "dark" },
+    { "x": 23.2, "y": 54.9, "rPx": 38, "sizePct": 7.4, "group": "purple" },
+    { "x": 33.6, "y": 91.1, "rPx": 36, "sizePct": 7.0, "group": "dark" },
+    { "x": 42.5, "y": 24.7, "rPx": 35, "sizePct": 6.8, "group": "mint" },
+    { "x": 50.5, "y": 62.0, "rPx": 38, "sizePct": 7.4, "group": "yellow" },
+    { "x": 64.9, "y": 32.9, "rPx": 37, "sizePct": 7.2, "group": "yellow" },
+    { "x": 69.9, "y": 85.9, "rPx": 35, "sizePct": 6.8, "group": "sky" },
+    { "x": 82.1, "y": 17.6, "rPx": 38, "sizePct": 7.4, "group": "sky" },
+    { "x": 86.5, "y": 69.8, "rPx": 36, "sizePct": 7.0, "group": "yellow" },
+    { "x": 94.5, "y": 41.5, "rPx": 35, "sizePct": 6.8, "group": "sky" }
+  ]
+}
