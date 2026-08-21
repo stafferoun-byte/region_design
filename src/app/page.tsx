@@ -7,14 +7,18 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { HeroNav } from "@/components/hero-nav";
+import { ConsultFormSection } from "@/components/consult-form-section";
+import { FaqSection } from "@/components/faq-section";
+import { InsightsSection } from "@/components/insights-section";
+import { LegalTermsAccordionSection } from "@/components/legal-terms-accordion-section";
 import { SiteFooter } from "@/components/site-footer";
 import { StatsSection } from "@/components/stats-section";
 import { TeamSection } from "@/components/team-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { WinningCases } from "@/components/winning-cases";
 import { WishNetworkSection } from "@/components/wish-network-section";
+import { useEffect, useRef, useState } from "react";
 
 /** Existing hero institution logos — reuse project assets as-is */
 const partnerLogos = [
@@ -224,14 +228,14 @@ export default function Home() {
     return (
       <main
         id="top"
-        className="relative min-h-svh bg-white text-[#161616]"
+        className="relative min-h-svh bg-[#FCFCFA] text-[#161616]"
         suppressHydrationWarning
       />
     );
   }
 
   return (
-    <main id="top" className="relative bg-white text-[#161616]">
+    <main id="top" className="relative bg-[#FCFCFA] text-[#161616]">
       {/*
         Sticky hero stays pinned while the scroll track + next section move.
         After zoom/darken, the next section rises over it.
@@ -284,51 +288,7 @@ export default function Home() {
             />
           </motion.div>
 
-          <div className="absolute inset-x-0 top-0 z-[5] px-[calc(1.25rem+12px)] pt-[calc(1.25rem+16px)] sm:px-[calc(1.25rem+14px)]">
-            <div className="inline-flex items-center gap-1 rounded-full bg-white py-3 pr-3 pl-4 text-[#171717] shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
-              <Image
-                src="/images/eroun-logo.png"
-                alt="이로운 법률사무소"
-                width={240}
-                height={56}
-                className="h-12 w-auto shrink-0 object-contain"
-                style={{ width: "auto" }}
-                priority
-              />
-              <nav className="hidden items-center gap-2 text-[16px] font-medium tracking-[-0.03em] text-black lg:flex">
-                <a
-                  href="#partners"
-                  className="inline-flex min-w-[7.5rem] items-center justify-center rounded-full px-3 py-2.5 text-center transition-colors hover:bg-[#5DC39B] hover:text-white"
-                >
-                  이로운 파트너스
-                </a>
-                <a
-                  href="#practice"
-                  className="inline-flex min-w-[7.5rem] items-center justify-center rounded-full px-3 py-2.5 text-center transition-colors hover:bg-[#5DC39B] hover:text-white"
-                >
-                  업무분야
-                </a>
-                <a
-                  href="#cases"
-                  className="inline-flex min-w-[7.5rem] items-center justify-center rounded-full px-3 py-2.5 text-center transition-colors hover:bg-[#5DC39B] hover:text-white"
-                >
-                  성공사례
-                </a>
-                <a
-                  href="#consult"
-                  className="inline-flex min-w-[7.5rem] items-center justify-center rounded-full px-3 py-2.5 text-center transition-colors hover:bg-[#5DC39B] hover:text-white"
-                >
-                  상담예약
-                </a>
-                <a
-                  href="#location"
-                  className="inline-flex min-w-[7.5rem] items-center justify-center rounded-full px-3 py-2.5 text-center transition-colors hover:bg-[#5DC39B] hover:text-white"
-                >
-                  오시는길
-                </a>
-              </nav>
-            </div>
-          </div>
+          <HeroNav />
         </div>
       </section>
 
@@ -343,7 +303,7 @@ export default function Home() {
 
       {/* Green team box rises from below over the wish network */}
       <div className="relative z-20">
-        <div className="sticky top-0 z-0 bg-white">
+        <div className="sticky top-0 z-0 bg-[#FCFCFA]">
           <WishNetworkSection />
           {/* Bottom breathing room — does not shrink the network */}
           <div className="h-[120px] md:h-[160px] xl:h-[200px]" aria-hidden />
@@ -354,9 +314,16 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="relative z-20 bg-white">
+      <div className="relative z-20 bg-[#FCFCFA]">
         <StatsSection />
+        <LegalTermsAccordionSection />
         <TestimonialsSection />
+        <FaqSection />
+        <InsightsSection />
+      </div>
+      {/* CTA shrinks + footer circle rises — shared scroll stage */}
+      <div className="relative z-20 overflow-x-clip bg-[#FCFCFA]">
+        <ConsultFormSection />
         <SiteFooter />
       </div>
     </main>

@@ -1,0 +1,523 @@
+/* Küemmerlein tiles__item — ported from kuemmerlein_theme/style-min.css */
+
+.kuem-insights {
+  --page_bg_color: #fcfcfa;
+  --soft-grey0: #fcfcfa;
+  --soft-grey1: #e2e4d7;
+  --soft-grey-60: #e2e4d799;
+  --dark-shade: #686155;
+  --yellow: #5dc39b;
+  --big_round_corners: 30px;
+  --small_round_corners: 15px;
+  --grid_gap: 20px;
+  --content_max_w: 1520px;
+  --content_padding: round(clamp(6px, 1.6vw, 23px), 1px);
+  --type__tiny_text_uc: 12px;
+  --type__tiny_text_uc_lh: 14px;
+  --type__tiny_text_regular: 14px;
+  --type__tiny_text_regular_lh: 17px;
+  --type__tags: 14px;
+  --type__tags_lh: 16px;
+  --type__headline_tiles: 25px;
+  --type__headline_tiles_lh: 30px;
+  --type__headline: 50px;
+  --type__headline_lh: 56px;
+  --type__headline_smaller: 30px;
+  --type__headline_smaller_lh: 33px;
+  --type__body_copy: 18px;
+  --type__body_copy_lh: 21px;
+  --tag_height: 30px;
+  --lottie_aspect: 1740 / 1000;
+  --margin_headline_copytext: 27px;
+  --margin_m: calc(2 * 21px);
+  --font-grotesk: "ABC Monument Grotesk", sans-serif;
+  --font-mono: "ABC Monument Grotesk Semi-Mono", monospace, sans-serif;
+  --font-rhymes: "Rhymes Display", var(--font-insight-kr), "Noto Serif KR",
+    Georgia, serif;
+  --insights-inset-x: 72px;
+
+  width: 100%;
+  background-color: var(--page_bg_color);
+  color: #000;
+  font-family: var(--font-grotesk);
+  font-size: var(--type__body_copy);
+  line-height: var(--type__body_copy_lh);
+}
+
+@media (max-width: 767px) {
+  .kuem-insights {
+    --big_round_corners: 18px;
+    --small_round_corners: 8px;
+  }
+}
+
+.kuem-insights__pad {
+  width: 100%;
+  max-width: var(--content_max_w);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--content_padding);
+  padding-right: var(--content_padding);
+  padding-top: clamp(90px, 10vw, 150px);
+  padding-bottom: 110px;
+}
+
+.kuem-insights__pad > header {
+  margin-left: var(--insights-inset-x);
+}
+
+.kuem-insights__title {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: clamp(40px, 5.2vw, 74px);
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+.kuem-insights__lead {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  color: #363636;
+  max-width: 42em;
+  margin: 30px 0 0;
+}
+
+@media (min-width: 768px) {
+  .kuem-insights__lead {
+    font-size: 25px;
+    margin-top: 50px;
+  }
+}
+
+.kuem-insights__filter {
+  margin-top: calc(var(--margin_m) + 72px);
+  margin-bottom: calc(var(--margin_m) + 8px);
+  margin-left: var(--insights-inset-x);
+  margin-right: auto;
+  background-color: var(--soft-grey-60);
+  border-radius: 18px;
+  padding: 22px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px 36px;
+  width: calc(100% - 220px);
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 5;
+  overflow: visible;
+}
+
+.kuem-insights__filter-item {
+  position: relative;
+}
+
+.kuem-insights__filter-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #000;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: background-color 0.18s ease;
+  font-weight: inherit;
+}
+
+.kuem-insights__filter-link:hover,
+.kuem-insights__filter-item:hover > .kuem-insights__filter-link {
+  background-color: #fff;
+}
+
+.kuem-insights__filter-menu {
+  list-style: none;
+  margin: 0;
+  padding: 22px 26px;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  background-color: rgba(252, 252, 250, 0.88);
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s;
+  z-index: 20;
+}
+
+.kuem-insights__filter-menu::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.kuem-insights__filter-item:hover > .kuem-insights__filter-menu,
+.kuem-insights__filter-item:focus-within > .kuem-insights__filter-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.kuem-insights__filter-menu li + li {
+  margin-top: 10px;
+}
+
+.kuem-insights__filter-menu-link {
+  display: block;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.35;
+  color: #000;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.kuem-insights__filter-menu-link:hover {
+  color: var(--dark-shade);
+}
+
+.kuem-insights__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid_gap);
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .kuem-insights__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .kuem-insights__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— tiles__item —— */
+.kuem-tile {
+  --cutout: 100px;
+  --circle: 90px;
+  background-color: #fff;
+  border-radius: var(--big_round_corners);
+  width: 100%;
+  height: auto;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 767px) {
+  .kuem-tile {
+    --cutout: 86px;
+    --circle: 68px;
+    min-height: 330px;
+  }
+}
+
+.kuem-tile__top {
+  flex: 1;
+  width: 100%;
+  padding: 20px 26px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.kuem-tile__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.kuem-tile__img {
+  aspect-ratio: var(--lottie_aspect);
+  background-color: var(--soft-grey1);
+  width: 100%;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border-radius: var(--small_round_corners);
+  position: relative;
+}
+
+.kuem-tile__img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.kuem-tile__meta {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  height: 32px;
+  overflow: hidden;
+}
+
+.kuem-tile__date {
+  font-family: var(--font-mono);
+  font-size: var(--type__tiny_text_uc);
+  line-height: var(--type__tiny_text_uc_lh);
+  text-transform: uppercase;
+  color: var(--dark-shade);
+  flex-shrink: 0;
+}
+
+.kuem-tile__author {
+  font-family: var(--font-grotesk);
+  font-size: var(--type__tiny_text_regular);
+  line-height: var(--type__tiny_text_regular_lh);
+  color: var(--dark-shade);
+  text-align: right;
+  margin-top: -2px;
+  margin-left: auto;
+  max-width: 58%;
+}
+
+.kuem-tile__tags {
+  --tag_height: 36px;
+  height: var(--tag_height);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.kuem-tile__tag {
+  display: inline-flex;
+  align-items: center;
+  height: var(--tag_height);
+  padding: 0 16px;
+  background-color: var(--soft-grey1);
+  border-radius: 999px;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: #000;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.kuem-tile__title {
+  font-family: var(--font-rhymes);
+  font-size: var(--type__headline_tiles);
+  line-height: var(--type__headline_tiles_lh);
+  font-weight: 500;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.kuem-tile__title a {
+  font-family: inherit;
+  color: #000;
+  text-decoration: none;
+  overflow-wrap: break-word;
+}
+
+.kuem-tile:hover .kuem-tile__title a {
+  color: var(--dark-shade);
+}
+
+/* Corner mask SVG — exact Küemmerlein path */
+.kuem-mask-br {
+  z-index: 2;
+  width: 31px;
+  height: 31px;
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  pointer-events: none;
+}
+
+.kuem-tile__bottom {
+  width: 100%;
+  height: var(--cutout);
+  display: flex;
+  flex-flow: row;
+  position: relative;
+  left: 0;
+  overflow: hidden;
+}
+
+.kuem-tile__left {
+  width: calc(100% - var(--cutout));
+  height: var(--cutout);
+  position: relative;
+  left: 0;
+  overflow: hidden;
+}
+
+.kuem-tile__cutout {
+  width: var(--cutout);
+  height: var(--cutout);
+  background-color: var(--page_bg_color);
+  border-radius: var(--big_round_corners) 0 var(--big_round_corners) 0;
+  flex-shrink: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.kuem-tile__circle {
+  width: var(--circle);
+  height: var(--circle);
+  z-index: 10;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.kuem-tile__circle-inner {
+  width: var(--circle);
+  height: var(--circle);
+  background-color: var(--yellow);
+  border-radius: calc(var(--circle) / 2);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  text-decoration: none;
+}
+
+.kuem-tile__arrow {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.3s;
+  transform: scale(1);
+  fill: #000;
+}
+
+.kuem-tile:hover .kuem-tile__arrow {
+  transform: scale(1.3);
+}
+
+.kuem-insights__pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 96px 0 0;
+  width: 100%;
+}
+
+.kuem-insights__pager-list {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-items: center;
+}
+
+.kuem-insights__pager-item {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.kuem-insights__pager-link,
+.kuem-insights__pager-current {
+  font-family: var(--font-grotesk);
+  font-size: 14px;
+  line-height: 1.2;
+  color: #000;
+  --ul_y: 96%;
+  --ul_h: 1px;
+  --ul_color: currentColor;
+  background: linear-gradient(to right, var(--ul_color), var(--ul_color))
+    no-repeat;
+  background-size: 0% var(--ul_h);
+  background-position: 100% var(--ul_y);
+  position: relative;
+  text-decoration: none !important;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+@supports (-moz-appearance: none) {
+  .kuem-insights__pager-link {
+    --ul_y: 100%;
+  }
+}
+
+.kuem-insights__pager-current {
+  background-size: 100% var(--ul_h);
+  background-position: 0% var(--ul_y);
+  animation: none;
+}
+
+.kuem-insights__pager-link:hover {
+  animation: 0.3s ease-in-out forwards kuem-ul-appear;
+}
+
+.kuem-insights__pager-next {
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.kuem-insights__pager-link:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+
+.kuem-insights__pager-ellipsis {
+  font-family: var(--font-grotesk);
+  font-size: 14px;
+  color: #000;
+  line-height: 1;
+}
+
+@keyframes kuem-ul-appear {
+  0% {
+    background-size: 0% var(--ul_h);
+    background-position: 0% var(--ul_y);
+  }
+  to {
+    background-size: 100% var(--ul_h);
+    background-position: 0% var(--ul_y);
+  }
+}

@@ -290,7 +290,7 @@ export function FaqFanSection() {
     <section
       ref={sectionRef}
       id="faq"
-      className="relative z-20 bg-white"
+      className="relative z-20 bg-[#FCFCFA]"
       aria-label="자주 묻는 질문"
     >
       {/* Desktop: sticky title + grid; tall track drives stack→fan→row */}

@@ -8,19 +8,12 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useRef, useState } from "react";
+import { SITE_NAV } from "@/lib/site-nav";
 
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
-
-/** Kora tokens */
-const NAV_LINKS = [
-  { href: "#partners", label: "이로운 파트너스" },
-  { href: "#practice", label: "업무분야" },
-  { href: "#cases", label: "성공사례" },
-  { href: "#consult", label: "상담예약" },
-  { href: "#location", label: "오시는길" },
-] as const;
 
 /** Exact paths from kora.framer.media social icon masks (viewBox 0 0 40 40) */
 const SOCIAL_LINKS = [
@@ -188,11 +181,11 @@ export function SiteFooter() {
     restDelta: 0.0001,
   });
 
-  // BG Circle Expand — 600×600 center, grows behind card
+  // BG Circle Expand — 600×600 center, grows behind card (rises as CTA shrinks)
   const circleScale = useTransform(
     smoothProgress,
-    [0, 0.12, 0.3, 0.55, 1],
-    reduceMotion ? [14, 14, 14, 14, 14] : [0, 0.5, 2, 6, 14],
+    [0, 0.08, 0.22, 0.45, 1],
+    reduceMotion ? [14, 14, 14, 14, 14] : [0, 1.1, 3.2, 7, 14],
   );
 
   // Outer Container — Kora: scale(0.85) → 1 while scrolling the footer.
@@ -242,7 +235,7 @@ export function SiteFooter() {
               <div className="grid w-full grid-cols-1 items-start gap-x-[50px] gap-y-8 lg:grid-cols-2 lg:gap-y-12">
                 {/* Logo */}
                 <div className="lg:col-start-1 lg:row-start-1">
-                  <a href="#top" aria-label="홈" className="inline-flex w-fit">
+                  <Link href="/" aria-label="홈" className="inline-flex w-fit">
                     <Image
                       src="/images/eroun-logo.png"
                       alt="이로운 법률사무소"
@@ -251,12 +244,11 @@ export function SiteFooter() {
                       className="h-14 w-auto -translate-x-[calc(100%*132/842)] object-contain md:h-16"
                       style={{ width: "auto" }}
                     />
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Pitch + contact — spans logo + address rows on desktop */}
                 <div
-                  id="consult"
                   className="flex w-full flex-col gap-12 scroll-mt-28 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:gap-14"
                 >
                   <p
@@ -335,18 +327,18 @@ export function SiteFooter() {
                       className="mt-3 flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-[1.5] font-semibold tracking-[-0.025em] text-black md:text-[15px]"
                       style={{ fontFamily: FONT_WANTED }}
                     >
-                      <a
+                      <Link
                         href="/privacy"
                         className="transition-opacity hover:opacity-70"
                       >
                         개인정보처리방침
-                      </a>
-                      <a
+                      </Link>
+                      <Link
                         href="/terms"
                         className="transition-opacity hover:opacity-70"
                       >
                         이용약관
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -359,16 +351,16 @@ export function SiteFooter() {
                     Navigation
                   </p>
                   <ul className="mt-3 flex flex-col gap-0.5">
-                    {NAV_LINKS.map((link) => (
+                    {SITE_NAV.map((link) => (
                       <li key={link.href}>
-                        <a
+                        <Link
                           href={link.href}
                           className="group inline-flex items-center gap-2.5 rounded-full py-1.5 pr-4 pl-2.5 -ml-2.5 text-[20px] font-bold tracking-[-0.02em] text-[#242424] transition-colors duration-200 hover:bg-[#5DC39B] hover:text-[#F5F5E9] md:text-[22px]"
                           style={{ fontFamily: FONT_WANTED }}
                         >
                           <span className="size-1.5 shrink-0 rounded-full bg-[#242424] transition-colors duration-200 group-hover:bg-[#F5F5E9]" />
                           {link.label}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>

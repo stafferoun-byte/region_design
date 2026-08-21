@@ -16,7 +16,7 @@ const TEXT_DARK = "#292929";
 const TEXT_MUTED = "#616161";
 const BAR_GRAY = "#E6E6E6";
 const LABEL_ON_GREEN = "#FFFFFA";
-const SECTION_BG = "#FFFFFF";
+const SECTION_BG = "#FCFCFA";
 
 const AXIS_TICKS = [0, 2, 4, 6, 8, 10, 12, 14] as const;
 const WITH_WIDTH = "100%";
@@ -188,7 +188,7 @@ function ChartBar({
             {label}
           </span>
           <span
-            className="absolute top-1/2 right-3 shrink-0 -translate-y-1/2 text-[36px] leading-none font-bold tracking-[-0.06em] md:right-4 md:text-[44px] md:tracking-[-0.07em]"
+            className="absolute top-1/2 right-3 shrink-0 -translate-y-1/2 text-[30px] leading-none font-bold tracking-[-0.06em] md:right-4 md:text-[38px] md:tracking-[-0.07em]"
             style={{
               fontFamily: FONT_WANTED,
               color: labelColor,
@@ -225,7 +225,7 @@ export function StatsSection() {
   return (
     <section
       id="services"
-      className="relative w-full scroll-mt-[130px] bg-white"
+      className="relative w-full scroll-mt-[130px] bg-[#FCFCFA]"
       aria-label="Services"
       style={{ backgroundColor: SECTION_BG }}
     >

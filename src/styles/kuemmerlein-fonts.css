@@ -1,0 +1,33 @@
+/* Küemmerlein typefaces used on insights/column cards */
+@font-face {
+  font-family: "ABC Monument Grotesk";
+  src: url("/fonts/kuemmerlein/ABCMonumentGrotesk-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ABC Monument Grotesk";
+  src: url("/fonts/kuemmerlein/ABCMonumentGrotesk-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ABC Monument Grotesk Semi-Mono";
+  src: url("/fonts/kuemmerlein/ABCMonumentGroteskSemi-Mono-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Rhymes Display";
+  src: url("/fonts/kuemmerlein/Rhymes_Display_Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
