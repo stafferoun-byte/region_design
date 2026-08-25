@@ -231,8 +231,7 @@ function LawyerPopout() {
 }
 
 /** Same word blur reveal as Team / Wish section titles */
-const TITLE_LINE_1 = ["일상의", "회복을", "위한"] as const;
-const TITLE_LINE_2 = ["이로운", "파트너스의", "진심."] as const;
+const TITLE_LINE_2 = ["이로운", "성공사례를", "소개합니다."] as const;
 
 function CasesTitleReveal({
   show,
@@ -252,22 +251,15 @@ function CasesTitleReveal({
 
   const word: Variants = reduceMotion
     ? {
-        hidden: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
-        show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+        hidden: { opacity: 1, y: 0 },
+        show: { opacity: 1, y: 0 },
       }
     : {
-        hidden: {
-          opacity: 0.001,
-          y: 2,
-          scale: 0.9,
-          filter: "blur(5px)",
-        },
+        hidden: { opacity: 0, y: 8 },
         show: {
           opacity: 1,
           y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.7, ease: easeOut },
+          transition: { duration: 0.4, ease: easeOut },
         },
       };
 
@@ -276,7 +268,7 @@ function CasesTitleReveal({
       <span key={`${w}-${i}`}>
         <motion.span
           variants={word}
-          className="inline-block will-change-[opacity,transform,filter]"
+          className="inline-block will-change-[opacity,transform]"
         >
           {w}
         </motion.span>
@@ -291,9 +283,32 @@ function CasesTitleReveal({
       variants={container}
       initial="hidden"
       animate={show || reduceMotion ? "show" : "hidden"}
-      aria-label="일상의 회복을 위한 이로운 파트너스의 진심."
+      aria-label="진심이 결과가 되는 순간. 이로운 성공사례를 소개합니다."
     >
-      {renderLine(TITLE_LINE_1)}
+      <motion.span
+        variants={word}
+        className="inline-block will-change-[opacity,transform]"
+      >
+        진심이
+      </motion.span>{" "}
+      <motion.span
+        variants={word}
+        className="inline-block will-change-[opacity,transform]"
+      >
+        결과가
+      </motion.span>{" "}
+      <motion.span
+        variants={word}
+        className="inline-block will-change-[opacity,transform]"
+      >
+        되는
+      </motion.span>{" "}
+      <motion.span
+        variants={word}
+        className="inline-block will-change-[opacity,transform]"
+      >
+        순간.
+      </motion.span>
       <br />
       {renderLine(TITLE_LINE_2)}
     </motion.h3>

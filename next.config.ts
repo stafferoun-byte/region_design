@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Enables React/Next View Transitions — used for Kora-style page circle mask
+    viewTransition: true,
+  },
   async headers() {
     return [
       {

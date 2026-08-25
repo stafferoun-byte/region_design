@@ -22,15 +22,15 @@ export function LegalTermsIntroSection() {
           initial={
             reduceMotion
               ? false
-              : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+              : { opacity: 0, y: 14 }
           }
           animate={
             inView || reduceMotion
-              ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-              : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+              ? { opacity: 1, y: 0 }
+              : { opacity: 0, y: 14 }
           }
           transition={{ duration: reduceMotion ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform,filter]"
+          className="text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform]"
         >
           변호사에게는 익숙한 용어지만,
           <br />

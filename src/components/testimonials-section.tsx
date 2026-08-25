@@ -300,12 +300,12 @@ export function TestimonialsSection() {
             initial={
               reduceMotion
                 ? false
-                : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                : { opacity: 0, y: 14 }
             }
             animate={
               show
-                ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 14 }
             }
             transition={appear}
           >

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
+import { KoraPageEffects } from "@/components/kora-page-effects";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
@@ -67,7 +68,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-[#FCFCFA]" suppressHydrationWarning>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <KoraPageEffects>{children}</KoraPageEffects>
+        </SmoothScroll>
       </body>
     </html>
   );

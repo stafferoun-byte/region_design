@@ -222,17 +222,17 @@ export function InsightsSection() {
           <div className="flex flex-col gap-5 md:gap-[30px]">
             <motion.h2
               id="insights-heading"
-              className="text-[clamp(36px,5vw,60px)] leading-[1.05] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform,filter]"
+              className="text-[clamp(36px,5vw,60px)] leading-[1.05] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform]"
               style={{ color: INK }}
               initial={
                 reduceMotion
                   ? false
-                  : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                  : { opacity: 0, y: 14 }
               }
               animate={
                 inView || reduceMotion
-                  ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                  : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 14 }
               }
               transition={{
                 duration: reduceMotion ? 0 : 0.85,

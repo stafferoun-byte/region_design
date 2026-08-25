@@ -7,6 +7,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { useRef, useState } from "react";
+import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 /**
  * FAQ — layout/tokens from Kora FAQ
@@ -24,9 +25,21 @@ const MUTED = "#5C5C5C";
 /** Match contact island width (Kora floating cream panels) */
 const PANEL_MAX = "560px";
 
+const FAQ_TITLE_LINE_1 = [
+  { text: "상담", color: "#000000" },
+  { text: "전", color: "#000000" },
+] as const;
+
+const FAQ_TITLE_LINE_2 = [
+  { text: "많이", color: "#000000" },
+  { text: "문의하시는", color: "#000000" },
+  { text: "질문을", color: "#000000" },
+  { text: "정리했습니다.", color: "#000000" },
+] as const;
+
 type CategoryId = "general" | "pricing" | "process" | "results";
 
-type FaqItem = {
+export type FaqItem = {
   id: string;
   question: string;
   answer: string;
@@ -169,27 +182,21 @@ const faqListVariants = {
 const faqItemVariants = {
   hidden: {
     opacity: 0,
-    y: 12,
-    scale: 0.96,
-    filter: "blur(4px)",
+    y: 10,
   },
   show: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.42,
+      duration: 0.36,
       ease: easeOut,
     },
   },
   exit: {
     opacity: 0,
-    y: -6,
-    scale: 0.98,
-    filter: "blur(3px)",
+    y: -4,
     transition: {
-      duration: 0.22,
+      duration: 0.18,
       ease: easeOut,
     },
   },
@@ -295,7 +302,19 @@ function FaqRow({
   );
 }
 
-export function FaqSection() {
+export function FaqSection({
+  items: customItems,
+  categoryLabel,
+  categories: customCategories,
+  faqByCategory: customFaqByCategory,
+}: {
+  items?: FaqItem[];
+  /** When set with custom items, shows a single mint pill instead of tabs */
+  categoryLabel?: string;
+  /** Custom tab labels (id + label). Requires faqByCategory. */
+  categories?: { id: string; label: string }[];
+  faqByCategory?: Record<string, FaqItem[]>;
+} = {}) {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -306,11 +325,37 @@ export function FaqSection() {
     amount: 0.35,
     margin: "0px 0px -8% 0px",
   });
-  const [category, setCategory] = useState<CategoryId>("general");
-  const [openId, setOpenId] = useState<string>("g1");
+
+  const useCustomTabs = Boolean(
+    customCategories?.length && customFaqByCategory,
+  );
+  const initialCustomId = customCategories?.[0]?.id ?? "general";
+
+  const [category, setCategory] = useState<string>(
+    useCustomTabs ? initialCustomId : "general",
+  );
+  const [openId, setOpenId] = useState<string>(() => {
+    if (customItems?.[0]?.id) return customItems[0].id;
+    if (useCustomTabs) {
+      return customFaqByCategory![initialCustomId]?.[0]?.id ?? "";
+    }
+    return "g1";
+  });
   const [copied, setCopied] = useState(false);
 
-  const items = FAQ_BY_CATEGORY[category];
+  const items = customItems
+    ? customItems
+    : useCustomTabs
+      ? (customFaqByCategory![category] ?? [])
+      : FAQ_BY_CATEGORY[category as CategoryId];
+
+  const showDefaultCategories = !customItems && !useCustomTabs;
+  const showCustomCategories = useCustomTabs && !customItems;
+  const showSinglePill = Boolean(customItems && categoryLabel);
+  const tabCategories = showCustomCategories
+    ? customCategories!
+    : CATEGORIES;
+  const listKey = customItems ? "custom" : category;
   const phone = "1800-9730";
   const listRevealed = Boolean(reduceMotion || listInView);
 
@@ -333,28 +378,14 @@ export function FaqSection() {
       aria-labelledby="faq-heading"
     >
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-10 md:gap-14 xl:gap-16">
-        <motion.h2
+        <SectionTitleReveal
           id="faq-heading"
-          className="mx-auto max-w-[16em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform,filter]"
-          initial={
-            reduceMotion
-              ? false
-              : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
-          }
-          animate={
-            inView || reduceMotion
-              ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-              : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
-          }
-          transition={{
-            duration: reduceMotion ? 0 : 0.85,
-            ease: easeOut,
-          }}
-        >
-          상담 전
-          <br />
-          많이 문의하시는 질문을 정리했습니다.
-        </motion.h2>
+          lines={[FAQ_TITLE_LINE_1, FAQ_TITLE_LINE_2]}
+          inView={inView}
+          reduceMotion={reduceMotion}
+          className="mx-auto max-w-[16em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
+          style={{ fontFamily: FONT }}
+        />
 
         <div className="flex w-full flex-col items-center gap-3 md:gap-4">
           {/* Kora cream panel — same width as contact island, ~10px inset */}
@@ -362,49 +393,69 @@ export function FaqSection() {
             className="flex w-full flex-col items-center overflow-hidden rounded-[40px] p-[10px]"
             style={{ backgroundColor: CREAM, maxWidth: PANEL_MAX }}
             initial={
-              reduceMotion ? false : { opacity: 0.001, y: 12, scale: 0.98 }
+              reduceMotion ? false : { opacity: 0, y: 14 }
             }
             animate={
               inView || reduceMotion
-                ? { opacity: 1, y: 0, scale: 1 }
-                : { opacity: 0.001, y: 12, scale: 0.98 }
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 14 }
             }
             transition={{
-              duration: reduceMotion ? 0 : 0.7,
-              delay: reduceMotion ? 0 : 0.06,
+              duration: reduceMotion ? 0 : 0.5,
+              delay: reduceMotion ? 0 : 0.04,
               ease: easeOut,
             }}
           >
             <div className="flex w-full flex-col items-center gap-[10px]">
-              <div
-                className="flex flex-wrap items-center justify-center gap-[5px] pt-3 pb-1"
-                role="tablist"
-                aria-label="FAQ 카테고리"
-              >
-                {CATEGORIES.map((cat) => {
-                  const active = cat.id === category;
-                  return (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={active}
-                      onClick={() => {
-                        setCategory(cat.id);
-                        setOpenId(FAQ_BY_CATEGORY[cat.id][0]?.id ?? "");
-                      }}
-                      className="cursor-pointer rounded-full px-4 py-2 text-[15px] font-semibold tracking-[-0.02em] transition-colors duration-250 md:px-5 md:text-[16px]"
-                      style={{
-                        backgroundColor: active ? ACCENT : "transparent",
-                        color: active ? "#FFFFFA" : INK,
-                        fontFamily: FONT,
-                      }}
-                    >
-                      {cat.label}
-                    </button>
-                  );
-                })}
-              </div>
+              {showDefaultCategories || showCustomCategories ? (
+                <div
+                  className="flex flex-wrap items-center justify-center gap-[5px] pt-3 pb-1"
+                  role="tablist"
+                  aria-label="FAQ 카테고리"
+                >
+                  {tabCategories.map((cat) => {
+                    const active = cat.id === category;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        onClick={() => {
+                          setCategory(cat.id);
+                          const nextItems = showCustomCategories
+                            ? customFaqByCategory![cat.id]
+                            : FAQ_BY_CATEGORY[cat.id as CategoryId];
+                          setOpenId(nextItems?.[0]?.id ?? "");
+                        }}
+                        className="cursor-pointer rounded-full px-4 py-2 text-[15px] font-semibold tracking-[-0.02em] transition-colors duration-250 md:px-5 md:text-[16px]"
+                        style={{
+                          backgroundColor: active ? ACCENT : "transparent",
+                          color: active ? "#FFFFFA" : INK,
+                          fontFamily: FONT,
+                        }}
+                      >
+                        {cat.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : showSinglePill ? (
+                <div className="flex items-center justify-center pt-3 pb-1">
+                  <span
+                    className="rounded-full px-4 py-2 text-[15px] font-semibold tracking-[-0.02em] md:px-5 md:text-[16px]"
+                    style={{
+                      backgroundColor: ACCENT,
+                      color: "#FFFFFA",
+                      fontFamily: FONT,
+                    }}
+                  >
+                    {categoryLabel}
+                  </span>
+                </div>
+              ) : (
+                <div className="h-3" aria-hidden />
+              )}
 
               <div
                 ref={listRef}
@@ -429,7 +480,7 @@ export function FaqSection() {
                 ) : (
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key={category}
+                      key={listKey}
                       className="flex flex-col gap-[10px]"
                       variants={reduceMotion ? undefined : faqListVariants}
                       initial={reduceMotion ? false : "hidden"}
@@ -467,16 +518,16 @@ export function FaqSection() {
             className="flex w-full flex-col items-center gap-4 rounded-[40px] px-5 py-5 md:flex-row md:justify-start md:gap-8 md:px-6 md:py-6 md:pl-6 md:pr-8"
             style={{ backgroundColor: CREAM, maxWidth: PANEL_MAX }}
             initial={
-              reduceMotion ? false : { opacity: 0.001, y: 16, scale: 0.98 }
+              reduceMotion ? false : { opacity: 0, y: 14 }
             }
             animate={
               inView || reduceMotion
-                ? { opacity: 1, y: 0, scale: 1 }
-                : { opacity: 0.001, y: 16, scale: 0.98 }
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 14 }
             }
             transition={{
-              duration: reduceMotion ? 0 : 0.7,
-              delay: reduceMotion ? 0 : 0.14,
+              duration: reduceMotion ? 0 : 0.5,
+              delay: reduceMotion ? 0 : 0.08,
               ease: easeOut,
             }}
           >
