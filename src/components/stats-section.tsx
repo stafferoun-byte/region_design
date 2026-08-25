@@ -32,11 +32,11 @@ const BODY_SEGMENTS: Segment[] = [
     tone: "muted",
   },
   {
-    text: "의뢰인이 가족이라면,\n우리는 어떤 조언",
+    text: "의뢰인이 가족이라면,\n우리는 어떻게 권리와 평온한 일상",
     tone: "green",
   },
   {
-    text: "을 건넸을까.\n\n이로운 파트너스는 언제나\n이 질문에서 변론을 시작합니다.",
+    text: "을 지켜낼까.\n\n이로운 파트너스의 변론은 ㅡ\n언제나 이 질문에서 시작됩니다.",
     tone: "muted",
   },
 ];
@@ -75,22 +75,15 @@ function CharReveal({
 
   const child: Variants = reduceMotion
     ? {
-        hidden: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
-        show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+        hidden: { opacity: 1, y: 0 },
+        show: { opacity: 1, y: 0 },
       }
     : {
-        hidden: {
-          opacity: 0.001,
-          y: 2,
-          scale: 0.9,
-          filter: "blur(5px)",
-        },
+        hidden: { opacity: 0, y: 8 },
         show: {
           opacity: 1,
           y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.7, ease: easeOut },
+          transition: { duration: 0.4, ease: easeOut },
         },
       };
 
@@ -112,7 +105,7 @@ function CharReveal({
           <motion.span
             key={`${c.key}-${idx}`}
             variants={child}
-            className="inline-block will-change-[opacity,transform,filter]"
+            className="inline-block will-change-[opacity,transform]"
             style={{
               color: c.tone === "green" ? EROUN_GREEN : TEXT_MUTED,
             }}
@@ -233,30 +226,20 @@ export function StatsSection() {
         <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-[30px] md:gap-[50px] xl:gap-20">
           <div ref={headerRef}>
             <motion.h2
-              className="text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform,filter]"
+              className="text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform]"
               style={{ fontFamily: FONT_WANTED }}
               initial={
                 reduceMotion
                   ? false
-                  : {
-                      opacity: 0.001,
-                      y: 2,
-                      scale: 0.9,
-                      filter: "blur(5px)",
-                    }
+                  : { opacity: 0, y: 14 }
               }
               animate={
                 headerInView || reduceMotion
-                  ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                  : {
-                      opacity: 0.001,
-                      y: 2,
-                      scale: 0.9,
-                      filter: "blur(5px)",
-                    }
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 14 }
               }
               transition={{
-                duration: reduceMotion ? 0 : 0.85,
+                duration: reduceMotion ? 0 : 0.55,
                 ease: easeOut,
               }}
             >

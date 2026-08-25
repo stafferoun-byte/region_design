@@ -149,11 +149,11 @@ export function InsightsListing() {
   const appear = {
     initial: reduceMotion
       ? false
-      : ({ opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" } as const),
+      : ({ opacity: 0, y: 14 } as const),
     animate:
       headerInView || reduceMotion
-        ? ({ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } as const)
-        : ({ opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" } as const),
+        ? ({ opacity: 1, y: 0 } as const)
+        : ({ opacity: 0, y: 14 } as const),
   };
 
   return (
@@ -161,7 +161,7 @@ export function InsightsListing() {
       <div className="kuem-insights__pad">
         <header ref={headerRef}>
           <motion.h1
-            className="kuem-insights__title will-change-[opacity,transform,filter]"
+            className="kuem-insights__title will-change-[opacity,transform]"
             initial={appear.initial}
             animate={appear.animate}
             transition={{
@@ -172,7 +172,7 @@ export function InsightsListing() {
             이로운 인사이트.
           </motion.h1>
           <motion.p
-            className="kuem-insights__lead will-change-[opacity,transform,filter]"
+            className="kuem-insights__lead will-change-[opacity,transform]"
             initial={appear.initial}
             animate={appear.animate}
             transition={{

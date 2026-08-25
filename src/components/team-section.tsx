@@ -72,18 +72,78 @@ const TEAM = [
   },
 ] as const;
 
+export type TeamItem = {
+  id: string;
+  concern: string;
+  name: string;
+  role: string;
+  bio: string;
+  image?: string;
+};
+
+/** Practice-page only — inheritance concern rows (does not affect main) */
+export const PRACTICE_TEAM: readonly TeamItem[] = [
+  {
+    id: "inheritance-assets",
+    concern: "부모님 재산이 얼마인지\n다른 형제가 알려주지 않아요.",
+    name: "상속재산 조회 · 재산목록 확정",
+    role: "유류분반환 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 특별수익",
+    bio: "상속재산 규모와 내역을 파악하는 것부터 함께합니다. 알려주지 않는 재산도 절차에 따라 확인할 수 있습니다.",
+    image: "/images/practice/inheritance.png",
+  },
+  {
+    id: "inheritance-special",
+    concern: "형제에게 생전에 넘어간 부동산과 현금도\n상속재산에 포함할 수 있나요?",
+    name: "특별수익 · 생전증여 반영",
+    role: "유류분반환 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 특별수익",
+    bio: "생전 증여·이전된 재산도 요건에 따라 상속재산·유류분 산정에 포함될 수 있습니다. 사안별로 기준을 정리해 드립니다.",
+    image: "/images/practice/realestate.png",
+  },
+  {
+    id: "inheritance-contribution",
+    concern: "오랫동안 부모님을 모신 시간은\n상속분에 반영될 수 있을까요?",
+    name: "기여분청구 · 부양·간호 반영",
+    role: "유류분반환 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 특별수익",
+    bio: "장기간 부양·간호 등은 기여분으로 인정될 여지가 있습니다. 입증 자료와 청구 기준을 함께 맞춰 드립니다.",
+    image: "/images/practice/family.png",
+  },
+  {
+    id: "inheritance-forced-share",
+    concern: "유언장에 제 몫이 전혀 없다면\n그대로 받아들여야 하나요?",
+    name: "유류분반환청구 · 유언 대응",
+    role: "유류분반환 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 특별수익",
+    bio: "유언으로 몫이 없더라도 유류분 청구가 가능한 경우가 많습니다. 기한과 산정 기준을 먼저 확인해 드립니다.",
+    image: "/images/practice/civil.png",
+  },
+  {
+    id: "inheritance-debt",
+    concern: "돌아가신 뒤에야 알게 된 빚을\n제가 갚아야 하나요?",
+    name: "한정승인 · 상속포기",
+    role: "유류분반환 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 특별수익",
+    bio: "무조건 갚는 것은 아닙니다. 한정승인·상속포기 등 선택지로 책임을 제한할 수 있으니, 신고 기한 안에 대응이 중요합니다.",
+    image: "/images/practice/criminal.png",
+  },
+] as const;
+
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-/** Title: word blur reveal — two lines */
+/** Title: word blur reveal — two lines (main default) */
 const TITLE_LINE_1 = ["지금,", "어떤", "도움이"] as const;
 const TITLE_LINE_2 = ["필요하신가요?"] as const;
+
+const PRACTICE_TITLE_LINE_1 = ["지금,", "어떤", "문제를"] as const;
+const PRACTICE_TITLE_LINE_2 = ["마주하고", "계신가요?"] as const;
 
 function TitleReveal({
   inView,
   reduceMotion,
+  line1,
+  line2,
 }: {
   inView: boolean;
   reduceMotion: boolean | null;
+  line1: readonly string[];
+  line2: readonly string[];
 }) {
   const container: Variants = {
     hidden: {},
@@ -96,23 +156,15 @@ function TitleReveal({
 
   const word: Variants = reduceMotion
     ? {
-        hidden: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
-        show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+        hidden: { opacity: 1, y: 0 },
+        show: { opacity: 1, y: 0 },
       }
     : {
-        /* Exact Kora appear: opacity 0.001, y:2, scale:0.9, blur(5px) */
-        hidden: {
-          opacity: 0.001,
-          y: 2,
-          scale: 0.9,
-          filter: "blur(5px)",
-        },
+        hidden: { opacity: 0, y: 8 },
         show: {
           opacity: 1,
           y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.7, ease: easeOut },
+          transition: { duration: 0.4, ease: easeOut },
         },
       };
 
@@ -126,6 +178,8 @@ function TitleReveal({
       </span>
     ));
 
+  const label = `${line1.join(" ")} ${line2.join(" ")}`;
+
   return (
     <motion.h2
       className="text-[clamp(42px,5.2vw,68px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep"
@@ -133,11 +187,11 @@ function TitleReveal({
       variants={container}
       initial="hidden"
       animate={inView || reduceMotion ? "show" : "hidden"}
-      aria-label="지금, 어떤 도움이 필요하신가요?"
+      aria-label={label}
     >
-      {renderLine(TITLE_LINE_1, "#FFFFFF")}
+      {renderLine(line1, "#FFFFFF")}
       <br />
-      {renderLine(TITLE_LINE_2, "#CDEDE0")}
+      {renderLine(line2, "#CDEDE0")}
     </motion.h2>
   );
 }
@@ -147,11 +201,14 @@ function TeamRow({
   open,
   onToggle,
   reduceMotion,
+  rowMode,
 }: {
-  member: (typeof TEAM)[number];
+  member: TeamItem;
   open: boolean;
   onToggle: () => void;
   reduceMotion: boolean | null;
+  /** swap = main (concern↔name + role) · concern-lines = practice 2-line Q */
+  rowMode: "swap" | "concern-lines";
 }) {
   const [hovered, setHovered] = useState(false);
   const active = open || hovered;
@@ -175,13 +232,12 @@ function TeamRow({
     <motion.div
       variants={{
         hidden: reduceMotion
-          ? { opacity: 1, y: 0, scale: 1 }
-          : { opacity: 0, y: 10, scale: 0.9 },
+          ? { opacity: 1, y: 0 }
+          : { opacity: 0, y: 12 },
         show: {
           opacity: 1,
           y: 0,
-          scale: 1,
-          transition: { duration: 0.65, ease: easeOut },
+          transition: { duration: 0.45, ease: easeOut },
         },
       }}
       className="relative"
@@ -245,7 +301,7 @@ function TeamRow({
           style={{ backgroundColor: CREAM }}
           aria-hidden
         >
-          {"image" in member && member.image ? (
+          {member.image ? (
             <>
               <Image
                 src={member.image}
@@ -275,47 +331,77 @@ function TeamRow({
           ) : null}
         </span>
 
-        {/* Title — always 2 lines; concern↔name swaps on hover, fields stay */}
-        <span className="relative z-[1] flex min-h-[58px] min-w-0 flex-1 items-center gap-5 md:min-h-[64px]">
-          <span className="flex min-w-0 flex-1 flex-col gap-2 md:gap-3">
-            <AnimatePresence mode="wait" initial={false}>
-              {active ? (
-                <motion.span
-                  key="detail-title"
-                  className="block text-[20px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
-                  style={{ fontFamily: FONT, color: DARK }}
-                  initial={reduceMotion ? false : { opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduceMotion ? undefined : { opacity: 0, y: -3 }}
-                  transition={{ duration: 0.2, ease: easeOut }}
+        {rowMode === "concern-lines" ? (
+          <span className="relative z-[1] flex min-h-[58px] min-w-0 flex-1 items-center gap-5 md:min-h-[64px]">
+            <span className="flex min-w-0 flex-1 flex-col gap-1 md:gap-1.5">
+              {member.concern.split("\n").map((line, i) => (
+                <span
+                  key={`${member.id}-${i}`}
+                  className={
+                    i === 0
+                      ? "block text-[19px] leading-[1.35] font-bold tracking-[-0.03em] break-keep transition-colors duration-200 md:text-[21px] xl:text-[22px]"
+                      : "block text-[18px] leading-[1.4] font-semibold tracking-[-0.045em] break-keep transition-colors duration-200 md:text-[20px] xl:text-[21px]"
+                  }
+                  style={{
+                    fontFamily:
+                      i === 0
+                        ? FONT
+                        : 'var(--font-practice-serif), "Noto Serif KR", "Batang", Georgia, serif',
+                    color: active
+                      ? DARK
+                      : i === 0
+                        ? CREAM
+                        : "rgba(255,255,255,0.85)",
+                  }}
                 >
-                  {member.name}
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="concern-title"
-                  className="block text-[20px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
-                  style={{ fontFamily: FONT, color: CREAM }}
-                  initial={reduceMotion ? false : { opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduceMotion ? undefined : { opacity: 0, y: -3 }}
-                  transition={{ duration: 0.2, ease: easeOut }}
-                >
-                  {member.concern}
-                </motion.span>
-              )}
-            </AnimatePresence>
-            <span
-              className="block truncate whitespace-nowrap text-[16px] leading-[1.5] font-semibold tracking-[-0.03em] transition-colors duration-200 md:text-[17px] xl:text-[18px]"
-              style={{
-                fontFamily: FONT,
-                color: active ? "#616161" : "rgba(255,255,255,0.55)",
-              }}
-            >
-              {member.role}
+                  {line}
+                </span>
+              ))}
             </span>
           </span>
-        </span>
+        ) : (
+          /* Title — always 2 lines; concern↔name swaps on hover, fields stay */
+          <span className="relative z-[1] flex min-h-[58px] min-w-0 flex-1 items-center gap-5 md:min-h-[64px]">
+            <span className="flex min-w-0 flex-1 flex-col gap-2 md:gap-3">
+              <AnimatePresence mode="wait" initial={false}>
+                {active ? (
+                  <motion.span
+                    key="detail-title"
+                    className="block text-[20px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
+                    style={{ fontFamily: FONT, color: DARK }}
+                    initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduceMotion ? undefined : { opacity: 0, y: -3 }}
+                    transition={{ duration: 0.2, ease: easeOut }}
+                  >
+                    {member.name}
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="concern-title"
+                    className="block text-[20px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
+                    style={{ fontFamily: FONT, color: CREAM }}
+                    initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduceMotion ? undefined : { opacity: 0, y: -3 }}
+                    transition={{ duration: 0.2, ease: easeOut }}
+                  >
+                    {member.concern}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              <span
+                className="block truncate whitespace-nowrap text-[16px] leading-[1.5] font-semibold tracking-[-0.03em] transition-colors duration-200 md:text-[17px] xl:text-[18px]"
+                style={{
+                  fontFamily: FONT,
+                  color: active ? "#616161" : "rgba(255,255,255,0.55)",
+                }}
+              >
+                {member.role}
+              </span>
+            </span>
+          </span>
+        )}
 
         {/*
           Plus — Kora Team Member:
@@ -533,22 +619,15 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
 
   const word: Variants = reduceMotion
     ? {
-        hidden: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
-        show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+        hidden: { opacity: 1, y: 0 },
+        show: { opacity: 1, y: 0 },
       }
     : {
-        hidden: {
-          opacity: 0.001,
-          y: 2,
-          scale: 0.9,
-          filter: "blur(5px)",
-        },
+        hidden: { opacity: 0, y: 8 },
         show: {
           opacity: 1,
           y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.7, ease: easeOut },
+          transition: { duration: 0.4, ease: easeOut },
         },
       };
 
@@ -568,18 +647,18 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
         <motion.div
           className="relative aspect-[3/2] w-full overflow-hidden rounded-[30px]"
           style={{ transformPerspective: 1200 }}
-          initial={reduceMotion ? false : { scale: 0.9, rotate: 3, opacity: 0 }}
+          initial={reduceMotion ? false : { scale: 0.97, opacity: 0, y: 16 }}
           whileInView={
             reduceMotion
               ? undefined
-              : { scale: 1, rotate: 0, opacity: 1 }
+              : { scale: 1, opacity: 1, y: 0 }
           }
           viewport={{ once: true, amount: 0.35 }}
           animate={
-            reduceMotion ? { scale: 1, rotate: 0, opacity: 1 } : undefined
+            reduceMotion ? { scale: 1, opacity: 1, y: 0 } : undefined
           }
           transition={{
-            duration: reduceMotion ? 0 : 1,
+            duration: reduceMotion ? 0 : 0.55,
             ease: easeOut,
           }}
         >
@@ -620,26 +699,16 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
             initial={
               reduceMotion
                 ? false
-                : {
-                    opacity: 0.001,
-                    y: 2,
-                    scale: 0.9,
-                    filter: "blur(5px)",
-                  }
+                : { opacity: 0, y: 12 }
             }
             animate={
               show
-                ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                : {
-                    opacity: 0.001,
-                    y: 2,
-                    scale: 0.9,
-                    filter: "blur(5px)",
-                  }
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 12 }
             }
             transition={{
-              duration: reduceMotion ? 0 : 0.7,
-              delay: reduceMotion ? 0 : 0.28,
+              duration: reduceMotion ? 0 : 0.45,
+              delay: reduceMotion ? 0 : 0.2,
               ease: easeOut,
             }}
           >
@@ -651,26 +720,16 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
           initial={
             reduceMotion
               ? false
-              : {
-                  opacity: 0.001,
-                  y: 2,
-                  scale: 0.9,
-                  filter: "blur(5px)",
-                }
+              : { opacity: 0, y: 12 }
           }
           animate={
             show
-              ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-              : {
-                  opacity: 0.001,
-                  y: 2,
-                  scale: 0.9,
-                  filter: "blur(5px)",
-                }
+              ? { opacity: 1, y: 0 }
+              : { opacity: 0, y: 12 }
           }
           transition={{
-            duration: reduceMotion ? 0 : 0.7,
-            delay: reduceMotion ? 0 : 0.42,
+            duration: reduceMotion ? 0 : 0.45,
+            delay: reduceMotion ? 0 : 0.28,
             ease: easeOut,
           }}
         >
@@ -681,18 +740,32 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
   );
 }
 
-export function TeamSection() {
+export function TeamSection({
+  items,
+  variant = "main",
+}: {
+  items?: readonly TeamItem[];
+  /** main = home practice areas · practice = inheritance concern rows */
+  variant?: "main" | "practice";
+} = {}) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.2 });
   const reduceMotion = useReducedMotion();
   const [openId, setOpenId] = useState<string | null>(null);
+
+  const list = items ?? (variant === "practice" ? PRACTICE_TEAM : TEAM);
+  const rowMode = variant === "practice" ? "concern-lines" : "swap";
+  const titleLine1 =
+    variant === "practice" ? PRACTICE_TITLE_LINE_1 : TITLE_LINE_1;
+  const titleLine2 =
+    variant === "practice" ? PRACTICE_TITLE_LINE_2 : TITLE_LINE_2;
 
   const listVariants: Variants = {
     hidden: {},
     show: {
       transition: reduceMotion
         ? { duration: 0 }
-        : { staggerChildren: 0.07, delayChildren: 0.15 },
+        : { staggerChildren: 0.05, delayChildren: 0.08 },
     },
   };
 
@@ -711,17 +784,22 @@ export function TeamSection() {
         <motion.div
           className="flex w-full flex-col gap-[60px] overflow-hidden rounded-[40px] pt-[100px] pb-[60px] md:gap-[90px] md:pt-[140px] md:pb-[90px] xl:gap-[120px] xl:pt-[180px] xl:pb-[120px]"
           style={{ backgroundColor: GREEN }}
-          initial={reduceMotion ? false : { y: 72, opacity: 0.92 }}
+          initial={reduceMotion ? false : { y: 40, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{
-            duration: reduceMotion ? 0 : 0.85,
+            duration: reduceMotion ? 0 : 0.55,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
           {/* Inside — same max-w as StatsSection */}
           <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-[70px] md:gap-[90px] xl:gap-[110px]">
-            <TitleReveal inView={!!inView} reduceMotion={reduceMotion} />
+            <TitleReveal
+              inView={!!inView}
+              reduceMotion={reduceMotion}
+              line1={titleLine1}
+              line2={titleLine2}
+            />
 
             <motion.div
               className="grid w-full grid-cols-1 gap-x-[30px] gap-y-[15px] md:grid-cols-2"
@@ -729,7 +807,7 @@ export function TeamSection() {
               initial="hidden"
               animate={inView || reduceMotion ? "show" : "hidden"}
             >
-              {TEAM.map((member) => (
+              {list.map((member) => (
                 <TeamRow
                   key={member.id}
                   member={member}
@@ -738,6 +816,7 @@ export function TeamSection() {
                     setOpenId((cur) => (cur === member.id ? null : member.id))
                   }
                   reduceMotion={reduceMotion}
+                  rowMode={rowMode}
                 />
               ))}
             </motion.div>

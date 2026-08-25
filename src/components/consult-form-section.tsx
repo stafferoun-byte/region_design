@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 /**
  * Consultation CTA + form — layout/tokens from Kora CTA
@@ -46,6 +47,16 @@ const FEATURES = [
   "사건 초기 대응 로드맵",
   "쟁점·위험 요소 진단",
   "다음 단계와 일정 안내",
+] as const;
+
+const CONSULT_TITLE_LINE_1 = [
+  { text: "지금,", color: "#FFFFFF" },
+  { text: "이로운과", color: "#FFFFFF" },
+] as const;
+
+const CONSULT_TITLE_LINE_2 = [
+  { text: "상담을", color: "#FFFFFF" },
+  { text: "시작하세요.", color: "#FFFFFF" },
 ] as const;
 
 const PRACTICE_AREAS = [
@@ -182,15 +193,15 @@ export function ConsultFormSection() {
     offset: ["end end", "end start"],
   });
   const smoothExit = useSpring(scrollYProgress, {
-    stiffness: reduceMotion ? 500 : 55,
-    damping: reduceMotion ? 40 : 26,
-    mass: 0.55,
-    restDelta: 0.0001,
+    stiffness: reduceMotion ? 500 : 120,
+    damping: reduceMotion ? 40 : 28,
+    mass: 0.4,
+    restDelta: 0.001,
   });
   const boxScale = useTransform(
     smoothExit,
     [0, 0.25, 0.55, 0.85, 1],
-    reduceMotion ? [1, 1, 1, 1, 1] : [1, 0.97, 0.92, 0.88, 0.85],
+    reduceMotion ? [1, 1, 1, 1, 1] : [1, 0.985, 0.96, 0.94, 0.92],
   );
 
   const [name, setName] = useState("");
@@ -246,34 +257,14 @@ export function ConsultFormSection() {
             {/* Left */}
             <div className="flex min-w-0 flex-1 flex-col justify-between gap-10 lg:gap-12">
               <div className="flex flex-col gap-8 md:gap-10">
-                <motion.h2
+                <SectionTitleReveal
                   id="consult-heading"
-                  className="max-w-[14em] text-[clamp(32px,4.5vw,56px)] leading-[1.12] font-bold tracking-[-0.045em] break-keep text-white will-change-[opacity,transform,filter]"
+                  lines={[CONSULT_TITLE_LINE_1, CONSULT_TITLE_LINE_2]}
+                  inView={inView}
+                  reduceMotion={reduceMotion}
+                  className="max-w-[14em] text-[clamp(32px,4.5vw,56px)] leading-[1.12] font-bold tracking-[-0.045em] break-keep will-change-[opacity,transform]"
                   style={{ fontFamily: FONT }}
-                  initial={
-                    reduceMotion
-                      ? false
-                      : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
-                  }
-                  animate={
-                    inView || reduceMotion
-                      ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                      : {
-                          opacity: 0.001,
-                          y: 2,
-                          scale: 0.9,
-                          filter: "blur(5px)",
-                        }
-                  }
-                  transition={{
-                    duration: reduceMotion ? 0 : 0.85,
-                    ease: easeOut,
-                  }}
-                >
-                  지금, 이로운과
-                  <br />
-                  상담을 시작하세요.
-                </motion.h2>
+                />
 
                 <ul className="flex flex-col gap-3.5">
                   {FEATURES.map((f, i) => (
@@ -376,17 +367,17 @@ export function ConsultFormSection() {
               initial={
                 reduceMotion
                   ? false
-                  : { opacity: 0, y: 20, scale: 0.9 }
+                  : { opacity: 0, y: 16 }
               }
               animate={
                 inView || reduceMotion
-                  ? { opacity: 1, y: 0, scale: 1 }
-                  : { opacity: 0, y: 20, scale: 0.9 }
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 16 }
               }
               transition={{
-                duration: reduceMotion ? 0 : 0.8,
+                duration: reduceMotion ? 0 : 0.55,
                 ease: easeOut,
-                delay: reduceMotion ? 0 : 0.1,
+                delay: reduceMotion ? 0 : 0.06,
               }}
             >
               <div className="flex flex-col gap-5 px-5 pt-6 md:gap-7 md:px-7 md:pt-9">

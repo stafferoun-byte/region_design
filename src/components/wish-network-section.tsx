@@ -341,22 +341,15 @@ function WishTitleReveal({
 
   const word: Variants = reduceMotion
     ? {
-        hidden: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
-        show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+        hidden: { opacity: 1, y: 0 },
+        show: { opacity: 1, y: 0 },
       }
     : {
-        hidden: {
-          opacity: 0.001,
-          y: 2,
-          scale: 0.9,
-          filter: "blur(5px)",
-        },
+        hidden: { opacity: 0, y: 8 },
         show: {
           opacity: 1,
           y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.7, ease: easeOut },
+          transition: { duration: 0.4, ease: easeOut },
         },
       };
 

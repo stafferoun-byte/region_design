@@ -8,16 +8,21 @@ import type { ReactNode } from "react";
 export function SitePageFrame({
   children,
   tone = "cream",
+  showNav = true,
 }: {
   children: ReactNode;
   /** cream = default site · paper = Küemmerlein soft-grey0 */
   tone?: "cream" | "paper";
+  /** false when a page embeds its own hero nav (e.g. practice) */
+  showNav?: boolean;
 }) {
   const bg = tone === "paper" ? "#F6F6F4" : "#FCFCFA";
 
   return (
     <div className="relative min-h-svh text-[#161616]" style={{ backgroundColor: bg }}>
-      <HeroNav variant="sticky" stickyTone={tone === "paper" ? "paper" : "cream"} />
+      {showNav ? (
+        <HeroNav variant="sticky" stickyTone={tone === "paper" ? "paper" : "cream"} />
+      ) : null}
       <main className="relative z-10">{children}</main>
       <div className="relative z-20 overflow-x-clip" style={{ backgroundColor: bg }}>
         <SiteFooter />

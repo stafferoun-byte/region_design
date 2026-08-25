@@ -4,18 +4,18 @@ import Lenis from "lenis";
 import { useEffect } from "react";
 import "lenis/dist/lenis.css";
 
-/** Kora uses Lenis — same smooth scroll feel site-wide */
+/** Smooth scroll — lighter settings so Framer appear animations stay fluid */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      // Slightly snappier than before — less float vs motion overlap
+      duration: 0.95,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      // Keep native scroll position in sync so Framer Motion useScroll tracks correctly
-      syncTouch: true,
+      syncTouch: false,
+      touchMultiplier: 1.4,
     });
 
-    // Expose for debugging / Motions that listen on window scroll
     (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
 
     let frame = 0;

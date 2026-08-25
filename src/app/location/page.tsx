@@ -1,3 +1,5 @@
+import { ConsultFormSection } from "@/components/consult-form-section";
+import { FaqSection } from "@/components/faq-section";
 import { LocationSection } from "@/components/location-section";
 import { SitePageFrame } from "@/components/site-page-frame";
 import type { Metadata } from "next";
@@ -11,6 +13,8 @@ export default function LocationPage() {
   return (
     <SitePageFrame>
       <LocationSection />
+      <ConsultFormSection />
+      <FaqSection />
     </SitePageFrame>
   );
 }

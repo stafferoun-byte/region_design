@@ -210,17 +210,28 @@ export function SiteFooter() {
       id="footer"
       className="relative isolate z-20 w-full overflow-x-clip"
     >
-      <motion.div
+      {/*
+        Clip shell extends upward (bloom) but stops at the footer bottom,
+        so the scaled mint circle can't inflate document scroll height.
+        Inner box maps 1:1 to the footer so the circle stays centered.
+      */}
+      <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 z-0 size-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#5DC39B] will-change-transform"
-        style={{ scale: circleScale }}
-      />
+        className="pointer-events-none absolute inset-x-0 top-[-100vmax] bottom-0 z-0 overflow-hidden"
+      >
+        <div className="absolute inset-x-0 top-[100vmax] bottom-0">
+          <motion.div
+            className="absolute top-1/2 left-1/2 size-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#5DC39B] will-change-transform"
+            style={{ scale: circleScale }}
+          />
+        </div>
+      </div>
 
       {/*
         Match hero video frame: inset-5 (20px) left/right.
-        Bottom gutter: slightly more than the side inset — just a little.
+        Bottom mint gutter: a touch more than the side inset.
       */}
-      <div className="relative z-[1] w-full px-5 pt-5 pb-10 md:pb-12">
+      <div className="relative z-[1] w-full px-5 pt-5 pb-6 md:pb-7">
         <motion.div
           className="flex w-full origin-center flex-col overflow-hidden rounded-[40px] bg-[#F5F5E9] will-change-transform"
           style={{ scale: cardScale }}

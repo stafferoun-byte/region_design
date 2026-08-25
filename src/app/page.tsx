@@ -145,7 +145,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                   }}
                   className="origin-center text-center text-[35px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform md:text-[60px] md:font-bold xl:text-[80px]"
                 >
-                  일상의 회복을 <span className="text-[#3D3D3D]">위한</span>
+                  일상의 회복을 위한
                 </motion.div>
                 <motion.div
                   style={{
@@ -156,9 +156,10 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                     transformPerspective: 1200,
                     fontFamily: FONT_WANTED,
                   }}
-                  className="origin-center text-center text-[35px] leading-[1.15] font-semibold tracking-[-0.06em] text-[#3D3D3D] will-change-transform md:text-[60px] md:font-bold xl:text-[80px]"
+                  className="origin-center text-center text-[35px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform md:text-[60px] md:font-bold xl:text-[80px]"
                 >
-                  이로운 파트너스의 진심
+                  이로운 파트너스의{" "}
+                  <span className="text-[#5DC39B]">진심</span>
                   <span className="ml-[0.08em] text-[0.72em]">.</span>
                 </motion.div>
               </motion.div>

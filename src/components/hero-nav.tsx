@@ -50,7 +50,7 @@ export function HeroNav({
       className={
         isSticky
           ? `sticky top-0 z-50 w-full ${stickyBg} px-5 pt-5 pb-3 backdrop-blur-md md:px-10 xl:px-12`
-          : "absolute inset-x-0 top-0 z-[5] px-[calc(1.25rem+12px)] pt-[calc(1.25rem+16px)] sm:px-[calc(1.25rem+14px)]"
+          : "absolute inset-x-0 top-0 z-20 px-[calc(1.25rem+12px)] pt-[calc(1.25rem+16px)] sm:px-[calc(1.25rem+14px)]"
       }
     >
       <div className="relative">

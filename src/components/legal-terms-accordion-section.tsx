@@ -31,7 +31,7 @@ const ITEMS: Item[] = [
   {
     id: "contrib",
     term: "기여분",
-    subtitle: "부모님을 모신 시간과\n나의 정성에 대한 권리",
+    subtitle: "부모님을 돌본 나의 시간과\n희생이 상속에 반영된 몫",
     image: "/images/dbd0ccc9-5a78-4d7a-8da4-821e6534d742.png",
   },
   {
@@ -70,13 +70,63 @@ const ITEMS: Item[] = [
     subtitle: "유언으로도 빼앗을 수 없는,\n법이 남겨둔 최소한의 몫",
     image: "/images/eff650fb-8405-456c-85e1-9b2dd692e4c1.png",
   },
+  {
+    id: "divorce-consolation",
+    term: "이혼 위자료",
+    subtitle: "혼인 중 받은 상처에\n책임을 묻는 것",
+  },
+  {
+    id: "property-disclosure",
+    term: "재산명시",
+    subtitle: "내가 알지 못했던 재산까지\n확인하는 절차",
+  },
+  {
+    id: "parentage",
+    term: "친생자관계확인",
+    subtitle: "자신의 부모가 누구인지\n법적으로 확인하는 절차",
+  },
+  {
+    id: "full-adoption",
+    term: "친양자입양",
+    subtitle: "함께 살아온 가족을 법적으로도\n온전한 가족으로 만드는 일",
+  },
+  {
+    id: "adult-guardianship",
+    term: "성년후견",
+    subtitle: "혼자 판단하기 어려운 가족을\n대신해 권리를 지키는 제도",
+  },
+  {
+    id: "provisional-attachment",
+    term: "가압류",
+    subtitle: "판결 전 재산이 사라지지 않도록\n미리 붙잡아두는 조치",
+  },
+  {
+    id: "compulsory-execution",
+    term: "강제집행",
+    subtitle: "승소판결문에 그치지 않고\n실제 회수로 이어가는 절차",
+  },
+  {
+    id: "renunciation",
+    term: "상속포기",
+    subtitle: "가족이라는 이유로\n빚까지 떠안지 않기 위한 선택",
+  },
+  {
+    id: "habeas-review",
+    term: "구속적부심",
+    subtitle: "이미 이루어진 구속이 타당한지\n다시 판단받는 절차",
+  },
+  {
+    id: "sentencing-materials",
+    term: "양형자료",
+    subtitle: "한 번의 잘못이 아닌,\n살아온 과정까지 보여주는 자료",
+  },
 ];
 
-/** Three rows — alternating scroll direction like Kuemmerlein */
+/** Three rows — unique items per row (no cross-row repeats on screen) */
 const ROWS: { dir: "left" | "right"; order: number[] }[] = [
-  { dir: "left", order: [0, 1, 2, 3, 4, 5, 6] },
-  { dir: "right", order: [3, 4, 5, 6, 0, 1, 2] },
-  { dir: "left", order: [5, 6, 0, 1, 2, 3, 4] },
+  { dir: "left", order: [0, 1, 2, 3, 4, 5] },
+  { dir: "right", order: [6, 7, 8, 9, 10, 11] },
+  { dir: "left", order: [12, 13, 14, 15, 16] },
 ];
 
 function TermPill({ item }: { item: Item }) {
@@ -207,16 +257,16 @@ export function LegalTermsAccordionSection() {
       >
         <div className="mb-[clamp(52px,7vw,96px)] flex flex-col gap-6 px-6 md:flex-row md:items-end md:justify-start md:gap-[clamp(36px,5vw,80px)] md:px-10 xl:px-14">
           <motion.h2
-            className="max-w-[16em] text-[clamp(28px,3.6vw,48px)] leading-[1.2] font-bold tracking-[-0.05em] break-keep text-white will-change-[opacity,transform,filter]"
+            className="max-w-[16em] text-[clamp(28px,3.6vw,48px)] leading-[1.2] font-bold tracking-[-0.05em] break-keep text-white will-change-[opacity,transform]"
             initial={
               reduceMotion
                 ? false
-                : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                : { opacity: 0, y: 14 }
             }
             animate={
               inView || reduceMotion
-                ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 14 }
             }
             transition={{
               duration: reduceMotion ? 0 : 0.85,
@@ -228,16 +278,16 @@ export function LegalTermsAccordionSection() {
             당신에게는 처음일 수 있으니까
           </motion.h2>
           <motion.p
-            className="max-w-none shrink-0 text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] break-keep whitespace-nowrap text-white/85 will-change-[opacity,transform,filter] md:pb-1 md:text-[25px]"
+            className="max-w-none shrink-0 text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] break-keep whitespace-nowrap text-white/85 will-change-[opacity,transform] md:pb-1 md:text-[25px]"
             initial={
               reduceMotion
                 ? false
-                : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                : { opacity: 0, y: 14 }
             }
             animate={
               inView || reduceMotion
-                ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-                : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 14 }
             }
             transition={{
               duration: reduceMotion ? 0 : 0.85,
@@ -266,12 +316,12 @@ export function LegalTermsAccordionSection() {
         initial={
           reduceMotion
             ? false
-            : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+            : { opacity: 0, y: 14 }
         }
         animate={
           inView || reduceMotion
-            ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-            : { opacity: 0.001, y: 2, scale: 0.9, filter: "blur(5px)" }
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: 14 }
         }
         transition={{
           duration: reduceMotion ? 0 : 0.7,
@@ -299,10 +349,13 @@ export function LegalTermsAccordionSection() {
             transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
             style={{ backgroundColor: ACCENT, height: "100%" }}
           >
-            <span className="text-[18px] leading-[1.28] font-semibold tracking-[-0.04em] text-white md:text-[27px]">
-              어려운 법률용어가 아닌, 일상의 언어로
-              <br />
-              쉽고 분명하게 안내해드릴게요.
+            <span className="flex flex-col gap-0.5 text-white">
+              <span className="text-[20px] leading-[1.25] font-semibold tracking-[-0.04em] md:text-[30px]">
+                어려운 법률용어가 아닌, 일상의 언어로
+              </span>
+              <span className="text-[14px] leading-[1.3] font-semibold tracking-[-0.03em] md:text-[18px]">
+                쉽고 분명하게 안내해드릴게요.
+              </span>
             </span>
           </motion.span>
 

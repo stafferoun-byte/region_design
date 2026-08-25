@@ -238,3 +238,94 @@
     stroke-dashoffset: -126px;
   }
 }
+
+/* ─── Kora Framer Page Effects (circle clip on root) ───
+   From kora.framer.media script_main global pageEffects:
+   exit  = circle @ 50%/-5%, tween 0.535s, ease [.73,.54,.05,.99]
+   enter = circle @ 50%/105%, scale .85, rotateX/Z -10, y 30%,
+           spring delay .75s (stiffness 825 / damping 84 / mass 3.2 → ~933ms)
+
+   Uses clip-path (not mask + @property) — custom props often fail to
+   interpolate on ::view-transition-* pseudo-elements.
+*/
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  mix-blend-mode: normal;
+  backface-visibility: hidden;
+}
+
+@keyframes kora-page-exit {
+  from {
+    clip-path: circle(150% at 50% -5%);
+    opacity: 1;
+  }
+
+  to {
+    clip-path: circle(0% at 50% -5%);
+    opacity: 1;
+  }
+}
+
+@keyframes kora-page-enter {
+  from {
+    clip-path: circle(0% at 50% 105%);
+    opacity: 1;
+    transform: translate(0%, 30%) scale(0.85) rotateX(-10deg) rotateY(0deg)
+      rotateZ(-10deg);
+  }
+
+  to {
+    clip-path: circle(150% at 50% 105%);
+    opacity: 1;
+    transform: translate(0px, 0px) scale(1) rotateX(0deg) rotateY(0deg)
+      rotateZ(0deg);
+  }
+}
+
+/* Kill UA default cross-fade so only our circle runs */
+::view-transition-old(root) {
+  animation: kora-page-exit 0.535s cubic-bezier(0.73, 0.54, 0.05, 0.99) both !important;
+}
+
+/* Spring → CSS linear() sampled from framer-motion (825/84/3.2) */
+::view-transition-new(root) {
+  animation: kora-page-enter 933ms 0.75s
+    linear(
+      0,
+      0.1068,
+      0.3178,
+      0.533,
+      0.7098,
+      0.8376,
+      0.9211,
+      0.9707,
+      0.9968,
+      1.0083,
+      1.0115,
+      1.0107,
+      1.0084,
+      1.0059,
+      1.0037,
+      1.0021,
+      1.0011,
+      1.0004,
+      1
+    )
+    both !important;
+}
+
+::view-transition-group(root) {
+  animation-duration: 1.7s !important;
+  /* Kora breakpoint fill — shows through circle mask between pages */
+  background-color: #5dc39b;
+}
