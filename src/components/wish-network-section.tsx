@@ -504,7 +504,7 @@ export function WishNetworkSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-20 w-full overflow-x-clip px-5 pt-[64px] pb-[80px] md:px-10 md:pt-[76px] md:pb-[108px] xl:px-12 xl:pt-[92px] xl:pb-[132px]"
+      className="relative z-20 w-full overflow-x-clip px-5 py-[52px] md:px-10 md:py-[68px] xl:px-12 xl:py-[84px]"
       style={{ backgroundColor: "#FCFCFA" }}
       aria-label="이로운 파트너스"
     >

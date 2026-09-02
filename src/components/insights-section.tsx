@@ -2,8 +2,9 @@
 
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { useRef, useState } from "react";
+import { SectionTitleReveal, WordReveal } from "@/components/section-title-reveal";
+import { PillCtaButton } from "@/components/pill-cta-button";
 
 /**
  * Insights — layout/tokens from Kora Insights
@@ -19,6 +20,27 @@ const LABEL = "#FAFAF7";
 const DATE = "#E6E6E6";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
+
+const INSIGHTS_TITLE_LINE = [
+  { text: "이로운", color: INK },
+  { text: "인사이트", color: INK },
+] as const;
+
+const INSIGHTS_DESC_LINE_1 = [
+  { text: "사건", color: MUTED },
+  { text: "현장에서", color: MUTED },
+  { text: "쌓은", color: MUTED },
+  { text: "경험과,", color: MUTED },
+] as const;
+
+const INSIGHTS_DESC_LINE_2 = [
+  { text: "의뢰인에게", color: MUTED },
+  { text: "도움이", color: MUTED },
+  { text: "되는", color: MUTED },
+  { text: "법률", color: MUTED },
+  { text: "칼럼을", color: MUTED },
+  { text: "정리합니다.", color: MUTED },
+] as const;
 
 type Insight = {
   id: string;
@@ -39,8 +61,7 @@ const INSIGHTS: Insight[] = [
     date: "2026. 3. 4.",
     datetime: "2026-03-04",
     title: "수사 초기, 진술 전에\n꼭 알아두어야 할 것들",
-    image:
-      "https://framerusercontent.com/images/ZUKAuHzqrTMon49eyQdZ9vuSDfY.jpeg",
+    image: "/images/insights/consultation.png",
     icon: "monitor",
   },
   {
@@ -50,8 +71,7 @@ const INSIGHTS: Insight[] = [
     date: "2026. 3. 3.",
     datetime: "2026-03-03",
     title: "합의 이혼과 소송 이혼,\n선택이 갈리는 지점",
-    image:
-      "https://framerusercontent.com/images/IXWqaCHPbvPQKcyZ9Mch2cWh9hU.jpg",
+    image: "/images/insights/family-law.png",
     icon: "target",
   },
 ];
@@ -138,22 +158,20 @@ function InsightCard({
           src={item.image}
           alt=""
           fill
+          quality={100}
           sizes="(min-width: 1200px) 28vw, (min-width: 810px) 42vw, 92vw"
           className="object-cover object-top"
           style={{ borderRadius: "inherit" }}
         />
       </motion.div>
 
-      {/* Bottom gradient — always on for title readability */}
+      {/* Always-on black wash + bottom gradient (title readability) */}
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
-          backgroundColor: INK,
-          opacity: 0.4,
-          maskImage: "linear-gradient(180deg, transparent 0%, #000 100%)",
-          WebkitMaskImage:
-            "linear-gradient(180deg, transparent 0%, #000 100%)",
+          background:
+            "linear-gradient(180deg, rgba(36,36,36,0.22) 0%, rgba(36,36,36,0.28) 38%, rgba(36,36,36,0.78) 100%)",
         }}
       />
 
@@ -220,46 +238,24 @@ export function InsightsSection() {
         {/* Left — title / description / CTA */}
         <div className="flex w-full flex-col justify-between gap-10 xl:w-auto xl:min-w-0 xl:flex-1">
           <div className="flex flex-col gap-5 md:gap-[30px]">
-            <motion.h2
+            <SectionTitleReveal
               id="insights-heading"
+              lines={[INSIGHTS_TITLE_LINE]}
+              inView={inView}
+              reduceMotion={reduceMotion}
               className="text-[clamp(36px,5vw,60px)] leading-[1.05] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform]"
-              style={{ color: INK }}
-              initial={
-                reduceMotion
-                  ? false
-                  : { opacity: 0, y: 14 }
-              }
-              animate={
-                inView || reduceMotion
-                  ? { opacity: 1, y: 0 }
-                  : { opacity: 0, y: 14 }
-              }
-              transition={{
-                duration: reduceMotion ? 0 : 0.85,
-                ease: easeOut,
-              }}
-            >
-              이로운 인사이트
-            </motion.h2>
-            <motion.p
+              style={{ color: INK, fontFamily: FONT }}
+            />
+            <WordReveal
+              as="p"
+              lines={[INSIGHTS_DESC_LINE_1, INSIGHTS_DESC_LINE_2]}
+              inView={inView}
+              reduceMotion={reduceMotion}
+              delay={0.1}
               className="max-w-[22em] text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] break-keep md:text-[25px]"
-              style={{ color: MUTED }}
-              initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-              animate={
-                inView || reduceMotion
-                  ? { opacity: 1, y: 0 }
-                  : { opacity: 0, y: 8 }
-              }
-              transition={{
-                duration: reduceMotion ? 0 : 0.7,
-                ease: easeOut,
-                delay: reduceMotion ? 0 : 0.08,
-              }}
-            >
-              사건 현장에서 쌓은 경험과,
-              <br />
-              의뢰인에게 도움이 되는 법률 칼럼을 정리합니다.
-            </motion.p>
+              style={{ color: MUTED, fontFamily: FONT }}
+              ariaLabel="사건 현장에서 쌓은 경험과, 의뢰인에게 도움이 되는 법률 칼럼을 정리합니다."
+            />
           </div>
 
           <motion.div
@@ -275,18 +271,16 @@ export function InsightsSection() {
               delay: reduceMotion ? 0 : 0.14,
             }}
           >
-            <Link
+            <PillCtaButton
               href="/insights"
-              className="group inline-flex items-center gap-[25px] rounded-[40px] bg-[#242424] px-[15px] py-[10px] no-underline transition-colors duration-250 hover:bg-[#F7F7ED]"
-            >
-              <span className="text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] text-[#FFFFFA] transition-colors duration-250 group-hover:text-[#242424]">
-                전체 보기
-              </span>
-              <span
-                aria-hidden
-                className="size-2.5 shrink-0 rounded-full bg-[#F7F7ED] transition-colors duration-250 group-hover:bg-[#242424]"
-              />
-            </Link>
+              label="전체 보기"
+              bg="#242424"
+              cream="#FFFFFA"
+              dark="#242424"
+              accent="#5DC39B"
+              bloom="#F7F7ED"
+              compact
+            />
           </motion.div>
         </div>
 

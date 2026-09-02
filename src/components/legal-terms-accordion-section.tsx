@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { SectionTitleReveal, WordReveal } from "@/components/section-title-reveal";
 
 /**
  * Legal-terms ticker — layout from Kümmerlein Über uns team ticker
@@ -26,6 +27,28 @@ const PILL = "#FCFCFA";
 const INK = "#242424";
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+const TITLE_LINE_1 = [
+  { text: "변호사에게는", color: "#FFFFFF" },
+  { text: "익숙한", color: "#FFFFFF" },
+  { text: "용어지만,", color: "#FFFFFF" },
+] as const;
+
+const TITLE_LINE_2 = [
+  { text: "당신에게는", color: "#FFFFFF" },
+  { text: "처음일", color: "#FFFFFF" },
+  { text: "수", color: "#FFFFFF" },
+  { text: "있으니까", color: "#FFFFFF" },
+] as const;
+
+const CAPTION_LINE = [
+  { text: "법은", color: "rgba(255,255,255,0.85)" },
+  { text: "이렇게", color: "rgba(255,255,255,0.85)" },
+  { text: "말하지만", color: "rgba(255,255,255,0.85)" },
+  { text: "사실은", color: "rgba(255,255,255,0.85)" },
+  { text: "이런", color: "rgba(255,255,255,0.85)" },
+  { text: "뜻이에요.", color: "rgba(255,255,255,0.85)" },
+] as const;
 
 const ITEMS: Item[] = [
   {
@@ -74,51 +97,61 @@ const ITEMS: Item[] = [
     id: "divorce-consolation",
     term: "이혼 위자료",
     subtitle: "혼인 중 받은 상처에\n책임을 묻는 것",
+    image: "/images/legal-terms/이혼위자료.jpg",
   },
   {
     id: "property-disclosure",
     term: "재산명시",
     subtitle: "내가 알지 못했던 재산까지\n확인하는 절차",
+    image: "/images/legal-terms/재산명시.jpg",
   },
   {
     id: "parentage",
     term: "친생자관계확인",
     subtitle: "자신의 부모가 누구인지\n법적으로 확인하는 절차",
+    image: "/images/legal-terms/친생자관계확인.jpg",
   },
   {
     id: "full-adoption",
     term: "친양자입양",
     subtitle: "함께 살아온 가족을 법적으로도\n온전한 가족으로 만드는 일",
+    image: "/images/legal-terms/친양자입양.jpg",
   },
   {
     id: "adult-guardianship",
     term: "성년후견",
     subtitle: "혼자 판단하기 어려운 가족을\n대신해 권리를 지키는 제도",
+    image: "/images/legal-terms/성년후견.jpg",
   },
   {
     id: "provisional-attachment",
     term: "가압류",
     subtitle: "판결 전 재산이 사라지지 않도록\n미리 붙잡아두는 조치",
+    image: "/images/legal-terms/가압류.jpg",
   },
   {
     id: "compulsory-execution",
     term: "강제집행",
     subtitle: "승소판결문에 그치지 않고\n실제 회수로 이어가는 절차",
+    image: "/images/legal-terms/강제집행.jpg",
   },
   {
     id: "renunciation",
     term: "상속포기",
     subtitle: "가족이라는 이유로\n빚까지 떠안지 않기 위한 선택",
+    image: "/images/legal-terms/상속포기.jpg",
   },
   {
     id: "habeas-review",
     term: "구속적부심",
     subtitle: "이미 이루어진 구속이 타당한지\n다시 판단받는 절차",
+    image: "/images/legal-terms/구속적부심.jpg",
   },
   {
     id: "sentencing-materials",
     term: "양형자료",
     subtitle: "한 번의 잘못이 아닌,\n살아온 과정까지 보여주는 자료",
+    image: "/images/legal-terms/양형자료.jpg",
   },
 ];
 
@@ -136,7 +169,7 @@ function TermPill({ item }: { item: Item }) {
       style={{ backgroundColor: PILL }}
     >
       <p
-        className="whitespace-pre-line text-left text-[14px] leading-[1.4] font-semibold tracking-[-0.03em] break-keep md:text-[16px]"
+        className="whitespace-pre-line text-left text-[15px] leading-[1.38] font-semibold tracking-[-0.03em] break-keep md:text-[17px] md:leading-[1.35]"
         style={{ color: INK, fontFamily: FONT }}
       >
         {item.subtitle}
@@ -256,47 +289,24 @@ export function LegalTermsAccordionSection() {
         }}
       >
         <div className="mb-[clamp(52px,7vw,96px)] flex flex-col gap-6 px-6 md:flex-row md:items-end md:justify-start md:gap-[clamp(36px,5vw,80px)] md:px-10 xl:px-14">
-          <motion.h2
-            className="max-w-[16em] text-[clamp(28px,3.6vw,48px)] leading-[1.2] font-bold tracking-[-0.05em] break-keep text-white will-change-[opacity,transform]"
-            initial={
-              reduceMotion
-                ? false
-                : { opacity: 0, y: 14 }
-            }
-            animate={
-              inView || reduceMotion
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 14 }
-            }
-            transition={{
-              duration: reduceMotion ? 0 : 0.85,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-            변호사에게는 익숙한 용어지만,
-            <br />
-            당신에게는 처음일 수 있으니까
-          </motion.h2>
-          <motion.p
-            className="max-w-none shrink-0 text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] break-keep whitespace-nowrap text-white/85 will-change-[opacity,transform] md:pb-1 md:text-[25px]"
-            initial={
-              reduceMotion
-                ? false
-                : { opacity: 0, y: 14 }
-            }
-            animate={
-              inView || reduceMotion
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 14 }
-            }
-            transition={{
-              duration: reduceMotion ? 0 : 0.85,
-              delay: reduceMotion ? 0 : 0.08,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-            법은 이렇게 말하지만 사실은 이런 뜻이에요.
-          </motion.p>
+          <SectionTitleReveal
+            lines={[TITLE_LINE_1, TITLE_LINE_2]}
+            inView={inView}
+            reduceMotion={reduceMotion}
+            className="max-w-[16em] text-[clamp(28px,3.6vw,48px)] leading-[1.2] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
+            style={{ fontFamily: FONT, color: "#FFFFFF" }}
+            ariaLabel="변호사에게는 익숙한 용어지만, 당신에게는 처음일 수 있으니까"
+          />
+          <WordReveal
+            as="p"
+            lines={[CAPTION_LINE]}
+            inView={inView}
+            reduceMotion={reduceMotion}
+            delay={0.1}
+            className="max-w-none shrink-0 text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] break-keep whitespace-nowrap will-change-[opacity,transform] md:pb-1 md:text-[25px]"
+            style={{ fontFamily: FONT }}
+            ariaLabel="법은 이렇게 말하지만 사실은 이런 뜻이에요."
+          />
         </div>
 
         <div className="flex flex-col gap-4 md:gap-5">

@@ -7,6 +7,7 @@ import {
   type Variants,
 } from "framer-motion";
 import { useMemo, useRef } from "react";
+import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -17,6 +18,17 @@ const TEXT_MUTED = "#616161";
 const BAR_GRAY = "#E6E6E6";
 const LABEL_ON_GREEN = "#FFFFFA";
 const SECTION_BG = "#FCFCFA";
+
+const STATS_TITLE_LINE_1 = [
+  { text: "편안하고", color: "#000000" },
+  { text: "이로운", color: "#000000" },
+  { text: "상담", color: "#000000" },
+] as const;
+
+const STATS_TITLE_LINE_2 = [
+  { text: "결과는", color: "#000000" },
+  { text: "단단하게.", color: "#000000" },
+] as const;
 
 const AXIS_TICKS = [0, 2, 4, 6, 8, 10, 12, 14] as const;
 const WITH_WIDTH = "100%";
@@ -225,28 +237,14 @@ export function StatsSection() {
       <div className="flex min-h-svh w-full items-center px-5 pt-[100px] pb-[60px] md:px-10 md:pt-[140px] md:pb-[90px] xl:px-12 xl:pt-[180px] xl:pb-[120px]">
         <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-[30px] md:gap-[50px] xl:gap-20">
           <div ref={headerRef}>
-            <motion.h2
-              className="text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform]"
+            <SectionTitleReveal
+              lines={[STATS_TITLE_LINE_1, STATS_TITLE_LINE_2]}
+              inView={headerInView}
+              reduceMotion={reduceMotion}
+              className="text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
               style={{ fontFamily: FONT_WANTED }}
-              initial={
-                reduceMotion
-                  ? false
-                  : { opacity: 0, y: 14 }
-              }
-              animate={
-                headerInView || reduceMotion
-                  ? { opacity: 1, y: 0 }
-                  : { opacity: 0, y: 14 }
-              }
-              transition={{
-                duration: reduceMotion ? 0 : 0.55,
-                ease: easeOut,
-              }}
-            >
-              편안하고 이로운 상담
-              <br />
-              결과는 단단하게.
-            </motion.h2>
+              ariaLabel="편안하고 이로운 상담 결과는 단단하게."
+            />
           </div>
 
           <div className="flex w-full flex-col items-start gap-[30px] md:gap-[50px]">

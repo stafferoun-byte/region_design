@@ -18,7 +18,7 @@ import { TeamSection } from "@/components/team-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { WinningCases } from "@/components/winning-cases";
 import { WishNetworkSection } from "@/components/wish-network-section";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 /** Existing hero institution logos — reuse project assets as-is */
 const partnerLogos = [
@@ -121,7 +121,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
     <section className="changes-section relative z-20" style={{ backgroundColor: "#FCFCFA" }}>
       <div className="relative">
         <div
-          className="sticky top-0 min-h-svh w-full overflow-x-clip"
+          className="sticky top-0 min-h-svh w-full"
           style={{ perspective: 1200, backgroundColor: "#FCFCFA" }}
         >
           {/* Headline — splits hard L/R */}
@@ -168,7 +168,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
 
           <motion.div
             style={{ opacity: casesOpacity, backgroundColor: "#FCFCFA" }}
-            className="relative z-[1] flex min-h-svh flex-col justify-center py-12 md:py-16"
+            className="relative z-[1] flex min-h-svh flex-col justify-center py-12 pb-16 md:py-16 md:pb-24"
           >
             <WinningCases
               reveal={casesReveal}
@@ -191,11 +191,6 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
 export default function Home() {
   const heroTransitionRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: heroTransitionRef,
@@ -223,20 +218,12 @@ export default function Home() {
     [0, reduceMotion ? 0 : -24],
   );
 
-  // Avoid hydration mismatch from browser extensions injecting styles
-  // (e.g. user-select) into SSR HTML before React hydrates.
-  if (!mounted) {
-    return (
-      <main
-        id="top"
-        className="relative min-h-svh bg-[#FCFCFA] text-[#161616]"
-        suppressHydrationWarning
-      />
-    );
-  }
-
   return (
-    <main id="top" className="relative bg-[#FCFCFA] text-[#161616]">
+    <main
+      id="top"
+      className="relative bg-[#FCFCFA] text-[#161616]"
+      suppressHydrationWarning
+    >
       {/*
         Sticky hero stays pinned while the scroll track + next section move.
         After zoom/darken, the next section rises over it.

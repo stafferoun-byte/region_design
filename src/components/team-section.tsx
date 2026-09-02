@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { PillCtaButton } from "@/components/pill-cta-button";
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -127,6 +128,16 @@ export const PRACTICE_TEAM: readonly TeamItem[] = [
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
+/** Kora team row appear — __framer__enter PC + spring IC, threshold 0.5 */
+const ROW_ENTER = { opacity: 0, y: 10, scale: 0.9 } as const;
+const ROW_VISIBLE = { opacity: 1, y: 0, scale: 1 } as const;
+const rowEnterTransition = (index: number) => ({
+  type: "spring" as const,
+  bounce: 0.29,
+  duration: 0.46,
+  delay: (index + 1) * 0.1,
+});
+
 /** Title: word blur reveal — two lines (main default) */
 const TITLE_LINE_1 = ["지금,", "어떤", "도움이"] as const;
 const TITLE_LINE_2 = ["필요하신가요?"] as const;
@@ -202,6 +213,7 @@ function TeamRow({
   onToggle,
   reduceMotion,
   rowMode,
+  rowIndex,
 }: {
   member: TeamItem;
   open: boolean;
@@ -209,11 +221,14 @@ function TeamRow({
   reduceMotion: boolean | null;
   /** swap = main (concern↔name + role) · concern-lines = practice 2-line Q */
   rowMode: "swap" | "concern-lines";
+  rowIndex: number;
 }) {
   const [hovered, setHovered] = useState(false);
   const active = open || hovered;
+  const rowWrapRef = useRef<HTMLDivElement | null>(null);
   const rowRef = useRef<HTMLButtonElement | null>(null);
   const [pillScale, setPillScale] = useState(28);
+  const rowInView = useInView(rowWrapRef, { once: true, amount: 0.5 });
 
   /* Cover row diagonal from a 50px circle */
   const measure = () => {
@@ -230,17 +245,15 @@ function TeamRow({
 
   return (
     <motion.div
-      variants={{
-        hidden: reduceMotion
-          ? { opacity: 1, y: 0 }
-          : { opacity: 0, y: 12 },
-        show: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.45, ease: easeOut },
-        },
-      }}
-      className="relative"
+      ref={rowWrapRef}
+      className="relative will-change-[opacity,transform]"
+      initial={reduceMotion ? false : ROW_ENTER}
+      animate={
+        reduceMotion || rowInView ? ROW_VISIBLE : ROW_ENTER
+      }
+      transition={
+        reduceMotion ? { duration: 0 } : rowEnterTransition(rowIndex)
+      }
     >
       {/* Default bottom rule — hides as the pill outline rolls up */}
       <motion.span
@@ -466,134 +479,7 @@ function TeamRow({
   );
 }
 
-/** Kora Apply Now — structure from framer-bdcy0 Desktop */
-function ApplyNowButton() {
-  const [hovered, setHovered] = useState(false);
-  const btnRef = useRef<HTMLDivElement | null>(null);
-  const [bloomScale, setBloomScale] = useState(28);
-
-  const measure = () => {
-    const el = btnRef.current;
-    if (!el) return;
-    const { width, height } = el.getBoundingClientRect();
-    // Cream circle is 10px (radius 5), anchored near the right edge.
-    // Scale must reach the farthest corner from that origin — use radius, not diameter.
-    const cx = width - 20;
-    const cy = height / 2;
-    const maxDist = Math.sqrt(cx * cx + cy * cy);
-    setBloomScale(Math.ceil(maxDist / 5) + 4);
-  };
-
-  const spring = {
-    type: "spring" as const,
-    stiffness: 280,
-    damping: 24,
-    mass: 0.7,
-  };
-
-  return (
-    <a
-      href="#consult"
-      onMouseEnter={() => {
-        measure();
-        setHovered(true);
-      }}
-      onMouseLeave={() => setHovered(false)}
-      className="relative inline-flex w-fit overflow-hidden rounded-[40px] no-underline"
-    >
-      {/* Button — slightly larger pill */}
-      <div
-        ref={btnRef}
-        className="relative flex items-center gap-[25px] rounded-[40px] bg-[#3D3D3D] px-[18px] py-3"
-      >
-        {/* Text — clips exit/enter */}
-        <span className="relative z-[4] overflow-hidden">
-          {/* Default — cream; on hover → absolute top -30 */}
-          <motion.span
-            className="block whitespace-nowrap text-[15px] leading-[1.5] font-semibold tracking-[-0.03em] min-[1200px]:text-[16px]"
-            style={{
-              fontFamily: FONT,
-              color: CREAM,
-              position: hovered ? "absolute" : "relative",
-              top: hovered ? -30 : undefined,
-              left: hovered ? 0 : undefined,
-            }}
-            initial={false}
-            animate={
-              hovered
-                ? { opacity: 0, scale: 0.9 }
-                : { opacity: 1, scale: 1 }
-            }
-            transition={spring}
-          >
-            함께 방법을 찾아보기
-          </motion.span>
-          {/* Hover — dark; default absolute bottom -30, scale .9 rotate -30 */}
-          <motion.span
-            className="block whitespace-nowrap text-[15px] leading-[1.5] font-semibold tracking-[-0.03em] min-[1200px]:text-[16px]"
-            style={{
-              fontFamily: FONT,
-              color: DARK,
-              position: hovered ? "relative" : "absolute",
-              bottom: hovered ? undefined : -30,
-              left: hovered ? undefined : 0,
-            }}
-            initial={false}
-            animate={
-              hovered
-                ? { opacity: 1, scale: 1, rotate: 0 }
-                : { opacity: 0, scale: 0.9, rotate: -30 }
-            }
-            transition={spring}
-          >
-            함께 방법을 찾아보기
-          </motion.span>
-        </span>
-
-        {/*
-          Dark Dot — default absolute over cream circle, scale 0.
-          On hover: relative (takes cream's flex slot), scale 1.
-        */}
-        <motion.span
-          aria-hidden
-          className="z-[4] size-[10px] shrink-0 rounded-[30px]"
-          style={{
-            backgroundColor: "#5DC39B",
-            ...(hovered
-              ? { position: "relative", order: 2 }
-              : { position: "absolute", bottom: 17, right: 15 }),
-          }}
-          initial={false}
-          animate={{ scale: hovered ? 1 : 0 }}
-          transition={spring}
-        />
-
-        {/*
-          Hover Color — cream 10×10 = visible white dot in flex.
-          On hover: absolute + scale up to fill pill.
-        */}
-        <motion.span
-          aria-hidden
-          className="z-[1] size-[10px] shrink-0 rounded-[30px]"
-          style={{
-            backgroundColor: CREAM,
-            position: hovered ? "absolute" : "relative",
-            top: hovered ? "50%" : undefined,
-            right: hovered ? 15 : undefined,
-            marginTop: hovered ? -5 : undefined,
-            order: hovered ? 1 : undefined,
-          }}
-          initial={false}
-          animate={{ scale: hovered ? bloomScale : 1 }}
-          transition={spring}
-        />
-      </div>
-    </a>
-  );
-}
-
-/**
- * Kora Bottom hiring row — breakpoints match Framer:
+/** Kora Bottom hiring row — breakpoints match Framer:
  * ≥1200 desktop · 810–1199 tablet · <810 mobile
  */
 const HIRE_LINE_1 = ["한", "사람의"] as const;
@@ -733,7 +619,7 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
             ease: easeOut,
           }}
         >
-          <ApplyNowButton />
+          <PillCtaButton href="#consult" label="함께 방법을 찾아보기" />
         </motion.div>
       </div>
     </div>
@@ -759,15 +645,6 @@ export function TeamSection({
     variant === "practice" ? PRACTICE_TITLE_LINE_1 : TITLE_LINE_1;
   const titleLine2 =
     variant === "practice" ? PRACTICE_TITLE_LINE_2 : TITLE_LINE_2;
-
-  const listVariants: Variants = {
-    hidden: {},
-    show: {
-      transition: reduceMotion
-        ? { duration: 0 }
-        : { staggerChildren: 0.05, delayChildren: 0.08 },
-    },
-  };
 
   return (
     <section
@@ -801,16 +678,14 @@ export function TeamSection({
               line2={titleLine2}
             />
 
-            <motion.div
+            <div
               className="grid w-full grid-cols-1 gap-x-[30px] gap-y-[15px] md:grid-cols-2"
-              variants={listVariants}
-              initial="hidden"
-              animate={inView || reduceMotion ? "show" : "hidden"}
             >
-              {list.map((member) => (
+              {list.map((member, rowIndex) => (
                 <TeamRow
                   key={member.id}
                   member={member}
+                  rowIndex={rowIndex}
                   open={openId === member.id}
                   onToggle={() =>
                     setOpenId((cur) => (cur === member.id ? null : member.id))
@@ -819,7 +694,7 @@ export function TeamSection({
                   rowMode={rowMode}
                 />
               ))}
-            </motion.div>
+            </div>
           </div>
 
           {/* Bottom — Join us / hiring */}
