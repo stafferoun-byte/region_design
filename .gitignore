@@ -43,4 +43,9 @@ next-env.d.ts
 # large source video backup (use public/videos/hero.mp4)
 /public/videos/hero-original.mp4
 
+# dev scratch / reference dumps (Clay, Slack demo archives)
+/archive-*
+/clay-*
+/slackdemo*
+
 .vercel

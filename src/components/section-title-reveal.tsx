@@ -11,7 +11,7 @@ export type TitleWord = {
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-type SectionTitleRevealProps = {
+type WordRevealProps = {
   id?: string;
   lines: readonly (readonly TitleWord[])[];
   className?: string;
@@ -19,10 +19,13 @@ type SectionTitleRevealProps = {
   inView: boolean;
   reduceMotion: boolean | null;
   ariaLabel?: string;
+  as?: "h2" | "p" | "span" | "div";
+  /** Delay before the first word (e.g. stagger list items) */
+  delay?: number;
 };
 
-/** Word-by-word reveal — matches main WishTitleReveal / Team TitleReveal */
-export function SectionTitleReveal({
+/** Word-by-word reveal — matches WishTitleReveal / Team TitleReveal */
+export function WordReveal({
   id,
   lines,
   className,
@@ -30,13 +33,15 @@ export function SectionTitleReveal({
   inView,
   reduceMotion,
   ariaLabel,
-}: SectionTitleRevealProps) {
+  as = "span",
+  delay = 0.02,
+}: WordRevealProps) {
   const container: Variants = {
     hidden: {},
     show: {
       transition: reduceMotion
         ? { duration: 0 }
-        : { staggerChildren: 0.055, delayChildren: 0.02 },
+        : { staggerChildren: 0.055, delayChildren: delay },
     },
   };
 
@@ -71,8 +76,17 @@ export function SectionTitleReveal({
   const label =
     ariaLabel ?? lines.flatMap((line) => line.map((w) => w.text)).join(" ");
 
+  const Component =
+    as === "h2"
+      ? motion.h2
+      : as === "p"
+        ? motion.p
+        : as === "div"
+          ? motion.div
+          : motion.span;
+
   return (
-    <motion.h2
+    <Component
       id={id}
       className={className}
       style={style}
@@ -87,6 +101,12 @@ export function SectionTitleReveal({
           {renderLine(line)}
         </span>
       ))}
-    </motion.h2>
+    </Component>
   );
+}
+
+type SectionTitleRevealProps = Omit<WordRevealProps, "as" | "delay">;
+
+export function SectionTitleReveal(props: SectionTitleRevealProps) {
+  return <WordReveal {...props} as="h2" />;
 }

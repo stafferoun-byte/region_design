@@ -15,7 +15,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { SectionTitleReveal } from "@/components/section-title-reveal";
+import { SectionTitleReveal, WordReveal } from "@/components/section-title-reveal";
 
 /**
  * Consultation CTA + form — layout/tokens from Kora CTA
@@ -43,10 +43,24 @@ const BG = "/images/consult-seoul-night.jpg";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-const FEATURES = [
-  "사건 초기 대응 로드맵",
-  "쟁점·위험 요소 진단",
-  "다음 단계와 일정 안내",
+const FEATURE_LINES = [
+  [
+    { text: "사건", color: "#FFFFFF" },
+    { text: "초기", color: "#FFFFFF" },
+    { text: "대응", color: "#FFFFFF" },
+    { text: "로드맵", color: "#FFFFFF" },
+  ],
+  [
+    { text: "쟁점·위험", color: "#FFFFFF" },
+    { text: "요소", color: "#FFFFFF" },
+    { text: "진단", color: "#FFFFFF" },
+  ],
+  [
+    { text: "다음", color: "#FFFFFF" },
+    { text: "단계와", color: "#FFFFFF" },
+    { text: "일정", color: "#FFFFFF" },
+    { text: "안내", color: "#FFFFFF" },
+  ],
 ] as const;
 
 const CONSULT_TITLE_LINE_1 = [
@@ -267,26 +281,22 @@ export function ConsultFormSection() {
                 />
 
                 <ul className="flex flex-col gap-3.5">
-                  {FEATURES.map((f, i) => (
-                    <motion.li
-                      key={f}
+                  {FEATURE_LINES.map((line, i) => (
+                    <li
+                      key={i}
                       className="flex items-center gap-3 text-[16px] leading-[1.35] font-semibold tracking-[-0.03em] text-white md:text-[17px]"
                       style={{ fontFamily: FONT }}
-                      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                      animate={
-                        inView || reduceMotion
-                          ? { opacity: 1, y: 0 }
-                          : { opacity: 0, y: 10 }
-                      }
-                      transition={{
-                        duration: reduceMotion ? 0 : 0.55,
-                        ease: easeOut,
-                        delay: reduceMotion ? 0 : 0.12 + i * 0.06,
-                      }}
                     >
                       <FeatureIcon />
-                      {f}
-                    </motion.li>
+                      <WordReveal
+                        as="span"
+                        lines={[line]}
+                        inView={inView}
+                        reduceMotion={reduceMotion}
+                        delay={0.12 + i * 0.14}
+                        style={{ fontFamily: FONT }}
+                      />
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -505,7 +515,7 @@ export function ConsultFormSection() {
                 style={{ borderColor: "rgba(255,255,255,0.35)" }}
               >
                 <p
-                  className="max-w-[14em] text-[13px] leading-[1.4] font-semibold tracking-[-0.025em]"
+                  className="whitespace-nowrap text-[13px] leading-[1.4] font-semibold tracking-[-0.025em]"
                   style={{ color: INK }}
                 >
                   {submitted ? (

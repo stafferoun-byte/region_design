@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 /** Kora Appear spring — bounce 0.29, duration 0.46 */
 const koraSpring = {
@@ -25,6 +26,13 @@ const BLACK = "#242424";
 const CREAM = "#F5F5E9";
 const CARD = "#FFFFFA";
 const OVERLAY = "#292929";
+
+const TITLE_LINE = [
+  { text: "함께", color: "#FFFFFF" },
+  { text: "한", color: "#FFFFFF" },
+  { text: "분들의", color: "#FFFFFF" },
+  { text: "이야기", color: "#FFFFFF" },
+] as const;
 
 const HERO_BG = "/images/testimonials/lawyers-hero.png";
 
@@ -248,14 +256,30 @@ export function TestimonialsSection() {
   /** Default open: first card (Kora SSR "1 Open") */
   const [openIndex, setOpenIndex] = useState(0);
 
-  const heroRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const cardsRef = useRef<HTMLDivElement | null>(null);
-  const heroInView = useInView(heroRef, { once: true, amount: 0.28 });
+  const inView = useInView(sectionRef, { once: true, amount: 0.12 });
   const cardsInView = useInView(cardsRef, { once: true, amount: 0.2 });
 
-  const show = heroInView || !!reduceMotion;
+  const show = inView || !!reduceMotion;
   const showCards = cardsInView || !!reduceMotion;
   const appear = reduceMotion ? { duration: 0 } : koraSpring;
+
+  const heroCardHidden = {
+    opacity: 0,
+    x: 30,
+    y: 30,
+    scale: 0.8,
+    rotate: -5,
+  } as const;
+
+  const heroCardVisible = {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    rotate: 0,
+  } as const;
 
   const gridColumns =
     openIndex === 0
@@ -266,13 +290,13 @@ export function TestimonialsSection() {
 
   return (
     <section
+      ref={sectionRef}
       className="relative flex w-full flex-col items-center gap-5 py-[60px] md:py-[90px] xl:py-[120px]"
       style={{ fontFamily: FONT }}
       aria-labelledby="testimonials-heading"
     >
       <div className="w-full max-w-[1600px] px-5 md:px-10 xl:px-[60px]">
         <div
-          ref={heroRef}
           className="relative isolate aspect-[4/3] w-full overflow-hidden"
           style={{ borderRadius: 40 }}
         >
@@ -293,42 +317,38 @@ export function TestimonialsSection() {
             aria-hidden
           />
 
-          {/* Title — Kora: blur 5px, y 2, scale 0.9 */}
-          <motion.h2
+          {/* Title — word-by-word (matches Wish / FAQ sections) */}
+          <SectionTitleReveal
             id="testimonials-heading"
-            className="pointer-events-none absolute top-10 left-5 z-20 max-w-[11em] origin-left text-[clamp(42px,5.2vw,68px)] leading-[1.15] font-bold tracking-[-0.05em] break-keep text-white select-none md:top-14 md:left-10 xl:top-16 xl:left-12"
-            initial={
-              reduceMotion
-                ? false
-                : { opacity: 0, y: 14 }
-            }
-            animate={
-              show
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 14 }
-            }
-            transition={appear}
-          >
-            함께 한 분들의 이야기
-          </motion.h2>
+            lines={[TITLE_LINE]}
+            inView={show}
+            reduceMotion={reduceMotion}
+            className="pointer-events-none absolute top-10 left-5 z-20 max-w-[11em] text-[clamp(42px,5.2vw,68px)] leading-[1.15] font-bold tracking-[-0.05em] break-keep select-none md:top-14 md:left-10 xl:top-16 xl:left-12"
+            style={{ fontFamily: FONT }}
+            ariaLabel="함께 한 분들의 이야기"
+          />
 
           {/* Glass card — Kora: x30 y30 scale 0.8 rotate -5deg */}
           <div className="absolute top-[72%] left-5 z-10 w-[min(100%-2.5rem,320px)] -translate-y-1/2 md:left-10 md:w-[375px] xl:left-12">
             <motion.div
-              initial={
+              className="will-change-[transform,opacity]"
+              initial={reduceMotion ? false : heroCardHidden}
+              whileInView={reduceMotion ? undefined : heroCardVisible}
+              viewport={{ once: true, amount: 0.35, margin: "0px 0px -10% 0px" }}
+              transition={
                 reduceMotion
-                  ? false
-                  : { opacity: 0, x: 30, y: 30, scale: 0.8, rotate: -5 }
+                  ? { duration: 0 }
+                  : {
+                      opacity: {
+                        duration: 0.5,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                      x: { type: "spring", bounce: 0.29, duration: 0.58 },
+                      y: { type: "spring", bounce: 0.29, duration: 0.58 },
+                      scale: { type: "spring", bounce: 0.29, duration: 0.58 },
+                      rotate: { type: "spring", bounce: 0.29, duration: 0.58 },
+                    }
               }
-              animate={
-                show
-                  ? { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }
-                  : { opacity: 0, x: 30, y: 30, scale: 0.8, rotate: -5 }
-              }
-              transition={{
-                ...appear,
-                delay: reduceMotion ? 0 : 0.08,
-              }}
             >
               <div
                 className="flex flex-col gap-[30px] rounded-[30px] p-[30px] shadow-[0_0_0_1px_#ffffff80]"
