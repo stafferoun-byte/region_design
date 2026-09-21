@@ -316,24 +316,26 @@ export default function Home() {
         Mobile: normal document flow (nav is fixed separately).
       */}
       <section
-        className={`z-0 h-svh w-full ${isDesktop ? "sticky top-0" : "relative"}`}
+        className={`z-0 h-svh w-full bg-[#FCFCFA] ${isDesktop ? "sticky top-0" : "relative"}`}
       >
-        <div className="relative h-full w-full overflow-hidden">
+        <div className="relative h-full w-full overflow-hidden p-3 sm:p-4 md:p-5">
+          {/*
+            Scale the rounded frame itself (not a parent of it).
+            Absolute-inset + parent transform was clipping as full-bleed.
+          */}
           <motion.div
-            className="absolute inset-0 z-0 origin-center will-change-transform"
+            className="relative h-full w-full origin-center overflow-hidden rounded-[44px] will-change-transform sm:rounded-[32px] md:rounded-[40px]"
             style={{ scale: frameScale }}
           >
-            <div className="absolute inset-3 overflow-hidden rounded-[44px] sm:inset-4 sm:rounded-[32px] md:inset-5 md:rounded-[40px]">
-              <video
-                className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
-                src="/videos/hero.mp4?v=3"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-              />
-            </div>
+            <video
+              className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
+              src="/videos/hero.mp4?v=3"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+            />
           </motion.div>
 
           {SHOW_HERO_MOBILE_COPY ? (
@@ -360,11 +362,11 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            className="pointer-events-none absolute inset-0 z-[2] origin-center"
-            style={{ scale: frameScale }}
+            className="pointer-events-none absolute inset-3 z-[2] overflow-hidden rounded-[44px] sm:inset-4 sm:rounded-[32px] md:inset-5 md:rounded-[40px]"
+            style={{ scale: frameScale, transformOrigin: "center center" }}
           >
             <motion.div
-              className="absolute inset-3 rounded-[44px] bg-black/50 sm:inset-4 sm:rounded-[32px] md:inset-5 md:rounded-[40px]"
+              className="absolute inset-0 bg-black/50"
               style={{ opacity: darkOpacity }}
             />
           </motion.div>
