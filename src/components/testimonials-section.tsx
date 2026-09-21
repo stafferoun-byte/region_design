@@ -25,7 +25,6 @@ const ACCENT = "#5DC39B";
 const BLACK = "#242424";
 const CREAM = "#F5F5E9";
 const CARD = "#FFFFFA";
-const OVERLAY = "#292929";
 
 const TITLE_LINE = [
   { text: "함께", color: "#FFFFFF" },
@@ -37,6 +36,9 @@ const TITLE_LINE = [
 const HERO_BG = "/images/testimonials/lawyers-hero.png";
 
 const HERO = {
+  rating: "4.9",
+  ratingMax: "5",
+  ratingNote: "의뢰인 후기 기준",
   quote:
     "사건만 봐 주는 변호사가 아니라,\n제 삶을 함께 지켜 주는 팀이었습니다.",
   body: "막막했던 상황에서 방향부터 차분히 잡아 주셨고, 불안한 질문에 하나하나 답해 주셨습니다. 재판 과정에서도 제가 이해할 수 있게 설명해 주시니 마음이 놓였고, 결과까지 책임감 있게 이끌어 주셨습니다. 다시 일상으로 돌아올 수 있게 해 주셔서 진심으로 감사합니다.",
@@ -76,14 +78,24 @@ const CARDS = [
   },
 ] as const;
 
-function Stars() {
+function Stars({ play }: { play: boolean }) {
   return (
     <div className="flex items-center gap-[5px]" aria-hidden>
       {Array.from({ length: 5 }).map((_, i) => (
-        <span
+        <motion.span
           key={i}
-          className="size-[9px] rounded-full"
+          className="size-[8px] origin-center rounded-full md:size-[9px]"
           style={{ backgroundColor: ACCENT }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={
+            play ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }
+          }
+          transition={{
+            type: "spring",
+            bounce: 0.29,
+            duration: 0.46,
+            delay: play ? i * 0.07 : 0,
+          }}
         />
       ))}
     </div>
@@ -127,36 +139,6 @@ function BrandMark() {
   );
 }
 
-function Avatar({
-  src,
-  alt,
-  size = 58,
-}: {
-  src: string;
-  alt: string;
-  size?: number;
-}) {
-  return (
-    <span
-      className="relative shrink-0 overflow-hidden"
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor: "#E8E8E8",
-      }}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        sizes={`${size}px`}
-        className="object-cover"
-      />
-    </span>
-  );
-}
-
 function AccordionCard({
   quote,
   name,
@@ -174,33 +156,45 @@ function AccordionCard({
   onActivate: () => void;
   reduceMotion: boolean | null;
 }) {
+  const cardRef = useRef<HTMLElement | null>(null);
+  const cardInView = useInView(cardRef, {
+    once: true,
+    amount: 0.35,
+    margin: "0px 0px -8% 0px",
+  });
+  const starsPlay = Boolean(reduceMotion || cardInView);
+
   return (
     <article
+      ref={cardRef}
       onMouseEnter={onActivate}
       onFocus={onActivate}
       onClick={onActivate}
       tabIndex={0}
       role="button"
       aria-expanded={open}
-      className="relative flex h-full min-h-[360px] cursor-pointer flex-col justify-between overflow-hidden outline-none md:min-h-[400px]"
+      className="relative flex h-full min-h-[300px] cursor-pointer flex-col justify-between overflow-hidden outline-none md:min-h-[400px]"
       style={{
         backgroundColor: CARD,
         borderRadius: 30,
         fontFamily: FONT,
       }}
     >
-      {/* Plus — absolute top-right (Kora: top 15px right 15px) */}
-      <div className="absolute top-[15px] right-[15px] z-10">
+      {/* Plus — desktop only (mobile cards don’t expand) */}
+      <div className="absolute top-[15px] right-[15px] z-10 hidden md:block">
         <PlusMinus open={open} />
       </div>
 
-      <div className="flex flex-col gap-5 p-[30px] pr-12">
-        <Stars />
+      <div className="flex flex-col gap-4 p-5 md:gap-5 md:p-[30px] md:pr-12">
+        <Stars play={starsPlay} />
 
-        {/* Dual quote layers: Big (open) / Small (closed) — Kora pattern */}
-        <div className="relative min-h-[7.5rem]">
+        {/* Mobile: one quote size. Desktop: big/small swap when expanded. */}
+        <div className="relative min-h-0 md:min-h-[7.5rem]">
+          <p className="text-[15px] leading-[1.4] font-semibold tracking-[-0.03em] md:hidden" style={{ color: BLACK }}>
+            &ldquo;{quote}&rdquo;
+          </p>
           <p
-            className="text-[20px] leading-[1.35] font-semibold tracking-[-0.03em]"
+            className="hidden text-[20px] leading-[1.35] font-semibold tracking-[-0.03em] md:block"
             style={{
               color: BLACK,
               opacity: open ? 1 : 0,
@@ -213,7 +207,7 @@ function AccordionCard({
             &ldquo;{quote}&rdquo;
           </p>
           <p
-            className="text-[14px] leading-[1.5] font-semibold tracking-[-0.03em]"
+            className="hidden text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] md:block"
             style={{
               color: BLACK,
               opacity: open ? 0 : 1,
@@ -228,18 +222,29 @@ function AccordionCard({
         </div>
       </div>
 
-      <div className="mt-auto flex items-center gap-4 px-[30px] pt-0 pb-[30px]">
-        <div className="flex min-w-0 items-center gap-[15px]">
-          <Avatar src={avatar} alt={name} size={58} />
+      <div className="mt-auto flex items-center gap-3 px-5 pt-0 pb-5 md:gap-4 md:px-[30px] md:pb-[30px]">
+        <div className="flex min-w-0 items-center gap-3 md:gap-[15px]">
+          <span
+            className="relative size-11 shrink-0 overflow-hidden rounded-full md:size-[58px]"
+            style={{ backgroundColor: "#E8E8E8" }}
+          >
+            <Image
+              src={avatar}
+              alt={name}
+              fill
+              sizes="58px"
+              className="object-cover"
+            />
+          </span>
           <div className="min-w-0">
             <p
-              className="truncate text-[14px] font-semibold tracking-[-0.03em]"
+              className="truncate text-[13px] font-semibold tracking-[-0.03em] md:text-[14px]"
               style={{ color: BLACK }}
             >
               {name}
             </p>
             <p
-              className="truncate text-[13px] font-semibold tracking-[-0.025em]"
+              className="truncate text-[12px] font-semibold tracking-[-0.025em] md:text-[13px]"
               style={{ color: "#616161" }}
             >
               {role}
@@ -259,7 +264,11 @@ export function TestimonialsSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardsRef = useRef<HTMLDivElement | null>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.12 });
-  const cardsInView = useInView(cardsRef, { once: true, amount: 0.2 });
+  const cardsInView = useInView(cardsRef, {
+    once: true,
+    amount: 0.12,
+    margin: "0px 0px -10% 0px",
+  });
 
   const show = inView || !!reduceMotion;
   const showCards = cardsInView || !!reduceMotion;
@@ -296,95 +305,135 @@ export function TestimonialsSection() {
       aria-labelledby="testimonials-heading"
     >
       <div className="w-full max-w-[1600px] px-5 md:px-10 xl:px-[60px]">
+        {/* Kora: photo + rating on top, cream quote panel below, title at photo seam */}
         <div
-          className="relative isolate aspect-[4/3] w-full overflow-hidden"
-          style={{ borderRadius: 40 }}
+          className="relative isolate w-full overflow-hidden"
+          style={{ borderRadius: 40, backgroundColor: CREAM }}
         >
-          {/* Image stays framed — Kora does not scale the photo on appear */}
-          <div className="absolute inset-0">
+          <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[5/4] md:aspect-[16/10]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={HERO_BG}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover object-[center_22%] md:object-[center_30%]"
               decoding="async"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(41,41,41,0.12) 0%, rgba(41,41,41,0.08) 45%, rgba(41,41,41,0.45) 100%)",
+              }}
+              aria-hidden
+            />
+
+            {/* Rating — desktop only (Kora has it; hide on mobile) */}
+            <div className="absolute top-5 right-5 z-20 hidden text-right text-white md:top-8 md:right-8 md:block">
+              <p
+                className="text-[clamp(40px,11vw,72px)] leading-none font-bold tracking-[-0.05em]"
+                style={{ fontFamily: FONT }}
+              >
+                4.
+                <span className="relative inline-block">
+                  9
+                  <span
+                    className="absolute right-0 bottom-[0.08em] left-0 h-[3px] rounded-full md:h-[4px]"
+                    style={{ backgroundColor: ACCENT }}
+                    aria-hidden
+                  />
+                </span>
+                /{HERO.ratingMax}
+              </p>
+              <p
+                className="mt-1.5 text-[12px] leading-[1.3] font-medium tracking-[-0.02em] text-white/90 md:text-[14px]"
+                style={{ fontFamily: FONT }}
+              >
+                {HERO.ratingNote}
+              </p>
+            </div>
+
+            {/* Title sits on photo bottom — overlaps into cream like Kora */}
+            <SectionTitleReveal
+              id="testimonials-heading"
+              lines={[TITLE_LINE]}
+              inView={show}
+              reduceMotion={reduceMotion}
+              className="pointer-events-none absolute bottom-0 left-5 z-20 max-w-[12em] translate-y-[28%] text-[clamp(32px,9vw,68px)] leading-[1.05] font-bold tracking-[-0.05em] break-keep select-none md:left-10 md:translate-y-[32%] md:text-[clamp(42px,5.2vw,72px)] xl:left-12"
+              style={{ fontFamily: FONT }}
+              ariaLabel="함께 한 분들의 이야기"
             />
           </div>
 
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: OVERLAY, opacity: 0.18 }}
-            aria-hidden
-          />
-
-          {/* Title — word-by-word (matches Wish / FAQ sections) */}
-          <SectionTitleReveal
-            id="testimonials-heading"
-            lines={[TITLE_LINE]}
-            inView={show}
-            reduceMotion={reduceMotion}
-            className="pointer-events-none absolute top-10 left-5 z-20 max-w-[11em] text-[clamp(42px,5.2vw,68px)] leading-[1.15] font-bold tracking-[-0.05em] break-keep select-none md:top-14 md:left-10 xl:top-16 xl:left-12"
-            style={{ fontFamily: FONT }}
-            ariaLabel="함께 한 분들의 이야기"
-          />
-
-          {/* Glass card — Kora: x30 y30 scale 0.8 rotate -5deg */}
-          <div className="absolute top-[72%] left-5 z-10 w-[min(100%-2.5rem,320px)] -translate-y-1/2 md:left-10 md:w-[375px] xl:left-12">
-            <motion.div
-              className="will-change-[transform,opacity]"
-              initial={reduceMotion ? false : heroCardHidden}
-              whileInView={reduceMotion ? undefined : heroCardVisible}
-              viewport={{ once: true, amount: 0.35, margin: "0px 0px -10% 0px" }}
-              transition={
-                reduceMotion
-                  ? { duration: 0 }
-                  : {
-                      opacity: {
-                        duration: 0.5,
-                        ease: [0.22, 1, 0.36, 1],
-                      },
-                      x: { type: "spring", bounce: 0.29, duration: 0.58 },
-                      y: { type: "spring", bounce: 0.29, duration: 0.58 },
-                      scale: { type: "spring", bounce: 0.29, duration: 0.58 },
-                      rotate: { type: "spring", bounce: 0.29, duration: 0.58 },
-                    }
-              }
-            >
-              <div
-                className="flex flex-col gap-[30px] rounded-[30px] p-[30px] shadow-[0_0_0_1px_#ffffff80]"
-                style={{
-                  backgroundColor: "#ffffff59",
-                  backdropFilter: "blur(10px)",
-                  WebkitBackdropFilter: "blur(10px)",
-                }}
+          {/* Cream quote panel — dark type (Kora) */}
+          <motion.div
+            className="relative z-10 flex flex-col gap-6 px-5 pt-10 pb-7 will-change-[transform,opacity] sm:px-7 sm:pt-14 md:gap-8 md:px-10 md:pt-[4.5rem] md:pb-10 xl:px-12"
+            initial={reduceMotion ? false : heroCardHidden}
+            whileInView={reduceMotion ? undefined : heroCardVisible}
+            viewport={{ once: true, amount: 0.25, margin: "0px 0px -8% 0px" }}
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : {
+                    opacity: {
+                      duration: 0.5,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
+                    x: { type: "spring", bounce: 0.29, duration: 0.58 },
+                    y: { type: "spring", bounce: 0.29, duration: 0.58 },
+                    scale: { type: "spring", bounce: 0.29, duration: 0.58 },
+                    rotate: { type: "spring", bounce: 0.29, duration: 0.58 },
+                  }
+            }
+          >
+            <div className="flex max-w-[34em] flex-col gap-4 md:gap-5">
+              <p
+                className="whitespace-pre-line text-[clamp(16px,4.1vw,24px)] leading-[1.3] font-semibold tracking-[-0.04em] md:text-[clamp(22px,2.4vw,32px)] md:leading-[1.25] md:font-bold"
+                style={{ color: BLACK, fontFamily: FONT }}
               >
-                <div className="flex flex-col gap-5">
-                  <p className="whitespace-pre-line text-[17px] leading-[1.35] font-semibold tracking-[-0.03em] text-[#FFFFFA] md:text-[20px]">
-                    &ldquo;{HERO.quote}&rdquo;
-                  </p>
-                  <div
-                    className="h-px w-full"
-                    style={{ backgroundColor: "#e3e3e373" }}
-                    aria-hidden
-                  />
-                  <p className="text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] text-[#E6E6E6]">
-                    {HERO.body}
-                  </p>
-                </div>
-                <div className="flex items-center gap-[15px]">
-                  <Avatar src={HERO.avatar} alt={HERO.name} size={58} />
-                  <div>
-                    <p className="text-[14px] font-semibold tracking-[-0.03em] text-[#FAFAF7]">
-                      {HERO.name}
-                    </p>
-                    <p className="text-[13px] font-semibold tracking-[-0.025em] text-[#E6E6E6]">
-                      {HERO.role}
-                    </p>
-                  </div>
-                </div>
+                &ldquo;{HERO.quote}&rdquo;
+              </p>
+              <div
+                className="h-px w-full"
+                style={{ backgroundColor: "rgba(36,36,36,0.12)" }}
+                aria-hidden
+              />
+              <p
+                className="text-[14px] leading-[1.55] font-medium tracking-[-0.03em] md:text-[16px] md:leading-[1.5]"
+                style={{ color: "#3A3A3A", fontFamily: FONT }}
+              >
+                {HERO.body}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 md:gap-[15px]">
+              <span
+                className="relative size-11 shrink-0 overflow-hidden rounded-full md:size-[58px]"
+                style={{ backgroundColor: "#E8E8E8" }}
+              >
+                <Image
+                  src={HERO.avatar}
+                  alt={HERO.name}
+                  fill
+                  sizes="58px"
+                  className="object-cover"
+                />
+              </span>
+              <div>
+                <p
+                  className="text-[13px] font-bold tracking-[-0.03em] md:text-[15px]"
+                  style={{ color: BLACK, fontFamily: FONT }}
+                >
+                  {HERO.name}
+                </p>
+                <p
+                  className="text-[12px] font-medium tracking-[-0.025em] md:text-[13px]"
+                  style={{ color: "#616161", fontFamily: FONT }}
+                >
+                  {HERO.role}
+                </p>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
@@ -401,17 +450,21 @@ export function TestimonialsSection() {
               key={card.id}
               className="h-full"
               initial={
-                reduceMotion ? false : { opacity: 0.001, y: 10, scale: 0.9 }
+                reduceMotion
+                  ? false
+                  : { opacity: 0, y: 16, scale: 0.92 }
               }
-              animate={
-                showCards
-                  ? { opacity: 1, y: 0, scale: 1 }
-                  : { opacity: 0.001, y: 10, scale: 0.9 }
+              whileInView={
+                reduceMotion
+                  ? undefined
+                  : { opacity: 1, y: 0, scale: 1 }
               }
-              transition={{
-                ...appear,
-                delay: reduceMotion ? 0 : i * 0.05,
-              }}
+              viewport={{ once: true, amount: 0.28, margin: "0px 0px -6% 0px" }}
+              transition={
+                reduceMotion
+                  ? { duration: 0 }
+                  : { ...koraSpring, delay: i * 0.08 }
+              }
             >
               <AccordionCard
                 {...card}

@@ -1,0 +1,22 @@
+---
+description: Mobile hero copy overlay — agreed design (temporarily hidden)
+globs: src/app/page.tsx
+alwaysApply: false
+---
+
+# Hero mobile copy (remembered)
+
+PC keeps text burned into the hero video. Mobile needs an HTML overlay (`HeroMobileCopy` in `src/app/page.tsx`) — **currently hidden** (`SHOW_HERO_MOBILE_COPY = false`). Re-enable that flag when the user asks to show it again.
+
+## Copy (centered, Pretendard)
+
+1. `하나의 사건번호가 아닌,` — `font-light`
+2. `한 사람의 삶` (`font-semibold`) + `으로` (`font-light`)
+3. `이로운 변호사들,` — `font-light` (extra top gap)
+4. `이로운 파트너스` — `font-semibold`
+
+## Motion
+
+- Opacity-only fade (no slide)
+- Slow: `duration: 2.4`, `delay: 0.5 + i * 0.95`, `ease: "easeInOut"`
+- `md:hidden` only — do not add on desktop

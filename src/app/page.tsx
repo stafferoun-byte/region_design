@@ -18,7 +18,22 @@ import { TeamSection } from "@/components/team-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { WinningCases } from "@/components/winning-cases";
 import { WishNetworkSection } from "@/components/wish-network-section";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+/** Desktop only — hero sticky zoom scrub (Kora mobile scrolls normally) */
+function useIsDesktop(query = "(min-width: 1024px)") {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, [query]);
+
+  return isDesktop;
+}
 
 /** Existing hero institution logos — reuse project assets as-is */
 const partnerLogos = [
@@ -31,6 +46,69 @@ const partnerLogos = [
 
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+const FONT_PRETENDARD =
+  '"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+/** Flip to true to restore mobile hero copy overlay */
+const SHOW_HERO_MOBILE_COPY = false;
+
+/** Mobile-only hero copy — PC has the same lines burned into the video */
+function HeroMobileCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
+  const lines: {
+    key: string;
+    mt?: boolean;
+    parts: { text: string; bold?: boolean }[];
+  }[] = [
+    { key: "l0", parts: [{ text: "하나의 사건번호가 아닌," }] },
+    {
+      key: "l1",
+      parts: [
+        { text: "한 사람의 삶", bold: true },
+        { text: "으로" },
+      ],
+    },
+    { key: "l2", mt: true, parts: [{ text: "이로운 변호사들," }] },
+    { key: "l3", parts: [{ text: "이로운 파트너스", bold: true }] },
+  ];
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center px-6 md:hidden">
+      <div
+        className="flex w-full max-w-[20ch] flex-col items-center text-center text-[clamp(26px,7vw,34px)] leading-[1.25] tracking-[-0.04em] text-white"
+        style={{ fontFamily: FONT_PRETENDARD }}
+        aria-label="하나의 사건번호가 아닌, 한 사람의 삶으로. 이로운 변호사들, 이로운 파트너스"
+      >
+        {lines.map((line, i) => (
+          <motion.p
+            key={line.key}
+            className={`font-light${line.mt ? " mt-7" : ""}`}
+            initial={reduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : {
+                    duration: 2.4,
+                    delay: 0.5 + i * 0.95,
+                    ease: "easeInOut",
+                  }
+            }
+          >
+            {line.parts.map((part) => (
+              <span
+                key={part.text}
+                className={part.bold ? "font-semibold" : undefined}
+              >
+                {part.text}
+              </span>
+            ))}
+          </motion.p>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   const cardTriggerRef = useRef<HTMLDivElement | null>(null);
@@ -143,7 +221,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                     transformPerspective: 1200,
                     fontFamily: FONT_WANTED,
                   }}
-                  className="origin-center text-center text-[35px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform md:text-[60px] md:font-bold xl:text-[80px]"
+                  className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
                 >
                   일상의 회복을 위한
                 </motion.div>
@@ -156,7 +234,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                     transformPerspective: 1200,
                     fontFamily: FONT_WANTED,
                   }}
-                  className="origin-center text-center text-[35px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform md:text-[60px] md:font-bold xl:text-[80px]"
+                  className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
                 >
                   이로운 파트너스의{" "}
                   <span className="text-[#5DC39B]">진심</span>
@@ -191,6 +269,8 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
 export default function Home() {
   const heroTransitionRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
+  const isDesktop = useIsDesktop();
+  const enableHeroScrub = isDesktop && !reduceMotion;
 
   const { scrollYProgress } = useScroll({
     target: heroTransitionRef,
@@ -201,21 +281,25 @@ export default function Home() {
   const frameScale = useTransform(
     scrollYProgress,
     [0, 0.18, 1],
-    reduceMotion ? [1, 1, 1] : [1, 1, 1.1],
+    enableHeroScrub ? [1, 1, 1.1] : [1, 1, 1],
   );
 
   // Cap darkness to the mid-dim look (not full black)
   const darkOpacity = useTransform(
     scrollYProgress,
     [0.2, 1],
-    [0, 0.42],
+    enableHeroScrub ? [0, 0.42] : [0, 0],
   );
 
-  const logoOpacity = useTransform(scrollYProgress, [0, 0.14, 0.4], [1, 1, 0]);
+  const logoOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.14, 0.4],
+    enableHeroScrub ? [1, 1, 0] : [1, 1, 1],
+  );
   const logoY = useTransform(
     scrollYProgress,
     [0.14, 0.4],
-    [0, reduceMotion ? 0 : -24],
+    [0, enableHeroScrub ? -24 : 0],
   );
 
   return (
@@ -224,19 +308,24 @@ export default function Home() {
       className="relative bg-[#FCFCFA] text-[#161616]"
       suppressHydrationWarning
     >
+      {/* Kora: floating pill — fixed to viewport, outside hero overflow */}
+      <HeroNav />
+
       {/*
-        Sticky hero stays pinned while the scroll track + next section move.
-        After zoom/darken, the next section rises over it.
+        Desktop: sticky hero while zoom/darken scrub.
+        Mobile: normal document flow (nav is fixed separately).
       */}
-      <section className="sticky top-0 z-0 h-svh w-full">
+      <section
+        className={`z-0 h-svh w-full ${isDesktop ? "sticky top-0" : "relative"}`}
+      >
         <div className="relative h-full w-full overflow-hidden">
           <motion.div
             className="absolute inset-0 z-0 origin-center will-change-transform"
             style={{ scale: frameScale }}
           >
-            <div className="absolute inset-5 overflow-hidden rounded-[40px]">
+            <div className="absolute inset-3 overflow-hidden rounded-[44px] sm:inset-4 sm:rounded-[32px] md:inset-5 md:rounded-[40px]">
               <video
-                className="absolute inset-0 h-full w-full object-cover object-center"
+                className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
                 src="/videos/hero.mp4?v=3"
                 autoPlay
                 muted
@@ -247,19 +336,23 @@ export default function Home() {
             </div>
           </motion.div>
 
+          {SHOW_HERO_MOBILE_COPY ? (
+            <HeroMobileCopy reduceMotion={reduceMotion} />
+          ) : null}
+
           <motion.div
-            className="institution-logo-strip pointer-events-none absolute right-auto bottom-[52px] left-[44px] z-[1] max-w-[58%] sm:bottom-[56px] sm:left-[48px]"
+            className="institution-logo-strip pointer-events-none absolute right-auto bottom-8 left-6 z-[1] max-w-[72%] sm:bottom-10 sm:left-10 sm:max-w-[62%] md:bottom-[56px] md:left-[48px] md:max-w-[58%]"
             style={{ opacity: logoOpacity, y: logoY }}
           >
             <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]">
-              <div className="marquee-track flex min-w-max items-center gap-20">
+              <div className="marquee-track flex min-w-max items-center gap-10 md:gap-20">
                 {[...partnerLogos, ...partnerLogos].map((logo, index) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={`${logo.alt}-${index}`}
                     src={`${logo.src}?v=4`}
                     alt={logo.alt}
-                    className="h-12 w-auto object-contain"
+                    className="h-8 w-auto object-contain sm:h-10 md:h-12"
                   />
                 ))}
               </div>
@@ -271,19 +364,21 @@ export default function Home() {
             style={{ scale: frameScale }}
           >
             <motion.div
-              className="absolute inset-5 rounded-[40px] bg-black/50"
+              className="absolute inset-3 rounded-[44px] bg-black/50 sm:inset-4 sm:rounded-[32px] md:inset-5 md:rounded-[40px]"
               style={{ opacity: darkOpacity }}
             />
           </motion.div>
-
-          <HeroNav />
         </div>
       </section>
 
-      {/* Track ends when zoom/dim finish — next section covers right then */}
+      {/* Scroll track only when desktop sticky scrub is active */}
       <div
         ref={heroTransitionRef}
-        className="pointer-events-none -mt-[100svh] h-[180svh] md:h-[200svh]"
+        className={
+          isDesktop
+            ? "pointer-events-none -mt-[100svh] h-[200svh]"
+            : "pointer-events-none h-0 overflow-hidden"
+        }
         aria-hidden
       />
 

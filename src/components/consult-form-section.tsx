@@ -12,6 +12,7 @@ import Image from "next/image";
 import {
   FormEvent,
   type ReactNode,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -24,6 +25,21 @@ import { SectionTitleReveal, WordReveal } from "@/components/section-title-revea
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+/** Kora: CTA box shrink-on-exit is desktop-only */
+function useIsDesktop(query = "(min-width: 768px)") {
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, [query]);
+
+  return isDesktop;
+}
 
 const ACCENT = "#5DC39B";
 const INK = "#292929";
@@ -194,9 +210,12 @@ function RadioChip({
 
 export function ConsultFormSection() {
   const reduceMotion = useReducedMotion();
+  const isDesktop = useIsDesktop();
   const sectionRef = useRef<HTMLElement | null>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.15 });
+  /** Shrink as footer rises — desktop only (Kora mobile has none) */
+  const enableBoxScale = isDesktop === true && reduceMotion !== true;
 
   /**
    * Kora CTA → footer: as the box bottom leaves the viewport,
@@ -207,15 +226,15 @@ export function ConsultFormSection() {
     offset: ["end end", "end start"],
   });
   const smoothExit = useSpring(scrollYProgress, {
-    stiffness: reduceMotion ? 500 : 120,
-    damping: reduceMotion ? 40 : 28,
+    stiffness: enableBoxScale ? 120 : 500,
+    damping: enableBoxScale ? 28 : 40,
     mass: 0.4,
     restDelta: 0.001,
   });
   const boxScale = useTransform(
     smoothExit,
     [0, 0.25, 0.55, 0.85, 1],
-    reduceMotion ? [1, 1, 1, 1, 1] : [1, 0.985, 0.96, 0.94, 0.92],
+    enableBoxScale ? [1, 0.985, 0.96, 0.94, 0.92] : [1, 1, 1, 1, 1],
   );
 
   const [name, setName] = useState("");
@@ -245,11 +264,11 @@ export function ConsultFormSection() {
       className="relative z-10 w-full scroll-mt-24 overflow-x-clip bg-transparent"
       aria-labelledby="consult-heading"
     >
-      {/* Outer inset matches TeamSection green box */}
-      <div className="mx-auto w-full max-w-[1920px] px-5 py-5 md:px-10 xl:px-12">
+      {/* Outer inset + radius matched to SiteFooter cream card */}
+      <div className="mx-auto w-full max-w-[1920px] px-3 pt-3 pb-2.5 sm:px-3.5 md:px-5 md:pt-5 md:pb-4">
         <motion.div
           ref={boxRef}
-          className="relative w-full origin-center overflow-hidden rounded-[40px] will-change-transform"
+          className="relative w-full origin-center overflow-hidden rounded-[44px] will-change-transform md:rounded-[40px]"
           style={{ scale: boxScale }}
         >
           {/* Background — native img keeps full-res (no Next recompression) */}
@@ -263,13 +282,18 @@ export function ConsultFormSection() {
               draggable={false}
             />
             <div aria-hidden className="absolute inset-0 bg-black/25" />
+            {/* Mobile: slight darken lower band so white stats stay readable */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/35 via-black/12 to-transparent md:hidden"
+            />
           </div>
 
           <div className="relative z-[1] flex flex-col px-5 py-[60px] md:px-10 md:py-[90px] xl:px-12 xl:py-[120px]">
           {/* Main row: left + form stretch so bottoms match */}
-          <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-8 xl:gap-10">
+          <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-11 lg:flex-row lg:items-stretch lg:gap-8 xl:gap-10">
             {/* Left */}
-            <div className="flex min-w-0 flex-1 flex-col justify-between gap-10 lg:gap-12">
+            <div className="flex min-w-0 flex-1 flex-col justify-between gap-14 lg:gap-12">
               <div className="flex flex-col gap-8 md:gap-10">
                 <SectionTitleReveal
                   id="consult-heading"
@@ -303,7 +327,7 @@ export function ConsultFormSection() {
 
               {/* Testimonial — bottom aligns with form bottom */}
               <motion.div
-                className="flex max-w-[420px] flex-col gap-4"
+                className="mt-2 flex max-w-[420px] flex-col gap-4 md:mt-0"
                 initial={reduceMotion ? false : { opacity: 0, y: 16 }}
                 animate={
                   inView || reduceMotion
@@ -326,7 +350,7 @@ export function ConsultFormSection() {
                   ))}
                 </div>
                 <blockquote
-                  className="text-[20px] leading-[1.45] font-semibold tracking-[-0.03em] break-keep md:text-[23px]"
+                  className="text-[17px] leading-[1.35] font-semibold tracking-[-0.03em] break-keep md:text-[23px] md:leading-[1.45]"
                   style={{ fontFamily: FONT, color: "#FFFFFF" }}
                 >
                   &ldquo;사건만 봐 주는 변호사가 아니라,
@@ -397,18 +421,23 @@ export function ConsultFormSection() {
                   <img
                     src="/images/eroun-logo.png"
                     alt="이로운 법률사무소"
-                    className="h-9 w-auto -translate-x-[calc(100%*132/842)] object-contain md:h-10"
+                    className="h-12 w-auto -translate-x-[calc(100%*132/842)] object-contain md:h-10"
                     draggable={false}
                   />
                 </div>
 
                 <p
-                  className="text-[18px] leading-[1.35] font-semibold tracking-[-0.035em] break-keep md:text-[20px]"
+                  className="mb-2 text-[18px] leading-[1.35] font-semibold tracking-[-0.035em] break-keep md:mb-0 md:text-[20px]"
                   style={{ color: INK }}
                 >
                   부담 없이 상황을 알려 주세요.
                   <br />
-                  <span style={{ color: MUTED }}>
+                  <span className="md:hidden" style={{ color: MUTED }}>
+                    어떻게 도와드릴 수 있는지
+                    <br />
+                    함께 정리해 드립니다.
+                  </span>
+                  <span className="hidden md:inline" style={{ color: MUTED }}>
                     어떻게 도와드릴 수 있는지 함께 정리해 드립니다.
                   </span>
                 </p>
@@ -515,7 +544,7 @@ export function ConsultFormSection() {
                 style={{ borderColor: "rgba(255,255,255,0.35)" }}
               >
                 <p
-                  className="whitespace-nowrap text-[13px] leading-[1.4] font-semibold tracking-[-0.025em]"
+                  className="text-[13px] leading-[1.4] font-semibold tracking-[-0.025em] sm:whitespace-nowrap"
                   style={{ color: INK }}
                 >
                   {submitted ? (
@@ -548,14 +577,14 @@ export function ConsultFormSection() {
 
           {/* Stats — under the form column */}
           <div className="mx-auto flex w-full max-w-[1480px] justify-end pt-12 md:pt-14">
-            <div className="flex w-full flex-col gap-5 sm:flex-row sm:flex-wrap sm:gap-x-12 sm:gap-y-4 lg:w-[min(100%,600px)] lg:-ml-3 xl:w-[640px] xl:-ml-5">
+            <div className="flex w-full flex-col gap-12 sm:flex-row sm:flex-wrap sm:gap-x-12 sm:gap-y-4 lg:w-[min(100%,600px)] lg:-ml-3 xl:w-[640px] xl:-ml-5">
               {[
                 { value: "12,000+", label: "누적 상담" },
                 { value: "98%", label: "의뢰인 만족도" },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
-                  className="flex items-baseline gap-3"
+                  className="flex items-baseline gap-x-5 sm:gap-3"
                   initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                   animate={
                     inView || reduceMotion
@@ -569,13 +598,17 @@ export function ConsultFormSection() {
                   }}
                 >
                   <span
-                    className="text-[clamp(32px,4vw,48px)] leading-none font-bold tracking-[-0.05em] text-white"
-                    style={{ fontFamily: FONT }}
+                    className="text-[42px] leading-none font-semibold tracking-[-0.05em] text-[#FFFFFF] [-webkit-text-fill-color:#FFFFFF] max-md:[text-shadow:0_1px_4px_rgba(0,0,0,0.18)] md:text-[clamp(32px,4vw,48px)] md:font-bold"
+                    style={{
+                      fontFamily: FONT,
+                      color: "#FFFFFF",
+                      WebkitTextFillColor: "#FFFFFF",
+                    }}
                   >
                     {stat.value}
                   </span>
                   <span
-                    className="text-[15px] leading-[1.3] font-semibold tracking-[-0.03em] text-white/75 md:text-[17px]"
+                    className="text-[14px] leading-[1.3] font-normal tracking-[-0.03em] text-white/75 sm:text-[15px] sm:font-semibold md:text-[17px]"
                     style={{ fontFamily: FONT }}
                   >
                     {stat.label}

@@ -174,7 +174,7 @@ function ChartBar({
           }}
         />
         <motion.div
-          className="relative z-[1] h-full"
+          className="relative z-[1] flex h-full items-center justify-between gap-2 px-3.5 md:block md:px-0"
           initial={reduceMotion ? false : { opacity: 0 }}
           animate={show ? { opacity: 1 } : { opacity: 0 }}
           transition={{
@@ -184,7 +184,7 @@ function ChartBar({
           }}
         >
           <span
-            className="absolute bottom-3 left-[18px] shrink-0 text-[16px] leading-[1.4] font-bold tracking-[-0.03em] md:text-[18px]"
+            className="min-w-0 shrink text-[13px] leading-[1.25] font-bold tracking-[-0.03em] break-keep md:absolute md:bottom-3 md:left-[18px] md:text-[18px] md:leading-[1.4]"
             style={{
               fontFamily: FONT_WANTED,
               color: labelColor,
@@ -193,7 +193,7 @@ function ChartBar({
             {label}
           </span>
           <span
-            className="absolute top-1/2 right-3 shrink-0 -translate-y-1/2 text-[30px] leading-none font-bold tracking-[-0.06em] md:right-4 md:text-[38px] md:tracking-[-0.07em]"
+            className="shrink-0 text-right text-[17px] leading-[1.05] font-bold tracking-[-0.05em] break-keep sm:text-[20px] md:absolute md:top-1/2 md:right-4 md:-translate-y-1/2 md:text-[38px] md:tracking-[-0.07em]"
             style={{
               fontFamily: FONT_WANTED,
               color: labelColor,

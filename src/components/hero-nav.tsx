@@ -44,13 +44,24 @@ export function HeroNav({
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
   return (
     <div
       ref={rootRef}
       className={
         isSticky
           ? `sticky top-0 z-50 w-full ${stickyBg} px-5 pt-5 pb-3 backdrop-blur-md md:px-10 xl:px-12`
-          : "absolute inset-x-0 top-0 z-20 px-[calc(1.25rem+12px)] pt-[calc(1.25rem+16px)] sm:px-[calc(1.25rem+14px)]"
+          : /* Kora: floating pill stays on screen while scrolling */
+            "fixed inset-x-0 top-0 z-50 px-[calc(1.25rem+4px)] pt-[calc(1.25rem+8px)] sm:px-[calc(1.25rem+6px)] md:px-[calc(1.25rem+16px)] md:pt-[calc(1.25rem+16px)]"
       }
     >
       <div className="relative">
@@ -81,16 +92,32 @@ export function HeroNav({
 
           <button
             type="button"
-            className="relative flex size-10 shrink-0 items-center justify-center rounded-full lg:hidden"
+            className="relative flex size-8 shrink-0 items-center justify-center rounded-full bg-[#F5F5E9] lg:hidden"
             aria-expanded={menuOpen}
             aria-controls="hero-mobile-menu"
             aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
             onClick={() => setMenuOpen((open) => !open)}
           >
-            <span className="flex h-3.5 w-5 flex-col justify-between" aria-hidden>
-              <span className="block h-[2px] w-full rounded-full bg-[#292929]" />
-              <span className="block h-[2px] w-full rounded-full bg-[#292929]" />
-              <span className="block h-[2px] w-full rounded-full bg-[#292929]" />
+            <span className="relative h-3.5 w-5" aria-hidden>
+              <span
+                className={`absolute left-0 block h-[2px] w-full rounded-full bg-[#292929] transition-all duration-200 ease-out ${
+                  menuOpen
+                    ? "top-1/2 -translate-y-1/2 rotate-45"
+                    : "top-0 translate-y-0 rotate-0"
+                }`}
+              />
+              <span
+                className={`absolute top-1/2 left-0 block h-[2px] w-full -translate-y-1/2 rounded-full bg-[#292929] transition-opacity duration-200 ${
+                  menuOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`absolute left-0 block h-[2px] w-full rounded-full bg-[#292929] transition-all duration-200 ease-out ${
+                  menuOpen
+                    ? "top-1/2 -translate-y-1/2 -rotate-45"
+                    : "bottom-0 translate-y-0 rotate-0"
+                }`}
+              />
             </span>
           </button>
         </div>

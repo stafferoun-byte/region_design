@@ -243,7 +243,7 @@ export function InsightsSection() {
               lines={[INSIGHTS_TITLE_LINE]}
               inView={inView}
               reduceMotion={reduceMotion}
-              className="text-[clamp(36px,5vw,60px)] leading-[1.05] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform]"
+              className="text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:text-[clamp(36px,5vw,60px)] md:leading-[1.05]"
               style={{ color: INK, fontFamily: FONT }}
             />
             <WordReveal
@@ -252,7 +252,7 @@ export function InsightsSection() {
               inView={inView}
               reduceMotion={reduceMotion}
               delay={0.1}
-              className="max-w-[22em] text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] break-keep md:text-[25px]"
+              className="max-w-[22em] text-[15px] leading-[1.4] font-semibold tracking-[-0.04em] break-keep md:text-[25px] md:leading-[1.3]"
               style={{ color: MUTED, fontFamily: FONT }}
               ariaLabel="사건 현장에서 쌓은 경험과, 의뢰인에게 도움이 되는 법률 칼럼을 정리합니다."
             />

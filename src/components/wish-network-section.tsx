@@ -668,7 +668,10 @@ export function WishNetworkSection() {
                       }}
                     >
                       <div
-                        className="relative flex items-center gap-3 whitespace-nowrap px-6 py-4 text-[18px] leading-none font-semibold tracking-[-0.45px] text-[#1d1c1d] md:gap-3.5 md:px-8 md:py-5 md:text-[24px]"
+                        className="relative origin-center scale-[0.72] md:scale-100"
+                      >
+                      <div
+                        className="relative flex items-center gap-2.5 whitespace-nowrap px-5 py-3.5 text-[15px] leading-none font-semibold tracking-[-0.45px] text-[#1d1c1d] md:gap-3.5 md:px-8 md:py-5 md:text-[24px]"
                         style={{ fontFamily: FONT }}
                       >
                         <span
@@ -687,7 +690,7 @@ export function WishNetworkSection() {
                           src={b.emoji}
                           alt=""
                           draggable={false}
-                          className="relative size-[30px] shrink-0 object-contain md:size-[38px]"
+                          className="relative size-[26px] shrink-0 object-contain md:size-[38px]"
                           animate={
                             reduceMotion
                               ? undefined
@@ -704,6 +707,7 @@ export function WishNetworkSection() {
                             ease: "easeInOut",
                           }}
                         />
+                      </div>
                       </div>
                     </motion.div>
                   </motion.div>
