@@ -2,6 +2,7 @@
 
 import {
   motion,
+  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -272,34 +273,145 @@ export default function Home() {
   const isDesktop = useIsDesktop();
   const enableHeroScrub = isDesktop && !reduceMotion;
 
-  const { scrollYProgress } = useScroll({
-    target: heroTransitionRef,
-    offset: ["start start", "end end"],
-  });
+  const framePad = useMotionValue(24);
+  const frameRadius = useMotionValue(40);
+  const darkOpacity = useMotionValue(0);
+  const logoOpacity = useMotionValue(1);
+  const logoY = useMotionValue(0);
 
-  // Zoom + mild darken finish at end of track → next section rises immediately
-  const frameScale = useTransform(
-    scrollYProgress,
-    [0, 0.18, 1],
-    enableHeroScrub ? [1, 1, 1.1] : [1, 1, 1],
-  );
+  // Drive hero expand from Lenis/window scroll — Framer useScroll was not updating.
+  useEffect(() => {
+    const REST_PAD = enableHeroScrub ? 24 : 20;
+    const REST_RADIUS = enableHeroScrub ? 40 : 36;
 
-  // Cap darkness to the mid-dim look (not full black)
-  const darkOpacity = useTransform(
-    scrollYProgress,
-    [0.2, 1],
-    enableHeroScrub ? [0, 0.42] : [0, 0],
-  );
+    if (!enableHeroScrub) {
+      framePad.set(REST_PAD);
+      frameRadius.set(REST_RADIUS);
+      darkOpacity.set(0);
+      logoOpacity.set(1);
+      logoY.set(0);
+      return;
+    }
 
-  const logoOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.14, 0.4],
-    enableHeroScrub ? [1, 1, 0] : [1, 1, 1],
-  );
-  const logoY = useTransform(
-    scrollYProgress,
-    [0.14, 0.4],
-    [0, enableHeroScrub ? -24 : 0],
+    const update = () => {
+      const el = heroTransitionRef.current;
+      if (!el) return;
+
+      const total = el.offsetHeight - window.innerHeight;
+      if (total <= 0) return;
+
+      const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
+
+      // Expand through first ~55% of the sticky track
+      const t = Math.min(1, p / 0.55);
+      const s = t * t * (3 - 2 * t);
+      framePad.set(REST_PAD * (1 - s));
+      frameRadius.set(REST_RADIUS * (1 - s));
+
+      // Logos fade mid-expand
+      const logoT = Math.min(1, Math.max(0, (p - 0.12) / 0.28));
+      logoOpacity.set(1 - logoT);
+      logoY.set(-20 * logoT);
+
+      // Darken after mostly full-bleed
+      const darkT = Math.min(1, Math.max(0, (p - 0.4) / 0.4));
+      darkOpacity.set(0.42 * darkT);
+    };
+
+    update();
+
+    const lenis = (
+      window as unknown as { __lenis?: { on: Function; off: Function } }
+    ).__lenis;
+
+    // Lenis mounts in a parent effect after this one — retry briefly to attach.
+    let attached: { on: Function; off: Function } | null = lenis ?? null;
+    if (attached?.on) {
+      attached.on("scroll", update);
+    }
+
+    const retry = window.setInterval(() => {
+      if (attached) {
+        window.clearInterval(retry);
+        return;
+      }
+      const late = (
+        window as unknown as { __lenis?: { on: Function; off: Function } }
+      ).__lenis;
+      if (late?.on) {
+        attached = late;
+        late.on("scroll", update);
+        update();
+        window.clearInterval(retry);
+      }
+    }, 50);
+    window.setTimeout(() => window.clearInterval(retry), 2000);
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.clearInterval(retry);
+      attached?.off?.("scroll", update);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [
+    enableHeroScrub,
+    framePad,
+    frameRadius,
+    darkOpacity,
+    logoOpacity,
+    logoY,
+  ]);
+
+  const heroFrame = (
+    <motion.div
+      className="box-border h-full w-full bg-[#FCFCFA] will-change-[padding]"
+      style={{ padding: framePad }}
+    >
+      <motion.div
+        className="relative isolate h-full w-full overflow-hidden will-change-[border-radius]"
+        style={{ borderRadius: frameRadius }}
+      >
+        <video
+          className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
+          src="/videos/hero.mp4?v=3"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+
+        {SHOW_HERO_MOBILE_COPY ? (
+          <HeroMobileCopy reduceMotion={reduceMotion} />
+        ) : null}
+
+        <motion.div
+          className="institution-logo-strip pointer-events-none absolute right-auto bottom-8 left-6 z-[1] max-w-[72%] sm:bottom-10 sm:left-10 sm:max-w-[62%] md:bottom-[56px] md:left-[48px] md:max-w-[58%]"
+          style={{ opacity: logoOpacity, y: logoY }}
+        >
+          <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]">
+            <div className="marquee-track flex min-w-max items-center gap-10 md:gap-20">
+              {[...partnerLogos, ...partnerLogos].map((logo, index) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={`${logo.alt}-${index}`}
+                  src={`${logo.src}?v=4`}
+                  alt={logo.alt}
+                  className="h-8 w-auto object-contain sm:h-10 md:h-12"
+                />
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-[2] bg-black/50"
+          style={{ opacity: darkOpacity }}
+        />
+      </motion.div>
+    </motion.div>
   );
 
   return (
@@ -308,79 +420,22 @@ export default function Home() {
       className="relative bg-[#FCFCFA] text-[#161616]"
       suppressHydrationWarning
     >
-      {/* Kora: floating pill — fixed to viewport, outside hero overflow */}
       <HeroNav />
 
       {/*
-        Desktop: sticky hero while zoom/darken scrub.
-        Mobile: normal document flow (nav is fixed separately).
+        Same DOM always (ref must stay mounted). Desktop: tall scrub track + sticky.
+        Mobile: one viewport, static rounded card via enableHeroScrub=false.
       */}
-      <section
-        className={`z-0 h-svh w-full bg-[#FCFCFA] ${isDesktop ? "sticky top-0" : "relative"}`}
-      >
-        {/*
-          Cream padding + rounded clipper must NOT share a transform with the
-          video. Framer scale on the same node breaks border-radius clipping
-          (looks full-bleed on first paint).
-        */}
-        <div className="box-border h-full w-full bg-[#FCFCFA] p-3 sm:p-4 md:p-5">
-          <div className="relative isolate h-full w-full overflow-hidden rounded-[44px] sm:rounded-[32px] md:rounded-[40px]">
-            <motion.div
-              className="absolute inset-0 origin-center will-change-transform"
-              style={{ scale: frameScale }}
-            >
-              <video
-                className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
-                src="/videos/hero.mp4?v=3"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-              />
-            </motion.div>
-
-            {SHOW_HERO_MOBILE_COPY ? (
-              <HeroMobileCopy reduceMotion={reduceMotion} />
-            ) : null}
-
-            <motion.div
-              className="institution-logo-strip pointer-events-none absolute right-auto bottom-8 left-6 z-[1] max-w-[72%] sm:bottom-10 sm:left-10 sm:max-w-[62%] md:bottom-[56px] md:left-[48px] md:max-w-[58%]"
-              style={{ opacity: logoOpacity, y: logoY }}
-            >
-              <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]">
-                <div className="marquee-track flex min-w-max items-center gap-10 md:gap-20">
-                  {[...partnerLogos, ...partnerLogos].map((logo, index) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={`${logo.alt}-${index}`}
-                      src={`${logo.src}?v=4`}
-                      alt={logo.alt}
-                      className="h-8 w-auto object-contain sm:h-10 md:h-12"
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="pointer-events-none absolute inset-0 z-[2] bg-black/50"
-              style={{ opacity: darkOpacity }}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Scroll track only when desktop sticky scrub is active */}
       <div
         ref={heroTransitionRef}
-        className={
-          isDesktop
-            ? "pointer-events-none -mt-[100svh] h-[200svh]"
-            : "pointer-events-none h-0 overflow-hidden"
-        }
-        aria-hidden
-      />
+        className={`relative z-0 ${isDesktop ? "h-[240svh]" : "h-svh"}`}
+      >
+        <section
+          className={`h-svh w-full bg-[#FCFCFA] ${isDesktop ? "sticky top-0" : "relative"}`}
+        >
+          {heroFrame}
+        </section>
+      </div>
 
       <ChangesSection reduceMotion={reduceMotion} />
 

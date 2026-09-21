@@ -34,6 +34,7 @@ const TITLE_LINE = [
 ] as const;
 
 const HERO_BG = "/images/testimonials/lawyers-hero.png";
+const OVERLAY = "#292929";
 
 const HERO = {
   rating: "4.9",
@@ -305,17 +306,17 @@ export function TestimonialsSection() {
       aria-labelledby="testimonials-heading"
     >
       <div className="w-full max-w-[1600px] px-5 md:px-10 xl:px-[60px]">
-        {/* Kora: photo + rating on top, cream quote panel below, title at photo seam */}
+        {/* ── Mobile: cream panel below photo (keep as-is) ── */}
         <div
-          className="relative isolate w-full overflow-hidden"
+          className="relative isolate w-full overflow-hidden md:hidden"
           style={{ borderRadius: 40, backgroundColor: CREAM }}
         >
-          <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[5/4] md:aspect-[16/10]">
+          <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[5/4]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={HERO_BG}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover object-[center_22%] md:object-[center_30%]"
+              className="absolute inset-0 h-full w-full object-cover object-[center_22%]"
               decoding="async"
             />
             <div
@@ -327,46 +328,18 @@ export function TestimonialsSection() {
               aria-hidden
             />
 
-            {/* Rating — desktop only (Kora has it; hide on mobile) */}
-            <div className="absolute top-5 right-5 z-20 hidden text-right text-white md:top-8 md:right-8 md:block">
-              <p
-                className="text-[clamp(40px,11vw,72px)] leading-none font-bold tracking-[-0.05em]"
-                style={{ fontFamily: FONT }}
-              >
-                4.
-                <span className="relative inline-block">
-                  9
-                  <span
-                    className="absolute right-0 bottom-[0.08em] left-0 h-[3px] rounded-full md:h-[4px]"
-                    style={{ backgroundColor: ACCENT }}
-                    aria-hidden
-                  />
-                </span>
-                /{HERO.ratingMax}
-              </p>
-              <p
-                className="mt-1.5 text-[12px] leading-[1.3] font-medium tracking-[-0.02em] text-white/90 md:text-[14px]"
-                style={{ fontFamily: FONT }}
-              >
-                {HERO.ratingNote}
-              </p>
-            </div>
-
-            {/* Title sits on photo bottom — overlaps into cream like Kora */}
             <SectionTitleReveal
-              id="testimonials-heading"
               lines={[TITLE_LINE]}
               inView={show}
               reduceMotion={reduceMotion}
-              className="pointer-events-none absolute bottom-0 left-5 z-20 max-w-[12em] translate-y-[28%] text-[clamp(32px,9vw,68px)] leading-[1.05] font-bold tracking-[-0.05em] break-keep select-none md:left-10 md:translate-y-[32%] md:text-[clamp(42px,5.2vw,72px)] xl:left-12"
+              className="pointer-events-none absolute bottom-0 left-5 z-20 max-w-[12em] translate-y-[28%] text-[clamp(32px,9vw,68px)] leading-[1.05] font-bold tracking-[-0.05em] break-keep select-none"
               style={{ fontFamily: FONT }}
               ariaLabel="함께 한 분들의 이야기"
             />
           </div>
 
-          {/* Cream quote panel — dark type (Kora) */}
           <motion.div
-            className="relative z-10 flex flex-col gap-6 px-5 pt-10 pb-7 will-change-[transform,opacity] sm:px-7 sm:pt-14 md:gap-8 md:px-10 md:pt-[4.5rem] md:pb-10 xl:px-12"
+            className="relative z-10 flex flex-col gap-6 px-5 pt-10 pb-7 will-change-[transform,opacity] sm:px-7 sm:pt-14"
             initial={reduceMotion ? false : heroCardHidden}
             whileInView={reduceMotion ? undefined : heroCardVisible}
             viewport={{ once: true, amount: 0.25, margin: "0px 0px -8% 0px" }}
@@ -385,9 +358,9 @@ export function TestimonialsSection() {
                   }
             }
           >
-            <div className="flex max-w-[34em] flex-col gap-4 md:gap-5">
+            <div className="flex max-w-[34em] flex-col gap-4">
               <p
-                className="whitespace-pre-line text-[clamp(16px,4.1vw,24px)] leading-[1.3] font-semibold tracking-[-0.04em] md:text-[clamp(22px,2.4vw,32px)] md:leading-[1.25] md:font-bold"
+                className="whitespace-pre-line text-[clamp(16px,4.1vw,24px)] leading-[1.3] font-semibold tracking-[-0.04em]"
                 style={{ color: BLACK, fontFamily: FONT }}
               >
                 &ldquo;{HERO.quote}&rdquo;
@@ -398,35 +371,35 @@ export function TestimonialsSection() {
                 aria-hidden
               />
               <p
-                className="text-[14px] leading-[1.55] font-medium tracking-[-0.03em] md:text-[16px] md:leading-[1.5]"
+                className="text-[14px] leading-[1.55] font-medium tracking-[-0.03em]"
                 style={{ color: "#3A3A3A", fontFamily: FONT }}
               >
                 {HERO.body}
               </p>
             </div>
 
-            <div className="flex items-center gap-3 md:gap-[15px]">
+            <div className="flex items-center gap-3">
               <span
-                className="relative size-11 shrink-0 overflow-hidden rounded-full md:size-[58px]"
+                className="relative size-11 shrink-0 overflow-hidden rounded-full"
                 style={{ backgroundColor: "#E8E8E8" }}
               >
                 <Image
                   src={HERO.avatar}
                   alt={HERO.name}
                   fill
-                  sizes="58px"
+                  sizes="44px"
                   className="object-cover"
                 />
               </span>
               <div>
                 <p
-                  className="text-[13px] font-bold tracking-[-0.03em] md:text-[15px]"
+                  className="text-[13px] font-bold tracking-[-0.03em]"
                   style={{ color: BLACK, fontFamily: FONT }}
                 >
                   {HERO.name}
                 </p>
                 <p
-                  className="text-[12px] font-medium tracking-[-0.025em] md:text-[13px]"
+                  className="text-[12px] font-medium tracking-[-0.025em]"
                   style={{ color: "#616161", fontFamily: FONT }}
                 >
                   {HERO.role}
@@ -434,6 +407,106 @@ export function TestimonialsSection() {
               </div>
             </div>
           </motion.div>
+        </div>
+
+        {/* ── Desktop: original glass-on-photo hero (pre mobile redesign) ── */}
+        <div
+          className="relative isolate hidden aspect-[16/10] w-full overflow-hidden md:block"
+          style={{ borderRadius: 40 }}
+        >
+          <div className="absolute inset-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={HERO_BG}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+              decoding="async"
+            />
+          </div>
+
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: OVERLAY, opacity: 0.18 }}
+            aria-hidden
+          />
+
+          <SectionTitleReveal
+            id="testimonials-heading"
+            lines={[TITLE_LINE]}
+            inView={show}
+            reduceMotion={reduceMotion}
+            className="pointer-events-none absolute top-14 left-10 z-20 max-w-[11em] text-[clamp(42px,5.2vw,68px)] leading-[1.15] font-bold tracking-[-0.05em] break-keep select-none xl:top-16 xl:left-12"
+            style={{ fontFamily: FONT }}
+            ariaLabel="함께 한 분들의 이야기"
+          />
+
+          <div className="absolute top-[72%] left-10 z-10 w-[375px] -translate-y-1/2 xl:left-12">
+            <motion.div
+              className="will-change-[transform,opacity]"
+              initial={reduceMotion ? false : heroCardHidden}
+              whileInView={reduceMotion ? undefined : heroCardVisible}
+              viewport={{ once: true, amount: 0.35, margin: "0px 0px -10% 0px" }}
+              transition={
+                reduceMotion
+                  ? { duration: 0 }
+                  : {
+                      opacity: {
+                        duration: 0.5,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                      x: { type: "spring", bounce: 0.29, duration: 0.58 },
+                      y: { type: "spring", bounce: 0.29, duration: 0.58 },
+                      scale: { type: "spring", bounce: 0.29, duration: 0.58 },
+                      rotate: { type: "spring", bounce: 0.29, duration: 0.58 },
+                    }
+              }
+            >
+              <div
+                className="flex flex-col gap-[30px] rounded-[30px] p-[30px] shadow-[0_0_0_1px_#ffffff80]"
+                style={{
+                  backgroundColor: "#ffffff59",
+                  backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)",
+                }}
+              >
+                <div className="flex flex-col gap-5">
+                  <p className="whitespace-pre-line text-[20px] leading-[1.35] font-semibold tracking-[-0.03em] text-[#FFFFFA]">
+                    &ldquo;{HERO.quote}&rdquo;
+                  </p>
+                  <div
+                    className="h-px w-full"
+                    style={{ backgroundColor: "#e3e3e373" }}
+                    aria-hidden
+                  />
+                  <p className="text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] text-[#E6E6E6]">
+                    {HERO.body}
+                  </p>
+                </div>
+                <div className="flex items-center gap-[15px]">
+                  <span
+                    className="relative size-[58px] shrink-0 overflow-hidden rounded-full"
+                    style={{ backgroundColor: "#E8E8E8" }}
+                  >
+                    <Image
+                      src={HERO.avatar}
+                      alt={HERO.name}
+                      fill
+                      sizes="58px"
+                      className="object-cover"
+                    />
+                  </span>
+                  <div>
+                    <p className="text-[14px] font-semibold tracking-[-0.03em] text-[#FAFAF7]">
+                      {HERO.name}
+                    </p>
+                    <p className="text-[13px] font-semibold tracking-[-0.025em] text-[#E6E6E6]">
+                      {HERO.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
 

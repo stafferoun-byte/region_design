@@ -6,6 +6,7 @@ import {
   useInView,
   useReducedMotion,
 } from "framer-motion";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
 
@@ -162,7 +163,21 @@ const FAQ_BY_CATEGORY: Record<CategoryId, FaqItem[]> = {
   ],
 };
 
-const AVATAR_SLOTS = 3;
+/** Contact island — CEO (대표) centered; user nukki on panel cream */
+const CONTACT_AVATARS = [
+  {
+    src: "/images/faq/avatar-lawyer-w-v3.png",
+    alt: "강 변호사",
+  },
+  {
+    src: "/images/faq/avatar-ceo-v3.png",
+    alt: "이창재 대표변호사",
+  },
+  {
+    src: "/images/faq/avatar-lawyer-m-v3.png",
+    alt: "김 변호사",
+  },
+] as const;
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -558,24 +573,35 @@ export function FaqSection({
               initial={reduceMotion ? false : "hidden"}
               animate={contactRevealed ? "show" : "hidden"}
             >
-              {Array.from({ length: AVATAR_SLOTS }).map((_, i) => {
+              {CONTACT_AVATARS.map((avatar, i) => {
                 const isCenter = i === 1;
                 return (
                   <motion.span
-                    key={i}
-                    className={`relative shrink-0 origin-center overflow-hidden rounded-full border-2 border-[#F7F7ED] ${
+                    key={avatar.src}
+                    className={`relative shrink-0 origin-center overflow-hidden rounded-full border-2 ${
                       isCenter
-                        ? "z-20 size-12 md:size-[52px]"
-                        : "z-10 size-11 md:size-12"
+                        ? "z-20 size-[58px] md:size-[68px]"
+                        : "z-10 size-[52px] md:size-[60px]"
                     }`}
                     style={{
-                      marginLeft: i === 0 ? 0 : isCenter ? -14 : -12,
-                      backgroundColor: "#E4E4DC",
+                      marginLeft: i === 0 ? 0 : isCenter ? -16 : -14,
+                      backgroundColor: "#E8E8E6",
+                      borderColor: CREAM,
                     }}
                     variants={
                       reduceMotion ? undefined : avatarPopVariants
                     }
-                  />
+                  >
+                    <Image
+                      src={avatar.src}
+                      alt={avatar.alt}
+                      fill
+                      sizes="136px"
+                      quality={100}
+                      unoptimized
+                      className="object-cover object-[center_18%]"
+                    />
+                  </motion.span>
                 );
               })}
             </motion.div>
