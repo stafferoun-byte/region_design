@@ -217,6 +217,24 @@ export function KoraPageEffects({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
+    if (phase !== "exit") return;
+
+    // Failsafe: if exit animation callback never fires, still enter
+    const timer = window.setTimeout(() => {
+      if (phaseRef.current !== "exit") return;
+      if (!exitHandled.current) {
+        exitHandled.current = true;
+      }
+      if (routeReady.current || pendingHref.current) {
+        // Prefer waiting for the new route; if it's already there, enter
+        if (routeReady.current) beginEnter();
+      }
+    }, EXIT_MS + 120);
+
+    return () => window.clearTimeout(timer);
+  }, [phase, beginEnter]);
+
+  useEffect(() => {
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || isModifiedClick(event)) return;
 

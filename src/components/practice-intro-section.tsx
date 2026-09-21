@@ -59,7 +59,7 @@ export function PracticeIntroSection() {
       style={{ fontFamily: FONT }}
       aria-labelledby="practice-intro-heading"
     >
-      <div className="mx-auto w-full max-w-[1480px] px-5 pt-16 pb-10 md:px-10 md:pt-20 md:pb-12 xl:px-12 xl:pt-24 xl:pb-14">
+      <div className="mx-auto w-full max-w-[1480px] px-5 pt-28 pb-10 md:px-10 md:pt-32 md:pb-12 xl:px-12 xl:pt-36 xl:pb-14">
         {/* Header row */}
         <div className="mb-14 grid grid-cols-1 gap-6 md:mb-16 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_auto] md:items-start md:gap-8 xl:mb-20">
           <p
