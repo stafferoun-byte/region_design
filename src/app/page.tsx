@@ -318,58 +318,56 @@ export default function Home() {
       <section
         className={`z-0 h-svh w-full bg-[#FCFCFA] ${isDesktop ? "sticky top-0" : "relative"}`}
       >
-        <div className="relative h-full w-full overflow-hidden p-3 sm:p-4 md:p-5">
-          {/*
-            Scale the rounded frame itself (not a parent of it).
-            Absolute-inset + parent transform was clipping as full-bleed.
-          */}
-          <motion.div
-            className="relative h-full w-full origin-center overflow-hidden rounded-[44px] will-change-transform sm:rounded-[32px] md:rounded-[40px]"
-            style={{ scale: frameScale }}
-          >
-            <video
-              className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
-              src="/videos/hero.mp4?v=3"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-            />
-          </motion.div>
-
-          {SHOW_HERO_MOBILE_COPY ? (
-            <HeroMobileCopy reduceMotion={reduceMotion} />
-          ) : null}
-
-          <motion.div
-            className="institution-logo-strip pointer-events-none absolute right-auto bottom-8 left-6 z-[1] max-w-[72%] sm:bottom-10 sm:left-10 sm:max-w-[62%] md:bottom-[56px] md:left-[48px] md:max-w-[58%]"
-            style={{ opacity: logoOpacity, y: logoY }}
-          >
-            <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]">
-              <div className="marquee-track flex min-w-max items-center gap-10 md:gap-20">
-                {[...partnerLogos, ...partnerLogos].map((logo, index) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={`${logo.alt}-${index}`}
-                    src={`${logo.src}?v=4`}
-                    alt={logo.alt}
-                    className="h-8 w-auto object-contain sm:h-10 md:h-12"
-                  />
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="pointer-events-none absolute inset-3 z-[2] overflow-hidden rounded-[44px] sm:inset-4 sm:rounded-[32px] md:inset-5 md:rounded-[40px]"
-            style={{ scale: frameScale, transformOrigin: "center center" }}
-          >
+        {/*
+          Cream padding + rounded clipper must NOT share a transform with the
+          video. Framer scale on the same node breaks border-radius clipping
+          (looks full-bleed on first paint).
+        */}
+        <div className="box-border h-full w-full bg-[#FCFCFA] p-3 sm:p-4 md:p-5">
+          <div className="relative isolate h-full w-full overflow-hidden rounded-[44px] sm:rounded-[32px] md:rounded-[40px]">
             <motion.div
-              className="absolute inset-0 bg-black/50"
+              className="absolute inset-0 origin-center will-change-transform"
+              style={{ scale: frameScale }}
+            >
+              <video
+                className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
+                src="/videos/hero.mp4?v=3"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+              />
+            </motion.div>
+
+            {SHOW_HERO_MOBILE_COPY ? (
+              <HeroMobileCopy reduceMotion={reduceMotion} />
+            ) : null}
+
+            <motion.div
+              className="institution-logo-strip pointer-events-none absolute right-auto bottom-8 left-6 z-[1] max-w-[72%] sm:bottom-10 sm:left-10 sm:max-w-[62%] md:bottom-[56px] md:left-[48px] md:max-w-[58%]"
+              style={{ opacity: logoOpacity, y: logoY }}
+            >
+              <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]">
+                <div className="marquee-track flex min-w-max items-center gap-10 md:gap-20">
+                  {[...partnerLogos, ...partnerLogos].map((logo, index) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={`${logo.alt}-${index}`}
+                      src={`${logo.src}?v=4`}
+                      alt={logo.alt}
+                      className="h-8 w-auto object-contain sm:h-10 md:h-12"
+                    />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="pointer-events-none absolute inset-0 z-[2] bg-black/50"
               style={{ opacity: darkOpacity }}
             />
-          </motion.div>
+          </div>
         </div>
       </section>
 
