@@ -34,6 +34,9 @@ const FAQ_TITLE_LINE_2 = [
   { text: "많이", color: "#000000" },
   { text: "문의하시는", color: "#000000" },
   { text: "질문을", color: "#000000" },
+] as const;
+
+const FAQ_TITLE_LINE_3 = [
   { text: "정리했습니다.", color: "#000000" },
 ] as const;
 
@@ -167,8 +170,8 @@ const faqListVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.09,
-      delayChildren: 0.06,
+      staggerChildren: 0.12,
+      delayChildren: 0.08,
     },
   },
   exit: {
@@ -182,13 +185,13 @@ const faqListVariants = {
 const faqItemVariants = {
   hidden: {
     opacity: 0,
-    y: 10,
+    y: 14,
   },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.36,
+      duration: 0.42,
       ease: easeOut,
     },
   },
@@ -198,6 +201,33 @@ const faqItemVariants = {
     transition: {
       duration: 0.18,
       ease: easeOut,
+    },
+  },
+};
+
+const avatarGroupVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.13,
+      delayChildren: 0.12,
+    },
+  },
+};
+
+const avatarPopVariants = {
+  hidden: {
+    scale: 0,
+    opacity: 0,
+  },
+  show: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 460,
+      damping: 15,
+      mass: 0.65,
     },
   },
 };
@@ -284,7 +314,7 @@ function FaqRow({
       >
         <div className="min-h-0 overflow-hidden">
           <p
-            className="max-w-[540px] px-5 pb-5 text-[14px] leading-[1.65] font-medium tracking-[-0.02em] break-keep md:px-6 md:pb-6 md:text-[15px]"
+            className="max-w-[540px] px-5 pb-5 text-[13px] leading-[1.6] font-medium tracking-[-0.02em] break-keep md:px-6 md:pb-6 md:text-[15px] md:leading-[1.65]"
             style={{
               color: MUTED,
               fontFamily: FONT,
@@ -318,13 +348,21 @@ export function FaqSection({
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
+  const contactRef = useRef<HTMLDivElement | null>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.18 });
   /** Fire when the question list itself is on screen — not just the heading */
   const listInView = useInView(listRef, {
     once: true,
-    amount: 0.35,
-    margin: "0px 0px -8% 0px",
+    amount: 0.15,
+    margin: "0px 0px -12% 0px",
   });
+  /** Contact island + avatar pops — only when this block hits the viewport */
+  const contactInView = useInView(contactRef, {
+    once: true,
+    amount: 0.45,
+    margin: "0px 0px -10% 0px",
+  });
+  const contactRevealed = Boolean(reduceMotion || contactInView);
 
   const useCustomTabs = Boolean(
     customCategories?.length && customFaqByCategory,
@@ -380,10 +418,10 @@ export function FaqSection({
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-10 md:gap-14 xl:gap-16">
         <SectionTitleReveal
           id="faq-heading"
-          lines={[FAQ_TITLE_LINE_1, FAQ_TITLE_LINE_2]}
+          lines={[FAQ_TITLE_LINE_1, FAQ_TITLE_LINE_2, FAQ_TITLE_LINE_3]}
           inView={inView}
           reduceMotion={reduceMotion}
-          className="mx-auto max-w-[16em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
+          className="mx-auto max-w-[16em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:leading-[1.28] md:tracking-[-0.05em]"
           style={{ fontFamily: FONT }}
         />
 
@@ -461,83 +499,71 @@ export function FaqSection({
                 ref={listRef}
                 className="flex w-full flex-col gap-[10px]"
               >
-                {!listRevealed ? (
-                  <div
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={listKey}
                     className="flex flex-col gap-[10px]"
-                    aria-hidden
-                    style={{ opacity: 0.001, pointerEvents: "none" }}
+                    variants={reduceMotion ? undefined : faqListVariants}
+                    initial={reduceMotion ? false : "hidden"}
+                    animate={
+                      reduceMotion || listRevealed ? "show" : "hidden"
+                    }
+                    exit={reduceMotion ? undefined : "exit"}
                   >
                     {items.map((item) => (
-                      <FaqRow
+                      <motion.div
                         key={item.id}
-                        item={item}
-                        open={false}
-                        onToggle={() => {}}
-                        reduceMotion
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={listKey}
-                      className="flex flex-col gap-[10px]"
-                      variants={reduceMotion ? undefined : faqListVariants}
-                      initial={reduceMotion ? false : "hidden"}
-                      animate="show"
-                      exit={reduceMotion ? undefined : "exit"}
-                    >
-                      {items.map((item) => (
-                        <motion.div
-                          key={item.id}
-                          variants={
-                            reduceMotion ? undefined : faqItemVariants
+                        variants={
+                          reduceMotion ? undefined : faqItemVariants
+                        }
+                      >
+                        <FaqRow
+                          item={item}
+                          open={openId === item.id}
+                          onToggle={() =>
+                            setOpenId((prev) =>
+                              prev === item.id ? "" : item.id,
+                            )
                           }
-                        >
-                          <FaqRow
-                            item={item}
-                            open={openId === item.id}
-                            onToggle={() =>
-                              setOpenId((prev) =>
-                                prev === item.id ? "" : item.id,
-                              )
-                            }
-                            reduceMotion={reduceMotion}
-                          />
-                        </motion.div>
-                      ))}
-                    </motion.div>
-                  </AnimatePresence>
-                )}
+                          reduceMotion={reduceMotion}
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
           </motion.div>
 
           {/* Kora: separate floating contact island — same width */}
           <motion.div
+            ref={contactRef}
             className="flex w-full flex-col items-center gap-4 rounded-[40px] px-5 py-5 md:flex-row md:justify-start md:gap-8 md:px-6 md:py-6 md:pl-6 md:pr-8"
             style={{ backgroundColor: CREAM, maxWidth: PANEL_MAX }}
-            initial={
-              reduceMotion ? false : { opacity: 0, y: 14 }
-            }
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
             animate={
-              inView || reduceMotion
+              contactRevealed
                 ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 14 }
+                : { opacity: 0, y: 18 }
             }
             transition={{
-              duration: reduceMotion ? 0 : 0.5,
-              delay: reduceMotion ? 0 : 0.08,
+              duration: reduceMotion ? 0 : 0.48,
               ease: easeOut,
             }}
           >
-            <div className="flex items-center md:ml-3" aria-hidden>
+            <motion.div
+              className="flex items-center md:ml-3"
+              aria-hidden
+              variants={reduceMotion ? undefined : avatarGroupVariants}
+              initial={reduceMotion ? false : "hidden"}
+              animate={contactRevealed ? "show" : "hidden"}
+            >
               {Array.from({ length: AVATAR_SLOTS }).map((_, i) => {
                 const isCenter = i === 1;
                 return (
-                  <span
+                  <motion.span
                     key={i}
-                    className={`relative shrink-0 overflow-hidden rounded-full border-2 border-[#F7F7ED] ${
+                    className={`relative shrink-0 origin-center overflow-hidden rounded-full border-2 border-[#F7F7ED] ${
                       isCenter
                         ? "z-20 size-12 md:size-[52px]"
                         : "z-10 size-11 md:size-12"
@@ -546,10 +572,13 @@ export function FaqSection({
                       marginLeft: i === 0 ? 0 : isCenter ? -14 : -12,
                       backgroundColor: "#E4E4DC",
                     }}
+                    variants={
+                      reduceMotion ? undefined : avatarPopVariants
+                    }
                   />
                 );
               })}
-            </div>
+            </motion.div>
 
             <div className="flex flex-col items-center gap-1.5 text-center md:ml-3 md:items-start md:text-left">
               <p

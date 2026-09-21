@@ -85,16 +85,19 @@ function CaseCard({ item }: { item: WinningCase }) {
           "0 -10px 28px -14px rgba(0, 0, 0, 0.1), 0 18px 44px -18px rgba(0, 0, 0, 0.14), 0 6px 14px -8px rgba(0, 0, 0, 0.06)",
       }}
     >
-      <article
-        className="flex h-full w-full flex-col overflow-hidden rounded-[20px] min-[1072px]:rounded-[24px]"
+      {/* Glass plate — separate from overflow clip so backdrop blur actually works */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[20px] min-[1072px]:rounded-[24px]"
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.32)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
+          backgroundColor: "rgba(255, 255, 255, 0.14)",
+          backdropFilter: "blur(22px) saturate(1.2)",
+          WebkitBackdropFilter: "blur(22px) saturate(1.2)",
           boxShadow:
-            "inset 0 0 0 1px rgba(255, 255, 255, 0.95), inset 0 1px 0 rgba(255, 255, 255, 1)",
+            "inset 0 0 0 1px rgba(255, 255, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.85)",
         }}
-      >
+      />
+      <article className="relative z-[1] flex h-full w-full flex-col overflow-hidden rounded-[20px] bg-transparent min-[1072px]:rounded-[24px]">
         <a
           href="#cases"
           className="flex h-full w-full flex-col px-3.5 pt-3.5 pb-4 no-underline min-[1072px]:px-4 min-[1072px]:pt-4 min-[1072px]:pb-5"
@@ -296,12 +299,12 @@ export function WinningCases({
   return (
     <section
       id="cases"
-      className="w-full overflow-x-clip pl-8 md:pl-12 xl:pl-20"
+      className="w-full overflow-x-clip pl-5 md:pl-12 xl:pl-20"
       style={{ backgroundColor: "#FCFCFA" }}
       aria-label="승소사례"
     >
       <motion.div
-        className="pr-8 md:pr-12 xl:pr-20"
+        className="pr-5 md:pr-12 xl:pr-20"
         style={titleOpacity ? { opacity: titleOpacity } : undefined}
       >
         <SectionTitleReveal
@@ -317,11 +320,11 @@ export function WinningCases({
       <div className="relative mx-auto mt-16 w-full max-w-[1920px] md:mt-20 xl:mt-24">
         {/* Mobile */}
         <div className="md:hidden">
-          <div className="mb-10 flex justify-center pr-8">
+          <div className="mb-10 flex justify-center pr-5">
             <LawyerPopout />
           </div>
 
-          <div className="mb-4 flex items-center justify-between pr-8">
+          <div className="mb-4 flex items-center justify-between pr-5">
             <NavArrows
               onPrev={() => setReverse(true)}
               onNext={() => setReverse(false)}

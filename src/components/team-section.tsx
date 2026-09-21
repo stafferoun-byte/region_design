@@ -193,7 +193,7 @@ function TitleReveal({
 
   return (
     <motion.h2
-      className="text-[clamp(42px,5.2vw,68px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep"
+      className="text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep md:text-[clamp(32px,8vw,68px)] md:leading-[1.28] md:tracking-[-0.05em]"
       style={{ fontFamily: FONT }}
       variants={container}
       initial="hidden"
@@ -653,13 +653,13 @@ export function TeamSection({
       className="relative z-10 w-full bg-transparent"
       aria-label="팀 소개"
     >
-      {/* Outer inset matches StatsSection horizontal padding */}
-      <div className="mx-auto w-full max-w-[1920px] px-5 pb-5 md:px-10 xl:px-12">
+      {/* Outer inset — mobile matches footer side inset */}
+      <div className="mx-auto w-full max-w-[1920px] px-3 pb-5 md:px-10 xl:px-12">
         {/*
           Green box — rises over the pinned graph section
         */}
         <motion.div
-          className="flex w-full flex-col gap-[60px] overflow-hidden rounded-[40px] pt-[100px] pb-[60px] md:gap-[90px] md:pt-[140px] md:pb-[90px] xl:gap-[120px] xl:pt-[180px] xl:pb-[120px]"
+          className="flex w-full flex-col gap-[48px] overflow-hidden rounded-[28px] pt-[72px] pb-[48px] md:gap-[90px] md:rounded-[40px] md:pt-[140px] md:pb-[90px] xl:gap-[120px] xl:pt-[180px] xl:pb-[120px]"
           style={{ backgroundColor: GREEN }}
           initial={reduceMotion ? false : { y: 40, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
@@ -670,7 +670,7 @@ export function TeamSection({
           }}
         >
           {/* Inside — same max-w as StatsSection */}
-          <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-[70px] md:gap-[90px] xl:gap-[110px]">
+          <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-[36px] px-5 md:gap-[90px] md:px-10 xl:gap-[110px] xl:px-12">
             <TitleReveal
               inView={!!inView}
               reduceMotion={reduceMotion}
@@ -698,7 +698,7 @@ export function TeamSection({
           </div>
 
           {/* Bottom — Join us / hiring */}
-          <div className="mx-auto w-full max-w-[1480px]">
+          <div className="mx-auto w-full max-w-[1480px] px-5 md:px-10 xl:px-12">
             <HiringBlock reduceMotion={reduceMotion} />
           </div>
         </motion.div>

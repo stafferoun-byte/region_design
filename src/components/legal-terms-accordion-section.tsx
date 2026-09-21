@@ -28,14 +28,16 @@ const INK = "#242424";
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
-const TITLE_LINE_1 = [
-  { text: "변호사에게는", color: "#FFFFFF" },
+const TITLE_LINE_1 = [{ text: "변호사에게는", color: "#FFFFFF" }] as const;
+
+const TITLE_LINE_2 = [
   { text: "익숙한", color: "#FFFFFF" },
   { text: "용어지만,", color: "#FFFFFF" },
 ] as const;
 
-const TITLE_LINE_2 = [
-  { text: "당신에게는", color: "#FFFFFF" },
+const TITLE_LINE_3 = [{ text: "당신에게는", color: "#FFFFFF" }] as const;
+
+const TITLE_LINE_4 = [
   { text: "처음일", color: "#FFFFFF" },
   { text: "수", color: "#FFFFFF" },
   { text: "있으니까", color: "#FFFFFF" },
@@ -107,7 +109,7 @@ const ITEMS: Item[] = [
   },
   {
     id: "parentage",
-    term: "친생자관계확인",
+    term: "친생자관계\n확인",
     subtitle: "자신의 부모가 누구인지\n법적으로 확인하는 절차",
     image: "/images/legal-terms/친생자관계확인.jpg",
   },
@@ -208,18 +210,26 @@ function TermPill({ item }: { item: Item }) {
               />
             </span>
             <span
-              className="absolute inset-0 grid place-items-center px-1.5 text-center text-[14px] leading-[1.15] font-bold tracking-[-0.04em] break-keep text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:text-[16px]"
+              className="absolute inset-0 flex flex-col items-center justify-center px-1.5 text-center text-[13px] leading-none font-bold tracking-[-0.04em] break-keep text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:text-[15px]"
               style={{ fontFamily: FONT }}
             >
-              {item.term}
+              {item.term.split("\n").map((line) => (
+                <span key={line} className="block leading-[1.2]">
+                  {line}
+                </span>
+              ))}
             </span>
           </>
         ) : (
           <span
-            className="grid size-full place-items-center px-1.5 text-center text-[14px] leading-[1.15] font-bold tracking-[-0.04em] break-keep text-white md:text-[16px]"
+            className="flex size-full flex-col items-center justify-center px-1.5 text-center text-[13px] leading-none font-bold tracking-[-0.04em] break-keep text-white md:text-[15px]"
             style={{ fontFamily: FONT }}
           >
-            {item.term}
+            {item.term.split("\n").map((line) => (
+              <span key={line} className="block leading-[1.2]">
+                {line}
+              </span>
+            ))}
           </span>
         )}
       </span>
@@ -290,10 +300,10 @@ export function LegalTermsAccordionSection() {
       >
         <div className="mb-[clamp(52px,7vw,96px)] flex flex-col gap-6 px-6 md:flex-row md:items-end md:justify-start md:gap-[clamp(36px,5vw,80px)] md:px-10 xl:px-14">
           <SectionTitleReveal
-            lines={[TITLE_LINE_1, TITLE_LINE_2]}
+            lines={[TITLE_LINE_1, TITLE_LINE_2, TITLE_LINE_3, TITLE_LINE_4]}
             inView={inView}
             reduceMotion={reduceMotion}
-            className="max-w-[16em] text-[clamp(28px,3.6vw,48px)] leading-[1.2] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
+            className="max-w-[16em] text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:text-[clamp(28px,3.6vw,48px)] md:leading-[1.2] md:tracking-[-0.05em]"
             style={{ fontFamily: FONT, color: "#FFFFFF" }}
             ariaLabel="변호사에게는 익숙한 용어지만, 당신에게는 처음일 수 있으니까"
           />
@@ -303,7 +313,7 @@ export function LegalTermsAccordionSection() {
             inView={inView}
             reduceMotion={reduceMotion}
             delay={0.1}
-            className="max-w-none shrink-0 text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] break-keep whitespace-nowrap will-change-[opacity,transform] md:pb-1 md:text-[25px]"
+            className="max-w-none shrink-0 text-[16px] leading-[1.35] font-semibold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:pb-1 md:text-[25px] md:leading-[1.3] md:whitespace-nowrap"
             style={{ fontFamily: FONT }}
             ariaLabel="법은 이렇게 말하지만 사실은 이런 뜻이에요."
           />
@@ -322,7 +332,7 @@ export function LegalTermsAccordionSection() {
       </motion.div>
 
       <motion.div
-        className="mx-auto mt-[84px] w-full max-w-[min(100%,1220px)] md:mt-[104px] md:max-w-[1340px]"
+        className="mx-auto mt-[48px] w-full max-w-[min(100%,1220px)] md:mt-[104px] md:max-w-[1340px]"
         initial={
           reduceMotion
             ? false
@@ -360,10 +370,10 @@ export function LegalTermsAccordionSection() {
             style={{ backgroundColor: ACCENT, height: "100%" }}
           >
             <span className="flex flex-col gap-0.5 text-white">
-              <span className="text-[20px] leading-[1.25] font-semibold tracking-[-0.04em] md:text-[30px]">
+              <span className="text-[16px] leading-[1.25] font-semibold tracking-[-0.04em] md:text-[30px]">
                 어려운 법률용어가 아닌, 일상의 언어로
               </span>
-              <span className="text-[14px] leading-[1.3] font-semibold tracking-[-0.03em] md:text-[18px]">
+              <span className="text-[13px] leading-[1.3] font-semibold tracking-[-0.03em] md:text-[18px]">
                 쉽고 분명하게 안내해드릴게요.
               </span>
             </span>

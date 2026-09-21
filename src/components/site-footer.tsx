@@ -9,8 +9,23 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SITE_NAV } from "@/lib/site-nav";
+
+/** Kora: footer circle bloom + card scale are desktop-only */
+function useIsDesktop(query = "(min-width: 768px)") {
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, [query]);
+
+  return isDesktop;
+}
 
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -78,7 +93,7 @@ function SocialButton({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="group relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#FFFFFA] p-2.5 md:size-[52px]"
+      className="group relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#FFFFFA] p-2 md:size-[52px] md:p-2.5"
     >
       {/* Kora Hover BG — green circle expands from center */}
       <span
@@ -88,7 +103,7 @@ function SocialButton({
       <SocialIcon
         path={path}
         nudgeX={nudgeX}
-        className="relative z-[1] size-5 text-black transition-colors duration-300 group-hover:text-[#F5F5E9] md:size-[22px]"
+        className="relative z-[1] size-4 text-black transition-colors duration-300 group-hover:text-[#F5F5E9] md:size-[22px]"
       />
     </a>
   );
@@ -167,6 +182,11 @@ function CopyPhoneRow({ phone }: { phone: string }) {
 export function SiteFooter() {
   const footerRef = useRef<HTMLElement | null>(null);
   const reduceMotion = useReducedMotion();
+  const isDesktop = useIsDesktop();
+  /** Circle bloom + card scale: desktop only (Kora mobile has none) */
+  const enableScrollFx = isDesktop === true && reduceMotion !== true;
+  /** Wordmark grow: mobile + desktop */
+  const enableWordmarkFx = reduceMotion !== true;
 
   const { scrollYProgress } = useScroll({
     target: footerRef,
@@ -175,33 +195,31 @@ export function SiteFooter() {
 
   // Smooth the scroll progress so scale eases like Kora (not 1:1 jumpy)
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: reduceMotion ? 500 : 55,
-    damping: reduceMotion ? 40 : 26,
+    stiffness: enableScrollFx || enableWordmarkFx ? 55 : 500,
+    damping: enableScrollFx || enableWordmarkFx ? 26 : 40,
     mass: 0.55,
     restDelta: 0.0001,
   });
 
-  // BG Circle Expand — 600×600 center, grows behind card (rises as CTA shrinks)
+  // BG Circle Expand — desktop only
   const circleScale = useTransform(
     smoothProgress,
     [0, 0.08, 0.22, 0.45, 1],
-    reduceMotion ? [14, 14, 14, 14, 14] : [0, 1.1, 3.2, 7, 14],
+    enableScrollFx ? [0, 1.1, 3.2, 7, 14] : [14, 14, 14, 14, 14],
   );
 
-  // Outer Container — Kora: scale(0.85) → 1 while scrolling the footer.
-  // Stay small longer so the rounded cream box is visibly smaller on entry,
-  // then expand to fill as you reach the bottom (matches Framer).
+  // Outer Container — desktop only (Kora mobile has no shrink/grow)
   const cardScale = useTransform(
     smoothProgress,
     [0, 0.35, 0.65, 0.9, 1],
-    reduceMotion ? [1, 1, 1, 1, 1] : [0.85, 0.88, 0.94, 0.99, 1],
+    enableScrollFx ? [0.85, 0.88, 0.94, 0.99, 1] : [1, 1, 1, 1, 1],
   );
 
-  // FitText — grows 0.1 → 1; bottom-left origin keeps the baseline glued to the card floor
+  // FitText — mobile + desktop
   const wordmarkScale = useTransform(
     smoothProgress,
     [0.15, 0.45, 0.75, 0.95],
-    reduceMotion ? [1, 1, 1, 1] : [0.1, 0.4, 0.82, 1],
+    enableWordmarkFx ? [0.1, 0.4, 0.82, 1] : [1, 1, 1, 1],
   );
 
   return (
@@ -211,13 +229,12 @@ export function SiteFooter() {
       className="relative isolate z-20 w-full overflow-x-clip"
     >
       {/*
-        Clip shell extends upward (bloom) but stops at the footer bottom,
-        so the scaled mint circle can't inflate document scroll height.
-        Inner box maps 1:1 to the footer so the circle stays centered.
+        Desktop only: blooming mint circle.
+        Mobile: no circle, no mint frame — cream card sits on page bg (Kora).
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-[-100vmax] bottom-0 z-0 overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-[-100vmax] bottom-0 z-0 hidden overflow-hidden md:block"
       >
         <div className="absolute inset-x-0 top-[100vmax] bottom-0">
           <motion.div
@@ -228,12 +245,12 @@ export function SiteFooter() {
       </div>
 
       {/*
-        Match hero video frame: inset-5 (20px) left/right.
-        Bottom mint gutter: a touch more than the side inset.
+        Mobile: side inset so card scale is visible.
+        Desktop: inset so mint bloom shows around the card.
       */}
-      <div className="relative z-[1] w-full px-5 pt-5 pb-6 md:pb-7">
+      <div className="relative z-[1] w-full px-3 pt-2.5 pb-4 sm:px-3.5 md:px-5 md:pt-4 md:pb-7">
         <motion.div
-          className="flex w-full origin-center flex-col overflow-hidden rounded-[40px] bg-[#F5F5E9] will-change-transform"
+          className="flex w-full origin-center flex-col overflow-hidden rounded-[44px] bg-[#F5F5E9] will-change-transform md:rounded-[40px]"
           style={{ scale: cardScale }}
         >
           {/* Outer Container — padding-top only: 120 / 90 / 60 */}
@@ -245,7 +262,7 @@ export function SiteFooter() {
             <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-[50px] px-5 md:gap-[60px] md:px-8 xl:gap-20 xl:px-10">
               <div className="grid w-full grid-cols-1 items-start gap-x-[50px] gap-y-8 lg:grid-cols-2 lg:gap-y-12">
                 {/* Logo */}
-                <div className="lg:col-start-1 lg:row-start-1">
+                <div className="order-1 lg:order-none lg:col-start-1 lg:row-start-1">
                   <Link href="/" aria-label="홈" className="inline-flex w-fit">
                     <Image
                       src="/images/eroun-logo.png"
@@ -260,7 +277,7 @@ export function SiteFooter() {
 
                 {/* Pitch + contact — spans logo + address rows on desktop */}
                 <div
-                  className="flex w-full flex-col gap-12 scroll-mt-28 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:gap-14"
+                  className="order-2 flex w-full flex-col gap-12 scroll-mt-28 lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:gap-14"
                 >
                   <p
                     className="max-w-[600px] text-[20px] leading-[1.45] font-[650] tracking-[-0.04em] text-[#242424] md:text-[24px]"
@@ -276,7 +293,7 @@ export function SiteFooter() {
                   <div className="flex flex-col items-start gap-3">
                     <a
                       href="mailto:legal@erounlaw.com"
-                      className="text-[15px] leading-none font-semibold tracking-[-0.03em] text-[#616161] transition-colors hover:text-[#242424] md:text-[16px]"
+                      className="text-[13px] leading-none font-semibold tracking-[-0.03em] text-[#616161] transition-colors hover:text-[#242424] md:text-[16px]"
                       style={{ fontFamily: FONT_WANTED }}
                     >
                       legal@erounlaw.com
@@ -285,8 +302,8 @@ export function SiteFooter() {
                   </div>
                 </div>
 
-                {/* Address */}
-                <div className="max-w-[520px] lg:col-start-1 lg:row-start-2">
+                {/* Address — desktop only */}
+                <div className="order-5 hidden max-w-[520px] lg:order-none lg:col-start-1 lg:row-start-2 lg:block">
                   <p
                     className="text-[14px] font-semibold tracking-[-0.02em] text-[#616161]"
                     style={{ fontFamily: FONT_WANTED }}
@@ -294,7 +311,7 @@ export function SiteFooter() {
                     Address
                   </p>
                   <div
-                    className="mt-2 space-y-1 text-[14px] leading-[1.5] font-semibold tracking-[-0.025em] text-black md:mt-3 md:text-[15px]"
+                    className="mt-2 space-y-1 text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-black md:mt-3 md:text-[15px]"
                     style={{ fontFamily: FONT_WANTED }}
                   >
                     <p>서울주사무소 2026. 9 개소예정</p>
@@ -306,7 +323,7 @@ export function SiteFooter() {
                 </div>
 
                 {/* Socials + Legal (left) | Navigation (right, top-aligned with Socials) */}
-                <div className="flex flex-col gap-10 md:gap-12 lg:col-start-1 lg:row-start-3">
+                <div className="order-4 flex flex-col gap-10 md:gap-12 lg:order-none lg:col-start-1 lg:row-start-3">
                   <div>
                     <p
                       className="text-[14px] font-semibold tracking-[-0.02em] text-[#616161]"
@@ -335,7 +352,7 @@ export function SiteFooter() {
                       Legal
                     </p>
                     <div
-                      className="mt-3 flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-[1.5] font-semibold tracking-[-0.025em] text-black md:text-[15px]"
+                      className="mt-3 flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-black md:text-[15px]"
                       style={{ fontFamily: FONT_WANTED }}
                     >
                       <Link
@@ -354,7 +371,7 @@ export function SiteFooter() {
                   </div>
                 </div>
 
-                <div className="lg:col-start-2 lg:row-start-3">
+                <div className="order-3 lg:order-none lg:col-start-2 lg:row-start-3">
                   <p
                     className="text-[14px] font-semibold tracking-[-0.02em] text-[#616161]"
                     style={{ fontFamily: FONT_WANTED }}
@@ -366,7 +383,7 @@ export function SiteFooter() {
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className="group inline-flex items-center gap-2.5 rounded-full py-1.5 pr-4 pl-2.5 -ml-2.5 text-[20px] font-bold tracking-[-0.02em] text-[#242424] transition-colors duration-200 hover:bg-[#5DC39B] hover:text-[#F5F5E9] md:text-[22px]"
+                          className="group inline-flex items-center gap-2.5 rounded-full py-1.5 pr-4 pl-2.5 -ml-2.5 text-[17px] font-semibold tracking-[-0.02em] text-[#242424] transition-colors duration-200 hover:bg-[#5DC39B] hover:text-[#F5F5E9] md:text-[22px] md:font-bold"
                           style={{ fontFamily: FONT_WANTED }}
                         >
                           <span className="size-1.5 shrink-0 rounded-full bg-[#242424] transition-colors duration-200 group-hover:bg-[#F5F5E9]" />
@@ -388,13 +405,13 @@ export function SiteFooter() {
                   {/* Invisible spacer keeps layout height at full size */}
                   <p
                     aria-hidden
-                    className="invisible w-full whitespace-nowrap text-[clamp(100px,18vw,400px)] leading-[0.68] font-semibold tracking-[-0.05em]"
+                    className="invisible w-full whitespace-nowrap text-[clamp(118px,28vw,180px)] leading-[0.68] font-semibold tracking-[-0.05em] md:text-[clamp(100px,18vw,400px)]"
                     style={{ fontFamily: FONT_WANTED }}
                   >
                     Eroun
                   </p>
                   <motion.p
-                    className="absolute bottom-0 left-0 w-full origin-bottom-left whitespace-nowrap text-[clamp(100px,18vw,400px)] leading-[0.68] font-semibold tracking-[-0.05em] text-[#5DC39B] select-none will-change-transform"
+                    className="absolute bottom-0 left-0 w-full origin-bottom-left whitespace-nowrap text-[clamp(118px,28vw,180px)] leading-[0.68] font-semibold tracking-[-0.05em] text-[#5DC39B] select-none will-change-transform md:text-[clamp(100px,18vw,400px)]"
                     style={{
                       fontFamily: FONT_WANTED,
                       scale: wordmarkScale,
@@ -405,7 +422,7 @@ export function SiteFooter() {
                 </div>
 
                 <div
-                  className="relative z-[1] flex flex-col items-start gap-0.5 pb-5 text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-[#616161] max-md:order-first max-md:mb-4 max-md:pb-0 md:items-end md:self-end md:text-right"
+                  className="relative z-[1] flex flex-col items-start gap-0.5 pb-5 text-[12px] leading-[1.5] font-medium tracking-[-0.025em] text-[#616161] max-md:order-first max-md:mt-2 max-md:mb-9 max-md:pb-0 md:items-end md:self-end md:text-right md:text-[13px] md:font-semibold"
                   style={{ fontFamily: FONT_WANTED }}
                 >
                   <p>© 2026 이로운 법률사무소 All rights reserved.</p>
