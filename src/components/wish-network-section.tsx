@@ -710,13 +710,13 @@ export function WishNetworkSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-20 w-full overflow-x-visible px-2 py-[52px] md:overflow-x-clip md:px-10 md:py-[68px] xl:px-12 xl:py-[84px]"
+      className="relative z-20 w-full overflow-x-visible px-2 py-0 md:overflow-x-clip md:px-10 xl:px-12"
       style={{ backgroundColor: "#FCFCFA" }}
       aria-label="이로운 파트너스"
     >
       <WishTitleReveal inView={!!inView} reduceMotion={reduceMotion} />
 
-      <div className="relative mx-auto mt-14 w-full max-w-[1280px] md:mt-10 xl:mt-12">
+      <div className="relative mx-auto mt-12 w-full max-w-[1280px] md:mt-8 xl:mt-9">
         <div
           className="relative w-full overflow-visible"
           style={{ paddingBottom: `${(artH / W) * 100}%` }}

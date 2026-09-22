@@ -7,7 +7,6 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
 import { HeroNav } from "@/components/hero-nav";
 import { ConsultFormSection } from "@/components/consult-form-section";
@@ -20,7 +19,7 @@ import { TeamSection } from "@/components/team-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { WinningCases } from "@/components/winning-cases";
 import { WishNetworkSection } from "@/components/wish-network-section";
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /** Desktop only — hero sticky zoom scrub (Kora mobile scrolls normally) */
 function useIsDesktop(query = "(min-width: 1024px)") {
@@ -131,99 +130,17 @@ function HeroMobileCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
   );
 }
 
-/** Kora-style scroll blur: each word goes blur→sharp as progress advances */
-function BlurRevealWord({
-  children,
-  progress,
-  index,
-  count,
-  reduceMotion,
-  className,
-  style,
-}: {
-  children: ReactNode;
-  progress: MotionValue<number>;
-  index: number;
-  count: number;
-  reduceMotion: boolean | null;
-  className?: string;
-  style?: CSSProperties;
-}) {
-  // Overlapping windows so several words animate at once (Kora cascade)
-  const span = 0.55;
-  const start = (index / count) * (1 - span * 0.35);
-  const end = Math.min(1, start + span / count + 0.28);
-
-  const opacity = useTransform(
-    progress,
-    [start, end],
-    reduceMotion ? [1, 1] : [0.14, 1],
-  );
-  const blurPx = useTransform(
-    progress,
-    [start, end],
-    reduceMotion ? [0, 0] : [12, 0],
-  );
-  const filter = useTransform(blurPx, (v) => `blur(${v}px)`);
-
-  return (
-    <motion.span
-      className={className}
-      style={{
-        ...style,
-        display: "inline-block",
-        opacity,
-        filter,
-        willChange: "opacity, filter",
-      }}
-    >
-      {children}
-    </motion.span>
-  );
-}
-
-const BLUR_LINE_1 = ["일상의", "회복을", "위한"] as const;
-const BLUR_LINE_2 = [
-  { text: "이로운", color: "#000000" },
-  { text: "파트너스의", color: "#000000" },
-  { text: "진심", color: "#5DC39B" },
-] as const;
-
 function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   const cardTriggerRef = useRef<HTMLDivElement | null>(null);
   const [casesReveal, setCasesReveal] = useState(!!reduceMotion);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
 
   const { scrollYProgress: splitProgress } = useScroll({
     target: cardTriggerRef,
     offset: ["start end", "start start"],
   });
 
-  /**
-   * Mobile: 0–0.42 blur word reveal, 0.42–1 L/R split exit + cases.
-   * Desktop: full range = L/R split (unchanged).
-   */
-  const blurProgress = useTransform(splitProgress, [0, 0.42], [0, 1]);
-  const splitLocal = useTransform(splitProgress, (v) => {
-    if (isMobile) {
-      return Math.min(1, Math.max(0, (v - 0.42) / 0.58));
-    }
-    return v;
-  });
-
-  const mobileHeadlineOpacity = useTransform(
-    splitLocal,
-    [0, 0.35, 0.7],
-    reduceMotion ? [0, 0, 0] : [1, 0.45, 0],
-  );
+  /** Shared L/R split progress — mobile + desktop */
+  const splitLocal = splitProgress;
 
   const line1X = useTransform(
     splitLocal,
@@ -295,8 +212,6 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
         delay: 0,
       };
 
-  const blurWordCount = BLUR_LINE_1.length + BLUR_LINE_2.length + 1; // + period
-
   return (
     <section className="changes-section relative z-20" style={{ backgroundColor: "#FCFCFA" }}>
       <div className="relative">
@@ -304,98 +219,52 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
           className="sticky top-0 min-h-svh w-full"
           style={{ perspective: 1200, backgroundColor: "#FCFCFA" }}
         >
-          {/* Headline — mobile: Kora blur words · desktop: L/R split */}
-          <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center overflow-x-clip">
-            <div className="w-[min(900px,calc(100%-40px))]">
-              {/* Mobile blur reveal */}
+          {/*
+            Headline sits in a true viewport-height layer (h-svh), not the full
+            sticky content height — so it stays vertically centered on any phone.
+          */}
+          <div className="pointer-events-none absolute top-0 right-0 left-0 z-[2] flex h-svh items-center justify-center overflow-x-clip">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={enterTransition}
+              className="flex w-[min(900px,calc(100%-40px))] flex-col items-center gap-1 will-change-transform md:gap-2"
+            >
               <motion.div
-                className="flex flex-col items-center gap-1 md:hidden"
-                style={{ fontFamily: FONT_WANTED, opacity: mobileHeadlineOpacity }}
-                aria-label="일상의 회복을 위한 이로운 파트너스의 진심."
+                style={{
+                  x: line1X,
+                  rotateY: line1RotateY,
+                  scale: line1Scale,
+                  opacity: line1Opacity,
+                  transformPerspective: 1200,
+                  fontFamily: FONT_WANTED,
+                }}
+                className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
               >
-                <p className="text-center text-[28px] leading-[1.2] font-semibold tracking-[-0.06em] sm:text-[35px]">
-                  {BLUR_LINE_1.map((word, i) => (
-                    <span key={word}>
-                      <BlurRevealWord
-                        progress={blurProgress}
-                        index={i}
-                        count={blurWordCount}
-                        reduceMotion={reduceMotion}
-                      >
-                        {word}
-                      </BlurRevealWord>
-                      {i < BLUR_LINE_1.length - 1 ? " " : null}
-                    </span>
-                  ))}
-                </p>
-                <p className="text-center text-[28px] leading-[1.2] font-semibold tracking-[-0.06em] sm:text-[35px]">
-                  {BLUR_LINE_2.map((word, i) => (
-                    <span key={word.text}>
-                      <BlurRevealWord
-                        progress={blurProgress}
-                        index={BLUR_LINE_1.length + i}
-                        count={blurWordCount}
-                        reduceMotion={reduceMotion}
-                        style={{ color: word.color }}
-                      >
-                        {word.text}
-                      </BlurRevealWord>
-                      {i < BLUR_LINE_2.length - 1 ? " " : null}
-                    </span>
-                  ))}
-                  <BlurRevealWord
-                    progress={blurProgress}
-                    index={blurWordCount - 1}
-                    count={blurWordCount}
-                    reduceMotion={reduceMotion}
-                    className="ml-[0.08em] text-[0.72em]"
-                  >
-                    .
-                  </BlurRevealWord>
-                </p>
+                일상의 회복을 위한
               </motion.div>
               <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={enterTransition}
-                className="hidden flex-col items-center gap-1 will-change-transform md:flex md:gap-2"
+                style={{
+                  x: line2X,
+                  rotateY: line2RotateY,
+                  scale: line2Scale,
+                  opacity: line2Opacity,
+                  transformPerspective: 1200,
+                  fontFamily: FONT_WANTED,
+                }}
+                className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
               >
-                <motion.div
-                  style={{
-                    x: line1X,
-                    rotateY: line1RotateY,
-                    scale: line1Scale,
-                    opacity: line1Opacity,
-                    transformPerspective: 1200,
-                    fontFamily: FONT_WANTED,
-                  }}
-                  className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
-                >
-                  일상의 회복을 위한
-                </motion.div>
-                <motion.div
-                  style={{
-                    x: line2X,
-                    rotateY: line2RotateY,
-                    scale: line2Scale,
-                    opacity: line2Opacity,
-                    transformPerspective: 1200,
-                    fontFamily: FONT_WANTED,
-                  }}
-                  className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
-                >
-                  이로운 파트너스의{" "}
-                  <span className="text-[#5DC39B]">진심</span>
-                  <span className="ml-[0.08em] text-[0.72em]">.</span>
-                </motion.div>
+                이로운 파트너스의{" "}
+                <span className="text-[#5DC39B]">진심</span>
+                <span className="ml-[0.08em] text-[0.72em]">.</span>
               </motion.div>
-            </div>
+            </motion.div>
           </div>
 
           <motion.div
             style={{ opacity: casesOpacity, backgroundColor: "#FCFCFA" }}
-            className="relative z-[1] flex min-h-svh flex-col justify-start pt-[104px] pb-16 md:justify-center md:py-16 md:pb-24"
+            className="relative z-[1] flex min-h-svh flex-col justify-start pt-[104px] pb-16 md:pt-[148px] md:pb-20"
           >
             <WinningCases
               reveal={casesReveal}
@@ -404,10 +273,9 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
           </motion.div>
         </div>
 
-        {/* Mobile needs extra scroll room for blur phase before split */}
         <div
           ref={cardTriggerRef}
-          className="pointer-events-none h-[160svh] w-full md:h-[100svh]"
+          className="pointer-events-none h-[120svh] w-full md:h-[100svh]"
           aria-hidden
         />
         <div className="pointer-events-none h-[50svh] w-full" aria-hidden />
@@ -601,10 +469,14 @@ export default function Home() {
 
       {/* Green team box rises from below over the wish network */}
       <div className="relative z-20">
-        <div className="sticky top-0 z-0 bg-[#FCFCFA]">
-          <WishNetworkSection />
-          {/* Bottom breathing room — does not shrink the network */}
-          <div className="h-[120px] md:h-[160px] xl:h-[200px]" aria-hidden />
+        <div className="sticky top-0 z-0 bg-[#FCFCFA] md:flex md:min-h-svh md:flex-col">
+          {/*
+            Mobile: sit under nav without vertical centering (centering pushed it too low).
+            Desktop: clear nav, then center title + network in the pin frame.
+          */}
+          <div className="pt-[148px] pb-8 md:flex md:flex-1 md:flex-col md:justify-center md:pt-[108px] md:pb-10 xl:pt-[112px] xl:pb-12">
+            <WishNetworkSection />
+          </div>
         </div>
         <div className="pointer-events-none h-[90svh] md:h-[110svh]" aria-hidden />
         <div className="relative z-10">

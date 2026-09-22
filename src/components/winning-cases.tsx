@@ -91,17 +91,13 @@ function CaseCard({ item }: { item: WinningCase }) {
           "0 -10px 28px -14px rgba(0, 0, 0, 0.1), 0 18px 44px -18px rgba(0, 0, 0, 0.14), 0 6px 14px -8px rgba(0, 0, 0, 0.06)",
       }}
     >
-      {/* Glass plate — separate from overflow clip so backdrop blur actually works */}
+      {/*
+        Glass plate — desktop only. On mobile, backdrop-filter + marquee
+        transform makes the whole card look soft/blurred.
+      */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[20px] min-[1072px]:rounded-[24px]"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.14)",
-          backdropFilter: "blur(22px) saturate(1.2)",
-          WebkitBackdropFilter: "blur(22px) saturate(1.2)",
-          boxShadow:
-            "inset 0 0 0 1px rgba(255, 255, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.85)",
-        }}
+        className="pointer-events-none absolute inset-0 rounded-[20px] bg-[#FCFCFA] min-[1072px]:rounded-[24px] md:bg-[rgba(255,255,255,0.14)] md:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.65),inset_0_1px_0_rgba(255,255,255,0.85)] md:backdrop-blur-[22px] md:backdrop-saturate-[1.2]"
       />
       <article className="relative z-[1] flex h-full w-full flex-col overflow-hidden rounded-[20px] bg-transparent min-[1072px]:rounded-[24px]">
         <a
@@ -383,7 +379,7 @@ export function WinningCases({
         />
       </motion.div>
 
-      <div className="relative mx-auto mt-8 w-full max-w-[1920px] md:mt-20 xl:mt-24">
+      <div className="relative mx-auto mt-8 w-full max-w-[1920px] md:mt-10 xl:mt-12">
         {/* Mobile */}
         <div className="md:hidden">
           <div className="mb-14 flex justify-center pr-5">
