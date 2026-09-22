@@ -5,7 +5,6 @@ import {
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
-  useScroll,
   useTransform,
 } from "framer-motion";
 import { HeroNav } from "@/components/hero-nav";
@@ -133,71 +132,125 @@ function HeroMobileCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
 function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   const cardTriggerRef = useRef<HTMLDivElement | null>(null);
   const [casesReveal, setCasesReveal] = useState(!!reduceMotion);
+  const [isMobile, setIsMobile] = useState(false);
+  /** Manual scroll progress — Framer useScroll skips frames with Lenis/touch on mobile */
+  const splitProgress = useMotionValue(0);
 
-  const { scrollYProgress: splitProgress } = useScroll({
-    target: cardTriggerRef,
-    offset: ["start end", "start start"],
-  });
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const updateMq = () => setIsMobile(mq.matches);
+    updateMq();
+    mq.addEventListener("change", updateMq);
+    return () => mq.removeEventListener("change", updateMq);
+  }, []);
+
+  useEffect(() => {
+    const update = () => {
+      const el = cardTriggerRef.current;
+      if (!el) return;
+      // Match Framer offset ["start end", "start start"]
+      const top = el.getBoundingClientRect().top;
+      const vh = window.innerHeight || 1;
+      const p = Math.min(1, Math.max(0, 1 - top / vh));
+      splitProgress.set(p);
+    };
+
+    update();
+
+    let attached: { on: Function; off: Function } | null =
+      (
+        window as unknown as { __lenis?: { on: Function; off: Function } }
+      ).__lenis ?? null;
+    if (attached?.on) attached.on("scroll", update);
+
+    const retry = window.setInterval(() => {
+      if (attached) {
+        window.clearInterval(retry);
+        return;
+      }
+      const late = (
+        window as unknown as { __lenis?: { on: Function; off: Function } }
+      ).__lenis;
+      if (late?.on) {
+        attached = late;
+        late.on("scroll", update);
+        update();
+        window.clearInterval(retry);
+      }
+    }, 50);
+    window.setTimeout(() => window.clearInterval(retry), 2000);
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    return () => {
+      window.clearInterval(retry);
+      attached?.off?.("scroll", update);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [splitProgress]);
 
   /** Shared L/R split progress — mobile + desktop */
   const splitLocal = splitProgress;
 
-  const line1X = useTransform(
-    splitLocal,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, -2000],
-  );
-  const line1RotateY = useTransform(
-    splitLocal,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, -60],
-  );
-  const line1Scale = useTransform(
-    splitLocal,
-    [0, 1],
-    reduceMotion ? [1, 1] : [1, 1.5],
-  );
-  const line1Opacity = useTransform(
-    splitLocal,
-    [0, 0.55, 0.85],
-    reduceMotion ? [0, 0, 0] : [1, 0.35, 0],
-  );
+  /** Mobile: less 3D, shorter travel — smoother on phones */
+  const splitX = isMobile ? 920 : 2000;
+  const splitRot = isMobile ? 28 : 60;
+  const splitScaleTo = isMobile ? 1.22 : 1.5;
 
-  const line2X = useTransform(
-    splitLocal,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, 2000],
+  const line1X = useTransform(splitLocal, (v) =>
+    reduceMotion ? 0 : -splitX * v,
   );
-  const line2RotateY = useTransform(
-    splitLocal,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, 60],
+  const line1RotateY = useTransform(splitLocal, (v) =>
+    reduceMotion ? 0 : -splitRot * v,
   );
-  const line2Scale = useTransform(
-    splitLocal,
-    [0, 1],
-    reduceMotion ? [1, 1] : [1, 1.5],
+  const line1Scale = useTransform(splitLocal, (v) =>
+    reduceMotion ? 1 : 1 + (splitScaleTo - 1) * v,
   );
-  const line2Opacity = useTransform(
-    splitLocal,
-    [0, 0.55, 0.85],
-    reduceMotion ? [0, 0, 0] : [1, 0.35, 0],
-  );
+  const line1Opacity = useTransform(splitLocal, (v) => {
+    if (reduceMotion) return 0;
+    if (v <= 0.5) return 1 - v * 0.6;
+    if (v >= 0.82) return 0;
+    return 0.4 * (1 - (v - 0.5) / 0.32);
+  });
 
-  const casesOpacity = useTransform(
-    splitLocal,
-    [0.45, 0.75, 1],
-    reduceMotion ? [1, 1, 1] : [0, 0.85, 1],
+  const line2X = useTransform(splitLocal, (v) =>
+    reduceMotion ? 0 : splitX * v,
   );
+  const line2RotateY = useTransform(splitLocal, (v) =>
+    reduceMotion ? 0 : splitRot * v,
+  );
+  const line2Scale = useTransform(splitLocal, (v) =>
+    reduceMotion ? 1 : 1 + (splitScaleTo - 1) * v,
+  );
+  const line2Opacity = useTransform(splitLocal, (v) => {
+    if (reduceMotion) return 0;
+    if (v <= 0.5) return 1 - v * 0.6;
+    if (v >= 0.82) return 0;
+    return 0.4 * (1 - (v - 0.5) / 0.32);
+  });
 
-  const casesTitleOpacity = useTransform(
-    splitLocal,
-    [0.72, 0.9],
-    reduceMotion ? [1, 1] : [0, 1],
-  );
+  const casesOpacity = useTransform(splitLocal, (v) => {
+    if (reduceMotion) return 1;
+    const a = isMobile ? 0.35 : 0.45;
+    const b = isMobile ? 0.65 : 0.75;
+    if (v <= a) return 0;
+    if (v >= b) return 1;
+    return 0.85 * ((v - a) / (b - a));
+  });
+
+  const casesTitleOpacity = useTransform(splitLocal, (v) => {
+    if (reduceMotion) return 1;
+    const a = isMobile ? 0.58 : 0.72;
+    const b = isMobile ? 0.82 : 0.9;
+    if (v <= a) return 0;
+    if (v >= b) return 1;
+    return (v - a) / (b - a);
+  });
 
   useMotionValueEvent(splitLocal, "change", (v) => {
-    if (reduceMotion || v >= 0.55) {
+    const threshold = isMobile ? 0.4 : 0.55;
+    if (reduceMotion || v >= threshold) {
       setCasesReveal((prev) => prev || true);
     }
   });
@@ -217,7 +270,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
       <div className="relative">
         <div
           className="sticky top-0 min-h-svh w-full"
-          style={{ perspective: 1200, backgroundColor: "#FCFCFA" }}
+          style={{ perspective: isMobile ? 800 : 1200, backgroundColor: "#FCFCFA" }}
         >
           {/*
             Headline sits in a true viewport-height layer (h-svh), not the full
@@ -237,7 +290,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                   rotateY: line1RotateY,
                   scale: line1Scale,
                   opacity: line1Opacity,
-                  transformPerspective: 1200,
+                  transformPerspective: isMobile ? 800 : 1200,
                   fontFamily: FONT_WANTED,
                 }}
                 className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
@@ -250,7 +303,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                   rotateY: line2RotateY,
                   scale: line2Scale,
                   opacity: line2Opacity,
-                  transformPerspective: 1200,
+                  transformPerspective: isMobile ? 800 : 1200,
                   fontFamily: FONT_WANTED,
                 }}
                 className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
@@ -275,10 +328,10 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
 
         <div
           ref={cardTriggerRef}
-          className="pointer-events-none h-[120svh] w-full md:h-[100svh]"
+          className="pointer-events-none h-[100svh] w-full md:h-[100svh]"
           aria-hidden
         />
-        <div className="pointer-events-none h-[50svh] w-full" aria-hidden />
+        <div className="pointer-events-none h-[40svh] w-full md:h-[50svh]" aria-hidden />
       </div>
     </section>
   );
@@ -469,17 +522,17 @@ export default function Home() {
 
       {/* Green team box rises from below over the wish network */}
       <div className="relative z-20">
-        <div className="sticky top-0 z-0 bg-[#FCFCFA] md:flex md:min-h-svh md:flex-col">
+        <div className="sticky top-0 z-0 min-h-svh bg-[#FCFCFA] md:flex md:flex-col">
           {/*
-            Mobile: sit under nav without vertical centering (centering pushed it too low).
-            Desktop: clear nav, then center title + network in the pin frame.
+            Mobile: fill viewport under nav (min-h-svh) so the cream spacer
+            doesn’t cover the lower faces. Desktop centers in the pin frame.
           */}
-          <div className="pt-[148px] pb-8 md:flex md:flex-1 md:flex-col md:justify-center md:pt-[108px] md:pb-10 xl:pt-[112px] xl:pb-12">
+          <div className="pt-[108px] pb-6 md:flex md:flex-1 md:flex-col md:justify-center md:pt-[108px] md:pb-10 xl:pt-[112px] xl:pb-12">
             <WishNetworkSection />
           </div>
         </div>
-        <div className="pointer-events-none h-[90svh] md:h-[110svh]" aria-hidden />
-        <div className="relative z-10">
+        <div className="pointer-events-none h-[90svh] w-full md:h-[110svh]" aria-hidden />
+        <div className="relative z-10 bg-[#FCFCFA]">
           <TeamSection />
         </div>
       </div>
