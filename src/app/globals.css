@@ -160,6 +160,12 @@
     will-change: transform;
   }
 
+  @media (max-width: 767px) {
+    .cases-marquee-track {
+      animation-duration: 28s;
+    }
+  }
+
   /* Clay Slack — dashes crawl along the path while waves bounce */
   .wish-dash-flow {
     animation: wish-dash-flow 12s linear infinite;

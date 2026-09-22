@@ -41,7 +41,7 @@ const HERO = {
   ratingMax: "5",
   ratingNote: "의뢰인 후기 기준",
   quote:
-    "사건만 봐 주는 변호사가 아니라,\n제 삶을 함께 지켜 주는 팀이었습니다.",
+    "사건만 봐 주는 변호사가 아니라,\n제 삶을 함께 지켜주는 팀이었습니다.",
   body: "막막했던 상황에서 방향부터 차분히 잡아 주셨고, 불안한 질문에 하나하나 답해 주셨습니다. 재판 과정에서도 제가 이해할 수 있게 설명해 주시니 마음이 놓였고, 결과까지 책임감 있게 이끌어 주셨습니다. 다시 일상으로 돌아올 수 있게 해 주셔서 진심으로 감사합니다.",
   name: "김서연 님",
   role: "가사 사건 의뢰인",
@@ -186,12 +186,12 @@ function AccordionCard({
         <PlusMinus open={open} />
       </div>
 
-      <div className="flex flex-col gap-4 p-5 md:gap-5 md:p-[30px] md:pr-12">
+      <div className="flex flex-col gap-4 px-8 pt-7 pb-5 md:gap-5 md:p-[30px] md:pr-12">
         <Stars play={starsPlay} />
 
         {/* Mobile: one quote size. Desktop: big/small swap when expanded. */}
         <div className="relative min-h-0 md:min-h-[7.5rem]">
-          <p className="text-[15px] leading-[1.4] font-semibold tracking-[-0.03em] md:hidden" style={{ color: BLACK }}>
+          <p className="text-[14px] leading-[1.45] font-normal tracking-[-0.03em] md:hidden" style={{ color: BLACK }}>
             &ldquo;{quote}&rdquo;
           </p>
           <p
@@ -223,7 +223,7 @@ function AccordionCard({
         </div>
       </div>
 
-      <div className="mt-auto flex items-center gap-3 px-5 pt-0 pb-5 md:gap-4 md:px-[30px] md:pb-[30px]">
+      <div className="mt-auto flex items-center gap-3 px-8 pt-0 pb-5 md:gap-4 md:px-[30px] md:pb-[30px]">
         <div className="flex min-w-0 items-center gap-3 md:gap-[15px]">
           <span
             className="relative size-11 shrink-0 overflow-hidden rounded-full md:size-[58px]"
@@ -332,14 +332,14 @@ export function TestimonialsSection() {
               lines={[TITLE_LINE]}
               inView={show}
               reduceMotion={reduceMotion}
-              className="pointer-events-none absolute bottom-0 left-5 z-20 max-w-[12em] translate-y-[28%] text-[clamp(32px,9vw,68px)] leading-[1.05] font-bold tracking-[-0.05em] break-keep select-none"
+              className="pointer-events-none absolute bottom-0 left-5 z-20 max-w-[12em] translate-y-[12%] text-[clamp(32px,9vw,68px)] leading-[1.05] font-bold tracking-[-0.05em] break-keep select-none"
               style={{ fontFamily: FONT }}
               ariaLabel="함께 한 분들의 이야기"
             />
           </div>
 
           <motion.div
-            className="relative z-10 flex flex-col gap-6 px-5 pt-10 pb-7 will-change-[transform,opacity] sm:px-7 sm:pt-14"
+            className="relative z-10 flex flex-col gap-6 px-8 pt-10 pb-10 will-change-[transform,opacity] sm:pt-14 sm:pb-14"
             initial={reduceMotion ? false : heroCardHidden}
             whileInView={reduceMotion ? undefined : heroCardVisible}
             viewport={{ once: true, amount: 0.25, margin: "0px 0px -8% 0px" }}
@@ -360,7 +360,7 @@ export function TestimonialsSection() {
           >
             <div className="flex max-w-[34em] flex-col gap-4">
               <p
-                className="whitespace-pre-line text-[clamp(16px,4.1vw,24px)] leading-[1.3] font-semibold tracking-[-0.04em]"
+                className="mb-3 whitespace-pre-line text-[clamp(15px,3.8vw,19px)] leading-[1.4] font-bold tracking-[-0.03em]"
                 style={{ color: BLACK, fontFamily: FONT }}
               >
                 &ldquo;{HERO.quote}&rdquo;

@@ -7,6 +7,7 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 import { HeroNav } from "@/components/hero-nav";
 import { ConsultFormSection } from "@/components/consult-form-section";
@@ -19,7 +20,7 @@ import { TeamSection } from "@/components/team-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { WinningCases } from "@/components/winning-cases";
 import { WishNetworkSection } from "@/components/wish-network-section";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 /** Desktop only — hero sticky zoom scrub (Kora mobile scrolls normally) */
 function useIsDesktop(query = "(min-width: 1024px)") {
@@ -51,69 +52,155 @@ const FONT_WANTED =
 const FONT_PRETENDARD =
   '"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
-/** Flip to true to restore mobile hero copy overlay */
+/** Mobile hero copy — off for now; restore when ready */
 const SHOW_HERO_MOBILE_COPY = false;
 
-/** Mobile-only hero copy — PC has the same lines burned into the video */
-function HeroMobileCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
-  const lines: {
-    key: string;
-    mt?: boolean;
-    parts: { text: string; bold?: boolean }[];
-  }[] = [
-    { key: "l0", parts: [{ text: "하나의 사건번호가 아닌," }] },
-    {
-      key: "l1",
-      parts: [
-        { text: "한 사람의 삶", bold: true },
-        { text: "으로" },
-      ],
-    },
-    { key: "l2", mt: true, parts: [{ text: "이로운 변호사들," }] },
-    { key: "l3", parts: [{ text: "이로운 파트너스", bold: true }] },
-  ];
-
+/** Soft line dissolve — matches hero.mp4 burned-in caption timing */
+function HeroVideoLine({
+  children,
+  delay,
+  reduceMotion,
+  className,
+}: {
+  children: ReactNode;
+  delay: number;
+  reduceMotion: boolean | null;
+  className?: string;
+}) {
   return (
-    <div className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center px-6 md:hidden">
+    <motion.p
+      className={className}
+      initial={
+        reduceMotion
+          ? false
+          : { opacity: 0, filter: "blur(3px)" }
+      }
+      animate={{ opacity: 1, filter: "blur(0px)" }}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : {
+              duration: 1.6,
+              delay,
+              ease: [0.33, 0.1, 0.25, 1],
+            }
+      }
+      style={{
+        willChange: "opacity, filter",
+        textShadow:
+          "0 1px 10px rgba(0,0,0,0.28), 0 0 2px rgba(0,0,0,0.18)",
+      }}
+    >
+      {children}
+    </motion.p>
+  );
+}
+
+function HeroMobileCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
+  return (
+    <div className="pointer-events-none flex h-full w-full items-center justify-center px-6">
       <div
-        className="flex w-full max-w-[20ch] flex-col items-center text-center text-[clamp(26px,7vw,34px)] leading-[1.25] tracking-[-0.04em] text-white"
-        style={{ fontFamily: FONT_PRETENDARD }}
+        className="flex w-full max-w-[22ch] translate-y-24 flex-col text-[clamp(22px,5.8vw,28px)] leading-[1.35] tracking-[-0.03em] text-white antialiased"
+        style={{
+          fontFamily: FONT_PRETENDARD,
+          WebkitFontSmoothing: "antialiased",
+        }}
         aria-label="하나의 사건번호가 아닌, 한 사람의 삶으로. 이로운 변호사들, 이로운 파트너스"
       >
-        {lines.map((line, i) => (
-          <motion.p
-            key={line.key}
-            className={`font-light${line.mt ? " mt-7" : ""}`}
-            initial={reduceMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={
-              reduceMotion
-                ? { duration: 0 }
-                : {
-                    duration: 2.4,
-                    delay: 0.5 + i * 0.95,
-                    ease: "easeInOut",
-                  }
-            }
-          >
-            {line.parts.map((part) => (
-              <span
-                key={part.text}
-                className={part.bold ? "font-semibold" : undefined}
-              >
-                {part.text}
-              </span>
-            ))}
-          </motion.p>
-        ))}
+        {/* Left block — mirrors video left captions */}
+        <div className="flex flex-col self-start text-left font-light">
+          <HeroVideoLine delay={0.7} reduceMotion={reduceMotion}>
+            하나의 사건번호가 아닌,
+          </HeroVideoLine>
+          <HeroVideoLine delay={2.1} reduceMotion={reduceMotion}>
+            <span className="font-semibold">한 사람의 삶</span>으로
+          </HeroVideoLine>
+        </div>
+
+        {/* Right block — mirrors video right captions */}
+        <div className="mt-8 flex flex-col self-end text-right font-light">
+          <HeroVideoLine delay={4.2} reduceMotion={reduceMotion}>
+            이로운 변호사들,
+          </HeroVideoLine>
+          <HeroVideoLine delay={5.4} reduceMotion={reduceMotion}>
+            <span className="font-semibold">이로운 파트너스</span>
+          </HeroVideoLine>
+        </div>
       </div>
     </div>
   );
 }
 
+/** Kora-style scroll blur: each word goes blur→sharp as progress advances */
+function BlurRevealWord({
+  children,
+  progress,
+  index,
+  count,
+  reduceMotion,
+  className,
+  style,
+}: {
+  children: ReactNode;
+  progress: MotionValue<number>;
+  index: number;
+  count: number;
+  reduceMotion: boolean | null;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  // Overlapping windows so several words animate at once (Kora cascade)
+  const span = 0.55;
+  const start = (index / count) * (1 - span * 0.35);
+  const end = Math.min(1, start + span / count + 0.28);
+
+  const opacity = useTransform(
+    progress,
+    [start, end],
+    reduceMotion ? [1, 1] : [0.14, 1],
+  );
+  const blurPx = useTransform(
+    progress,
+    [start, end],
+    reduceMotion ? [0, 0] : [12, 0],
+  );
+  const filter = useTransform(blurPx, (v) => `blur(${v}px)`);
+
+  return (
+    <motion.span
+      className={className}
+      style={{
+        ...style,
+        display: "inline-block",
+        opacity,
+        filter,
+        willChange: "opacity, filter",
+      }}
+    >
+      {children}
+    </motion.span>
+  );
+}
+
+const BLUR_LINE_1 = ["일상의", "회복을", "위한"] as const;
+const BLUR_LINE_2 = [
+  { text: "이로운", color: "#000000" },
+  { text: "파트너스의", color: "#000000" },
+  { text: "진심", color: "#5DC39B" },
+] as const;
+
 function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   const cardTriggerRef = useRef<HTMLDivElement | null>(null);
   const [casesReveal, setCasesReveal] = useState(!!reduceMotion);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const { scrollYProgress: splitProgress } = useScroll({
     target: cardTriggerRef,
@@ -121,66 +208,78 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   });
 
   /**
-   * Strong L/R split (Kora-style). Headline must fully clear before
-   * the cases title appears — otherwise the same copy double-renders
-   * and looks like a horizontal tear through the glyphs.
+   * Mobile: 0–0.42 blur word reveal, 0.42–1 L/R split exit + cases.
+   * Desktop: full range = L/R split (unchanged).
    */
+  const blurProgress = useTransform(splitProgress, [0, 0.42], [0, 1]);
+  const splitLocal = useTransform(splitProgress, (v) => {
+    if (isMobile) {
+      return Math.min(1, Math.max(0, (v - 0.42) / 0.58));
+    }
+    return v;
+  });
+
+  const mobileHeadlineOpacity = useTransform(
+    splitLocal,
+    [0, 0.35, 0.7],
+    reduceMotion ? [0, 0, 0] : [1, 0.45, 0],
+  );
+
   const line1X = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 1],
     reduceMotion ? [0, 0] : [0, -2000],
   );
   const line1RotateY = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 1],
     reduceMotion ? [0, 0] : [0, -60],
   );
   const line1Scale = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 1],
     reduceMotion ? [1, 1] : [1, 1.5],
   );
   const line1Opacity = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 0.55, 0.85],
     reduceMotion ? [0, 0, 0] : [1, 0.35, 0],
   );
 
   const line2X = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 1],
     reduceMotion ? [0, 0] : [0, 2000],
   );
   const line2RotateY = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 1],
     reduceMotion ? [0, 0] : [0, 60],
   );
   const line2Scale = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 1],
     reduceMotion ? [1, 1] : [1, 1.5],
   );
   const line2Opacity = useTransform(
-    splitProgress,
+    splitLocal,
     [0, 0.55, 0.85],
     reduceMotion ? [0, 0, 0] : [1, 0.35, 0],
   );
 
   const casesOpacity = useTransform(
-    splitProgress,
+    splitLocal,
     [0.45, 0.75, 1],
     reduceMotion ? [1, 1, 1] : [0, 0.85, 1],
   );
 
-  /** Cases section title — only after overlay headline is gone */
   const casesTitleOpacity = useTransform(
-    splitProgress,
+    splitLocal,
     [0.72, 0.9],
     reduceMotion ? [1, 1] : [0, 1],
   );
 
-  useMotionValueEvent(splitProgress, "change", (v) => {
+  useMotionValueEvent(splitLocal, "change", (v) => {
     if (reduceMotion || v >= 0.55) {
       setCasesReveal((prev) => prev || true);
     }
@@ -196,6 +295,8 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
         delay: 0,
       };
 
+  const blurWordCount = BLUR_LINE_1.length + BLUR_LINE_2.length + 1; // + period
+
   return (
     <section className="changes-section relative z-20" style={{ backgroundColor: "#FCFCFA" }}>
       <div className="relative">
@@ -203,15 +304,62 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
           className="sticky top-0 min-h-svh w-full"
           style={{ perspective: 1200, backgroundColor: "#FCFCFA" }}
         >
-          {/* Headline — splits hard L/R */}
+          {/* Headline — mobile: Kora blur words · desktop: L/R split */}
           <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center overflow-x-clip">
             <div className="w-[min(900px,calc(100%-40px))]">
+              {/* Mobile blur reveal */}
+              <motion.div
+                className="flex flex-col items-center gap-1 md:hidden"
+                style={{ fontFamily: FONT_WANTED, opacity: mobileHeadlineOpacity }}
+                aria-label="일상의 회복을 위한 이로운 파트너스의 진심."
+              >
+                <p className="text-center text-[28px] leading-[1.2] font-semibold tracking-[-0.06em] sm:text-[35px]">
+                  {BLUR_LINE_1.map((word, i) => (
+                    <span key={word}>
+                      <BlurRevealWord
+                        progress={blurProgress}
+                        index={i}
+                        count={blurWordCount}
+                        reduceMotion={reduceMotion}
+                      >
+                        {word}
+                      </BlurRevealWord>
+                      {i < BLUR_LINE_1.length - 1 ? " " : null}
+                    </span>
+                  ))}
+                </p>
+                <p className="text-center text-[28px] leading-[1.2] font-semibold tracking-[-0.06em] sm:text-[35px]">
+                  {BLUR_LINE_2.map((word, i) => (
+                    <span key={word.text}>
+                      <BlurRevealWord
+                        progress={blurProgress}
+                        index={BLUR_LINE_1.length + i}
+                        count={blurWordCount}
+                        reduceMotion={reduceMotion}
+                        style={{ color: word.color }}
+                      >
+                        {word.text}
+                      </BlurRevealWord>
+                      {i < BLUR_LINE_2.length - 1 ? " " : null}
+                    </span>
+                  ))}
+                  <BlurRevealWord
+                    progress={blurProgress}
+                    index={blurWordCount - 1}
+                    count={blurWordCount}
+                    reduceMotion={reduceMotion}
+                    className="ml-[0.08em] text-[0.72em]"
+                  >
+                    .
+                  </BlurRevealWord>
+                </p>
+              </motion.div>
               <motion.div
                 initial={reduceMotion ? false : { opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.35 }}
                 transition={enterTransition}
-                className="flex flex-col items-center gap-1 will-change-transform md:gap-2"
+                className="hidden flex-col items-center gap-1 will-change-transform md:flex md:gap-2"
               >
                 <motion.div
                   style={{
@@ -247,7 +395,7 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
 
           <motion.div
             style={{ opacity: casesOpacity, backgroundColor: "#FCFCFA" }}
-            className="relative z-[1] flex min-h-svh flex-col justify-center py-12 pb-16 md:py-16 md:pb-24"
+            className="relative z-[1] flex min-h-svh flex-col justify-start pt-[104px] pb-16 md:justify-center md:py-16 md:pb-24"
           >
             <WinningCases
               reveal={casesReveal}
@@ -256,9 +404,10 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
           </motion.div>
         </div>
 
+        {/* Mobile needs extra scroll room for blur phase before split */}
         <div
           ref={cardTriggerRef}
-          className="pointer-events-none h-[100svh] w-full"
+          className="pointer-events-none h-[160svh] w-full md:h-[100svh]"
           aria-hidden
         />
         <div className="pointer-events-none h-[50svh] w-full" aria-hidden />
@@ -271,7 +420,8 @@ export default function Home() {
   const heroTransitionRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
   const isDesktop = useIsDesktop();
-  const enableHeroScrub = isDesktop && !reduceMotion;
+  /** Kora: rounded inset → full-bleed on scroll (mobile + desktop) */
+  const enableHeroScrub = !reduceMotion;
 
   const framePad = useMotionValue(24);
   const frameRadius = useMotionValue(40);
@@ -281,8 +431,8 @@ export default function Home() {
 
   // Drive hero expand from Lenis/window scroll — Framer useScroll was not updating.
   useEffect(() => {
-    const REST_PAD = enableHeroScrub ? 24 : 20;
-    const REST_RADIUS = enableHeroScrub ? 40 : 36;
+    const REST_PAD = isDesktop ? 24 : 16;
+    const REST_RADIUS = isDesktop ? 40 : 28;
 
     if (!enableHeroScrub) {
       framePad.set(REST_PAD);
@@ -293,6 +443,10 @@ export default function Home() {
       return;
     }
 
+    // Seed inset frame before first scroll tick
+    framePad.set(REST_PAD);
+    frameRadius.set(REST_RADIUS);
+
     const update = () => {
       const el = heroTransitionRef.current;
       if (!el) return;
@@ -302,7 +456,7 @@ export default function Home() {
 
       const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
 
-      // Expand through first ~55% of the sticky track
+      // Expand through first ~55% of the sticky track (Kora-style)
       const t = Math.min(1, p / 0.55);
       const s = t * t * (3 - 2 * t);
       framePad.set(REST_PAD * (1 - s));
@@ -313,9 +467,9 @@ export default function Home() {
       logoOpacity.set(1 - logoT);
       logoY.set(-20 * logoT);
 
-      // Darken after mostly full-bleed
+      // Darken after mostly full-bleed — leads into blur headline section
       const darkT = Math.min(1, Math.max(0, (p - 0.4) / 0.4));
-      darkOpacity.set(0.42 * darkT);
+      darkOpacity.set((isDesktop ? 0.42 : 0.5) * darkT);
     };
 
     update();
@@ -357,6 +511,7 @@ export default function Home() {
     };
   }, [
     enableHeroScrub,
+    isDesktop,
     framePad,
     frameRadius,
     darkOpacity,
@@ -384,7 +539,12 @@ export default function Home() {
         />
 
         {SHOW_HERO_MOBILE_COPY ? (
-          <HeroMobileCopy reduceMotion={reduceMotion} />
+          <motion.div
+            className="absolute inset-0 z-[1] md:hidden"
+            style={{ opacity: logoOpacity }}
+          >
+            <HeroMobileCopy reduceMotion={reduceMotion} />
+          </motion.div>
         ) : null}
 
         <motion.div
@@ -423,15 +583,15 @@ export default function Home() {
       <HeroNav />
 
       {/*
-        Same DOM always (ref must stay mounted). Desktop: tall scrub track + sticky.
-        Mobile: one viewport, static rounded card via enableHeroScrub=false.
+        Kora sequence: rounded inset → full-bleed → (scroll) blur headline → cases.
+        Sticky scrub track on both mobile and desktop.
       */}
       <div
         ref={heroTransitionRef}
-        className={`relative z-0 ${isDesktop ? "h-[240svh]" : "h-svh"}`}
+        className={`relative z-0 ${enableHeroScrub ? "h-[200svh] md:h-[240svh]" : "h-svh"}`}
       >
         <section
-          className={`h-svh w-full bg-[#FCFCFA] ${isDesktop ? "sticky top-0" : "relative"}`}
+          className={`h-svh w-full bg-[#FCFCFA] ${enableHeroScrub ? "sticky top-0" : "relative"}`}
         >
           {heroFrame}
         </section>

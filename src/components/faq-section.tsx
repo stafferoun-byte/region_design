@@ -166,15 +166,15 @@ const FAQ_BY_CATEGORY: Record<CategoryId, FaqItem[]> = {
 /** Contact island — CEO (대표) centered; user nukki on panel cream */
 const CONTACT_AVATARS = [
   {
-    src: "/images/faq/avatar-lawyer-w-v3.png",
+    src: "/images/faq/avatar-lawyer-w-v4.png",
     alt: "강 변호사",
   },
   {
-    src: "/images/faq/avatar-ceo-v3.png",
+    src: "/images/faq/avatar-ceo-v4.png",
     alt: "이창재 대표변호사",
   },
   {
-    src: "/images/faq/avatar-lawyer-m-v3.png",
+    src: "/images/faq/avatar-lawyer-m-v4.png",
     alt: "김 변호사",
   },
 ] as const;

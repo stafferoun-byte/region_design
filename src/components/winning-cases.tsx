@@ -1,7 +1,13 @@
 "use client";
 
-import { motion, useReducedMotion, type MotionValue } from "framer-motion";
-import { useState } from "react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  type MotionValue,
+} from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 const FONT =
@@ -79,7 +85,7 @@ const CASES: WinningCase[] = [
 function CaseCard({ item }: { item: WinningCase }) {
   return (
     <div
-      className="relative h-[272px] w-[195px] shrink-0 rounded-[20px] min-[1072px]:h-[372px] min-[1072px]:w-[255px] min-[1072px]:rounded-[24px]"
+      className="relative h-[272px] w-[195px] max-md:h-[300px] max-md:w-[220px] shrink-0 rounded-[20px] min-[1072px]:h-[372px] min-[1072px]:w-[255px] min-[1072px]:rounded-[24px]"
       style={{
         boxShadow:
           "0 -10px 28px -14px rgba(0, 0, 0, 0.1), 0 18px 44px -18px rgba(0, 0, 0, 0.14), 0 6px 14px -8px rgba(0, 0, 0, 0.06)",
@@ -103,7 +109,7 @@ function CaseCard({ item }: { item: WinningCase }) {
           className="flex h-full w-full flex-col px-3.5 pt-3.5 pb-4 no-underline min-[1072px]:px-4 min-[1072px]:pt-4 min-[1072px]:pb-5"
         >
           {/* Top — photo / 승소사례 visual */}
-          <div className="relative h-[96px] shrink-0 overflow-hidden rounded-[14px] min-[1072px]:h-[132px] min-[1072px]:rounded-[16px]">
+          <div className="relative h-[96px] max-md:h-[110px] shrink-0 overflow-hidden rounded-[14px] min-[1072px]:h-[132px] min-[1072px]:rounded-[16px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.image}
@@ -179,22 +185,82 @@ function CaseCard({ item }: { item: WinningCase }) {
   );
 }
 
-function CasesMarquee({ reverse }: { reverse: boolean }) {
+function CasesMarquee({
+  reverse,
+  tightTop = false,
+}: {
+  reverse: boolean;
+  tightTop?: boolean;
+}) {
   const loop = [...CASES, ...CASES];
+  const reduceMotion = useReducedMotion();
+  const x = useMotionValue(0);
+  const [paused, setPaused] = useState(false);
+  const [canDrag, setCanDrag] = useState(false);
+  const dragMoved = useRef(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setCanDrag(mq.matches && !reduceMotion);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [reduceMotion]);
 
   return (
-    <div className="overflow-x-clip pt-6 pb-8">
-      <div
-        className="cases-marquee-track flex w-max"
-        style={{
-          animationDirection: reverse ? "reverse" : "normal",
-          gap: "20px",
+    <div
+      className={`overflow-x-clip pb-8 ${tightTop ? "pt-1" : "pt-6"}`}
+    >
+      <motion.div
+        drag={canDrag ? "x" : false}
+        dragElastic={0.22}
+        dragConstraints={{ left: -280, right: 280 }}
+        dragTransition={{ bounceStiffness: 280, bounceDamping: 28 }}
+        style={{ x }}
+        onDragStart={() => {
+          dragMoved.current = false;
+          setPaused(true);
+        }}
+        onDrag={(_, info) => {
+          if (Math.abs(info.offset.x) > 6) dragMoved.current = true;
+        }}
+        onDragEnd={(_, info) => {
+          setPaused(false);
+          void animate(x, 0, {
+            type: "spring",
+            stiffness: 260,
+            damping: 30,
+            velocity: info.velocity.x,
+          });
+          window.setTimeout(() => {
+            dragMoved.current = false;
+          }, 80);
+        }}
+        className={
+          canDrag
+            ? "cursor-grab touch-pan-y active:cursor-grabbing"
+            : undefined
+        }
+        onClickCapture={(e) => {
+          if (dragMoved.current) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
         }}
       >
-        {loop.map((item, i) => (
-          <CaseCard key={`${item.id}-${i}`} item={item} />
-        ))}
-      </div>
+        <div
+          className="cases-marquee-track flex w-max"
+          style={{
+            animationDirection: reverse ? "reverse" : "normal",
+            animationPlayState: paused ? "paused" : "running",
+            gap: "20px",
+          }}
+        >
+          {loop.map((item, i) => (
+            <CaseCard key={`${item.id}-${i}`} item={item} />
+          ))}
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -250,8 +316,8 @@ function NavArrows({
 
 function LawyerPopout() {
   return (
-    <div className="relative z-10 w-[min(100%,280px)] shrink-0 md:w-[300px] xl:w-[320px]">
-      <div className="relative flex h-[272px] w-full items-end justify-center overflow-visible min-[1072px]:h-[372px]">
+    <div className="relative z-10 w-[min(100%,340px)] shrink-0 md:w-[300px] xl:w-[320px]">
+      <div className="relative flex h-[320px] w-full items-end justify-center overflow-visible md:h-[272px] min-[1072px]:h-[372px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/lawyer-popout01.png"
@@ -261,7 +327,7 @@ function LawyerPopout() {
         />
       </div>
       <p
-        className="absolute top-full left-0 right-0 mt-1.5 text-center text-[13px] font-medium"
+        className="absolute top-full left-0 right-0 mt-1.5 text-center text-[15px] font-medium md:text-[13px]"
         style={{ fontFamily: FONT, color: INK2 }}
       >
         이창재 대표변호사
@@ -317,35 +383,30 @@ export function WinningCases({
         />
       </motion.div>
 
-      <div className="relative mx-auto mt-16 w-full max-w-[1920px] md:mt-20 xl:mt-24">
+      <div className="relative mx-auto mt-8 w-full max-w-[1920px] md:mt-20 xl:mt-24">
         {/* Mobile */}
         <div className="md:hidden">
-          <div className="mb-10 flex justify-center pr-5">
+          <div className="mb-14 flex justify-center pr-5">
             <LawyerPopout />
           </div>
 
-          <div className="mb-4 flex items-center justify-between pr-5">
-            <NavArrows
-              onPrev={() => setReverse(true)}
-              onNext={() => setReverse(false)}
-              labelPrev="반대 방향"
-              labelNext="왼쪽 흐름"
-            />
-            <a
-              href="#cases"
-              className="mr-3 inline-flex h-8 items-center justify-center rounded-full border px-3.5 text-[12px] font-light tracking-[1px] no-underline"
-              style={{
-                borderColor: "#F5F5E9",
-                backgroundColor: "#F5F5E9",
-                color: "#242424",
-                fontFamily: FONT,
-              }}
-            >
-              MORE
-            </a>
+          <div className="relative">
+            <div className="mb-2 flex items-center justify-end pr-5">
+              <a
+                href="#cases"
+                className="mr-3 inline-flex h-7 items-center justify-center rounded-full border px-2.5 text-[10px] font-light tracking-[1px] no-underline"
+                style={{
+                  borderColor: "#F5F5E9",
+                  backgroundColor: "#F5F5E9",
+                  color: "#242424",
+                  fontFamily: FONT,
+                }}
+              >
+                MORE
+              </a>
+            </div>
+            <CasesMarquee reverse={reverse} tightTop />
           </div>
-
-          <CasesMarquee reverse={reverse} />
         </div>
 
         {/* Desktop */}
