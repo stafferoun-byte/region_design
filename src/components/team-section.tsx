@@ -650,7 +650,7 @@ export function TeamSection({
     <section
       ref={sectionRef}
       id="team"
-      className="relative z-10 w-full bg-transparent"
+      className="relative z-10 w-full bg-[#FCFCFA]"
       aria-label="팀 소개"
     >
       {/* Outer inset — mobile matches footer side inset */}

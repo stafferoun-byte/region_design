@@ -31,8 +31,8 @@ const TITLE_LINE_2 = [
 
 const W = layout.W;
 const H = layout.H;
-/** Mobile artboard — near-square so faces stack vertically */
-const H_MOBILE = Math.round(W * 0.92);
+/** Mobile artboard — tall enough to show full face network without clipping */
+const H_MOBILE = Math.round(W * 0.88);
 const STROKE = 4.25;
 const SEG = 3;
 const EASE = [0.19, 1, 0.22, 1] as const;
@@ -716,7 +716,7 @@ export function WishNetworkSection() {
     >
       <WishTitleReveal inView={!!inView} reduceMotion={reduceMotion} />
 
-      <div className="relative mx-auto mt-12 w-full max-w-[1280px] md:mt-8 xl:mt-9">
+      <div className="relative mx-auto mt-9 w-full max-w-[1280px] md:mt-8 xl:mt-9">
         <div
           className="relative w-full overflow-visible"
           style={{ paddingBottom: `${(artH / W) * 100}%` }}

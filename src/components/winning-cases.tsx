@@ -209,23 +209,24 @@ function CasesMarquee({
     >
       <motion.div
         drag={canDrag ? "x" : false}
-        dragElastic={0.22}
-        dragConstraints={{ left: -280, right: 280 }}
-        dragTransition={{ bounceStiffness: 280, bounceDamping: 28 }}
-        style={{ x }}
+        dragElastic={0.12}
+        dragConstraints={{ left: -220, right: 220 }}
+        dragTransition={{ bounceStiffness: 320, bounceDamping: 32 }}
+        dragMomentum={false}
+        style={{ x, touchAction: canDrag ? "pan-y" : undefined }}
         onDragStart={() => {
           dragMoved.current = false;
           setPaused(true);
         }}
         onDrag={(_, info) => {
-          if (Math.abs(info.offset.x) > 6) dragMoved.current = true;
+          if (Math.abs(info.offset.x) > 8) dragMoved.current = true;
         }}
         onDragEnd={(_, info) => {
           setPaused(false);
           void animate(x, 0, {
             type: "spring",
-            stiffness: 260,
-            damping: 30,
+            stiffness: 280,
+            damping: 32,
             velocity: info.velocity.x,
           });
           window.setTimeout(() => {

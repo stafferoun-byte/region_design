@@ -443,7 +443,7 @@ export function LegalTermsAccordionSection() {
                 어려운 법률용어가 아닌, 일상의 언어로
               </span>
               <span className="text-[15px] leading-[1.25] font-semibold tracking-[-0.04em] md:text-[18px]">
-                쉽고 분명하게 안내해드릴게요.
+                쉽고 분명하게 안내해 드릴게요.
               </span>
             </span>
           </motion.span>
