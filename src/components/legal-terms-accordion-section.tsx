@@ -164,66 +164,107 @@ const ROWS: { dir: "left" | "right"; order: number[] }[] = [
   { dir: "left", order: [12, 13, 14, 15, 16] },
 ];
 
-function TermPill({ item }: { item: Item }) {
+function TermPill({
+  item,
+  forceOpen = false,
+}: {
+  item: Item;
+  forceOpen?: boolean;
+}) {
+  const reduceMotion = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const revealed = forceOpen || open || hovered;
+  const termLabel = item.term.replace(/\n/g, " ");
+  const flip = reduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 420, damping: 28, mass: 0.7 };
+
   return (
-    <div
-      className="legal-term-pill group relative inline-flex h-[76px] w-[min(92vw,420px)] shrink-0 items-center overflow-hidden rounded-[45px] pr-[90px] pl-7 transition-colors duration-300 md:h-[90px] md:w-[420px] md:pr-[100px] md:pl-9"
+    <motion.button
+      type="button"
+      aria-pressed={revealed}
+      aria-label={revealed ? `${termLabel} 가리기` : `${termLabel} 보기`}
+      onClick={() => setOpen((v) => !v)}
+      onMouseEnter={() => {
+        if (
+          typeof window !== "undefined" &&
+          window.matchMedia("(hover: hover) and (pointer: fine)").matches
+        ) {
+          setHovered(true);
+        }
+      }}
+      onMouseLeave={() => setHovered(false)}
+      className="legal-term-pill group relative inline-flex h-[60px] w-[min(68vw,280px)] shrink-0 cursor-pointer items-center overflow-hidden rounded-[40px] pr-[70px] pl-7 text-left outline-none focus-visible:ring-2 focus-visible:ring-white/70 md:h-[90px] md:w-[420px] md:rounded-[45px] md:pr-[100px] md:pl-9"
       style={{ backgroundColor: PILL }}
     >
       <p
-        className="whitespace-pre-line text-left text-[15px] leading-[1.38] font-semibold tracking-[-0.03em] break-keep md:text-[17px] md:leading-[1.35]"
+        className="relative z-[1] whitespace-pre-line text-left text-[12px] leading-[1.35] font-medium tracking-[-0.03em] break-keep md:text-[17px] md:leading-[1.35] md:font-semibold"
         style={{ color: INK, fontFamily: FONT }}
       >
         {item.subtitle}
       </p>
+
       <span
-        className="absolute top-[5px] right-[5px] size-[66px] overflow-hidden rounded-full md:size-[80px]"
-        style={{ backgroundColor: ACCENT }}
+        aria-hidden
+        className="pointer-events-none absolute top-[4px] right-[4px] z-[2] size-[52px] rounded-full [perspective:600px] md:top-[5px] md:right-[5px] md:size-[80px]"
       >
-        {item.image ? (
-          <>
-            <span className="absolute inset-0 transition-opacity duration-300 group-hover:opacity-0">
-              <Image
-                src={item.image}
-                alt=""
-                fill
-                className="object-cover object-[center_40%]"
-                sizes="80px"
-              />
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 mix-blend-overlay"
-                style={{
-                  opacity: 0.45,
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-                  backgroundSize: "120px 120px",
-                }}
-              />
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 mix-blend-soft-light"
-                style={{
-                  opacity: 0.35,
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-                  backgroundSize: "80px 80px",
-                }}
-              />
-            </span>
-            <span
-              className="absolute inset-0 flex flex-col items-center justify-center px-1.5 text-center text-[13px] leading-none font-bold tracking-[-0.04em] break-keep text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:text-[15px]"
-              style={{ fontFamily: FONT }}
-            >
-              {item.term.split("\n").map((line) => (
-                <span key={line} className="block leading-[1.2]">
-                  {line}
-                </span>
-              ))}
-            </span>
-          </>
-        ) : (
+        <motion.span
+          className="relative block size-full"
+          style={{ transformStyle: "preserve-3d" }}
+          animate={{ rotateY: revealed ? 180 : 0 }}
+          transition={flip}
+        >
+          {/* Front — photo */}
           <span
-            className="flex size-full flex-col items-center justify-center px-1.5 text-center text-[13px] leading-none font-bold tracking-[-0.04em] break-keep text-white md:text-[15px]"
-            style={{ fontFamily: FONT }}
+            className="absolute inset-0 overflow-hidden rounded-full"
+            style={{
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              backgroundColor: ACCENT,
+            }}
+          >
+            {item.image ? (
+              <>
+                <Image
+                  src={item.image}
+                  alt=""
+                  fill
+                  className="object-cover object-[center_40%]"
+                  sizes="80px"
+                />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 mix-blend-overlay"
+                  style={{
+                    opacity: 0.45,
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+                    backgroundSize: "120px 120px",
+                  }}
+                />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+                  style={{
+                    opacity: 0.35,
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+                    backgroundSize: "80px 80px",
+                  }}
+                />
+              </>
+            ) : null}
+          </span>
+
+          {/* Back — legal term */}
+          <span
+            className="absolute inset-0 flex flex-col items-center justify-center rounded-full px-1 text-center text-[11px] leading-none font-bold tracking-[-0.04em] break-keep text-white md:px-1.5 md:text-[15px]"
+            style={{
+              fontFamily: FONT,
+              backgroundColor: ACCENT,
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              transform: "rotateY(180deg)",
+            }}
           >
             {item.term.split("\n").map((line) => (
               <span key={line} className="block leading-[1.2]">
@@ -231,9 +272,9 @@ function TermPill({ item }: { item: Item }) {
               </span>
             ))}
           </span>
-        )}
+        </motion.span>
       </span>
-    </div>
+    </motion.button>
   );
 }
 
@@ -241,10 +282,12 @@ function TickerRow({
   dir,
   order,
   reduceMotion,
+  forceOpen,
 }: {
   dir: "left" | "right";
   order: number[];
   reduceMotion: boolean | null;
+  forceOpen?: boolean;
 }) {
   const sequence = order.map((i) => ITEMS[i]);
   /** Two copies for seamless -50% loop */
@@ -255,14 +298,18 @@ function TickerRow({
       <div
         className={
           reduceMotion
-            ? "flex w-max gap-[20px] md:gap-[30px]"
+            ? "flex w-max gap-[14px] md:gap-[30px]"
             : dir === "left"
-              ? "legal-ticker-left flex w-max gap-[20px] md:gap-[30px]"
-              : "legal-ticker-right flex w-max gap-[20px] md:gap-[30px]"
+              ? "legal-ticker-left flex w-max gap-[14px] md:gap-[30px]"
+              : "legal-ticker-right flex w-max gap-[14px] md:gap-[30px]"
         }
       >
         {loop.map((item, i) => (
-          <TermPill key={`${dir}-${item.id}-${i}`} item={item} />
+          <TermPill
+            key={`${dir}-${item.id}-${i}`}
+            item={item}
+            forceOpen={forceOpen}
+          />
         ))}
       </div>
     </div>
@@ -272,13 +319,14 @@ function TickerRow({
 export function LegalTermsAccordionSection() {
   const reduceMotion = useReducedMotion();
   const [ctaHovered, setCtaHovered] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full px-5 pt-[40px] pb-[40px] md:px-10 md:pt-[56px] md:pb-[60px] xl:px-12"
+      className="relative w-full px-5 pt-[40px] pb-[72px] md:px-10 md:pt-[56px] md:pb-[60px] xl:px-12"
       aria-label="법률 용어"
       style={{ fontFamily: FONT }}
     >
@@ -313,26 +361,27 @@ export function LegalTermsAccordionSection() {
             inView={inView}
             reduceMotion={reduceMotion}
             delay={0.1}
-            className="max-w-none shrink-0 text-[16px] leading-[1.35] font-semibold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:pb-1 md:text-[25px] md:leading-[1.3] md:whitespace-nowrap"
+            className="max-w-none shrink-0 text-[15px] leading-[1.4] font-semibold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:pb-1 md:text-[25px] md:leading-[1.3] md:whitespace-nowrap"
             style={{ fontFamily: FONT }}
             ariaLabel="법은 이렇게 말하지만 사실은 이런 뜻이에요."
           />
         </div>
 
-        <div className="flex flex-col gap-4 md:gap-5">
+        <div className="flex flex-col gap-3 md:gap-5">
           {ROWS.map((row) => (
             <TickerRow
               key={`${row.dir}-${row.order.join("-")}`}
               dir={row.dir}
               order={row.order}
               reduceMotion={reduceMotion}
+              forceOpen={showTerms}
             />
           ))}
         </div>
       </motion.div>
 
       <motion.div
-        className="mx-auto mt-[48px] w-full max-w-[min(100%,1220px)] md:mt-[104px] md:max-w-[1340px]"
+        className="mx-auto mt-[48px] mb-6 flex w-full max-w-[min(100%,1220px)] justify-center md:mt-[104px] md:mb-0 md:block md:max-w-[1340px]"
         initial={
           reduceMotion
             ? false
@@ -351,37 +400,58 @@ export function LegalTermsAccordionSection() {
       >
         <motion.a
           href="#consult"
-          onMouseEnter={() => setCtaHovered(true)}
+          onMouseEnter={() => {
+            if (
+              typeof window !== "undefined" &&
+              window.matchMedia("(max-width: 767px)").matches
+            ) {
+              return;
+            }
+            setCtaHovered(true);
+          }}
           onMouseLeave={() => setCtaHovered(false)}
-          className="relative block h-[86px] w-full text-left no-underline md:h-[104px]"
-          aria-label="상담 예약하기"
+          onClick={(e) => {
+            if (typeof window === "undefined") return;
+            if (window.matchMedia("(max-width: 767px)").matches) {
+              e.preventDefault();
+              setCtaHovered(false);
+              setShowTerms((v) => !v);
+            }
+          }}
+          className="relative block h-[72px] w-[min(88%,320px)] text-left no-underline md:h-[104px] md:w-full"
+          aria-label={
+            showTerms
+              ? "법률 용어 사진으로 되돌리기"
+              : "법률 용어 단어로 보기"
+          }
+          aria-pressed={showTerms}
         >
           <motion.span
-            className="flex min-h-[86px] items-center rounded-full px-[28px] md:min-h-[104px] md:px-[44px]"
+            className="flex h-full min-h-[72px] w-full items-center justify-start rounded-full px-6 text-left md:min-h-[104px] md:px-[44px]"
             animate={
               reduceMotion
                 ? undefined
                 : {
                     width: ctaHovered ? "calc(100% - 116px)" : "100%",
-                    paddingRight: 44,
                   }
             }
             transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
             style={{ backgroundColor: ACCENT, height: "100%" }}
           >
             <span className="flex flex-col gap-0.5 text-white">
-              <span className="text-[16px] leading-[1.25] font-semibold tracking-[-0.04em] md:text-[30px]">
+              <span className="text-[15px] leading-[1.25] font-semibold tracking-[-0.04em] md:text-[30px]">
                 어려운 법률용어가 아닌, 일상의 언어로
               </span>
-              <span className="text-[13px] leading-[1.3] font-semibold tracking-[-0.03em] md:text-[18px]">
+              <span className="text-[15px] leading-[1.25] font-semibold tracking-[-0.04em] md:text-[18px]">
                 쉽고 분명하게 안내해드릴게요.
               </span>
             </span>
           </motion.span>
 
+          {/* Desktop hover only — circle split; mobile stays a single capsule */}
           <motion.span
             aria-hidden
-            className="absolute top-0 right-0 block aspect-square h-full overflow-hidden rounded-full"
+            className="absolute top-0 right-0 hidden aspect-square h-full overflow-hidden rounded-full md:block"
             initial={false}
             animate={
               reduceMotion

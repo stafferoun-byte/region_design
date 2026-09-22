@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  animate,
   motion,
   useInView,
   useReducedMotion,
@@ -94,18 +95,103 @@ const PRACTICE_AREAS = [
   "이혼·가사",
   "상속",
   "민사·부동산",
-  "교통사고",
+  "기타",
 ] as const;
 
 const STAGES = ["상담만", "수사 초기", "기소 전·후", "재판 중"] as const;
+
+const CONSULT_STATS = [
+  { value: "12,000+", label: "누적 상담", end: 12000, suffix: "+", format: "comma" as const },
+  { value: "98%", label: "의뢰인 만족도", end: 98, suffix: "%", format: "plain" as const },
+] as const;
+
+/** Mobile-only: Kora CTA stats — count-up + fade/slide when scrolled into view */
+function MobileConsultStat({
+  end,
+  suffix,
+  format,
+  label,
+  index,
+  inView,
+  reduceMotion,
+}: {
+  end: number;
+  suffix: string;
+  format: "comma" | "plain";
+  label: string;
+  index: number;
+  inView: boolean;
+  reduceMotion: boolean | null;
+}) {
+  const [display, setDisplay] = useState(() =>
+    reduceMotion ? (format === "comma" ? end.toLocaleString("en-US") : String(end)) + suffix : `0${suffix}`,
+  );
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setDisplay(
+        (format === "comma" ? end.toLocaleString("en-US") : String(end)) + suffix,
+      );
+      return;
+    }
+    if (!inView) return;
+
+    const controls = animate(0, end, {
+      duration: 1.35,
+      delay: 0.12 + index * 0.14,
+      ease: easeOut,
+      onUpdate: (v) => {
+        const n = Math.round(v);
+        setDisplay(
+          (format === "comma" ? n.toLocaleString("en-US") : String(n)) + suffix,
+        );
+      },
+    });
+    return () => controls.stop();
+  }, [end, format, inView, index, reduceMotion, suffix]);
+
+  return (
+    <motion.div
+      className="flex items-baseline gap-x-5"
+      initial={reduceMotion ? false : { opacity: 0, y: 28, filter: "blur(6px)" }}
+      animate={
+        inView || reduceMotion
+          ? { opacity: 1, y: 0, filter: "blur(0px)" }
+          : { opacity: 0, y: 28, filter: "blur(6px)" }
+      }
+      transition={{
+        duration: reduceMotion ? 0 : 0.75,
+        ease: easeOut,
+        delay: reduceMotion ? 0 : 0.06 + index * 0.12,
+      }}
+    >
+      <span
+        className="text-[42px] leading-none font-semibold tracking-[-0.05em] text-[#FFFFFF] [-webkit-text-fill-color:#FFFFFF] [text-shadow:0_1px_4px_rgba(0,0,0,0.18)] tabular-nums"
+        style={{
+          fontFamily: FONT,
+          color: "#FFFFFF",
+          WebkitTextFillColor: "#FFFFFF",
+        }}
+      >
+        {display}
+      </span>
+      <span
+        className="text-[14px] leading-[1.3] font-normal tracking-[-0.03em] text-white/75"
+        style={{ fontFamily: FONT }}
+      >
+        {label}
+      </span>
+    </motion.div>
+  );
+}
 
 function FeatureIcon() {
   return (
     <span
       aria-hidden
-      className="grid size-7 shrink-0 place-items-center rounded-full border border-white/50"
+      className="grid size-5 shrink-0 place-items-center rounded-full border border-white/50 md:size-7"
     >
-      <svg viewBox="0 0 16 16" className="size-3.5" fill="none">
+      <svg viewBox="0 0 16 16" className="size-2.5 md:size-3.5" fill="none">
         <path
           d="M3 8.5 6.2 11.5 13 4.5"
           stroke="#FFFFFA"
@@ -213,7 +299,10 @@ export function ConsultFormSection() {
   const isDesktop = useIsDesktop();
   const sectionRef = useRef<HTMLElement | null>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
+  const statsRef = useRef<HTMLDivElement | null>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.15 });
+  /** Mobile stats only — own trigger so count-up fires when stats enter view */
+  const statsInView = useInView(statsRef, { once: true, amount: 0.45 });
   /** Shrink as footer rises — desktop only (Kora mobile has none) */
   const enableBoxScale = isDesktop === true && reduceMotion !== true;
 
@@ -308,7 +397,7 @@ export function ConsultFormSection() {
                   {FEATURE_LINES.map((line, i) => (
                     <li
                       key={i}
-                      className="flex items-center gap-3 text-[16px] leading-[1.35] font-semibold tracking-[-0.03em] text-white md:text-[17px]"
+                      className="flex items-center gap-2.5 text-[14px] leading-[1.35] font-semibold tracking-[-0.03em] text-white md:gap-3 md:text-[17px]"
                       style={{ fontFamily: FONT }}
                     >
                       <FeatureIcon />
@@ -452,7 +541,7 @@ export function ConsultFormSection() {
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="홍길동"
+                      placeholder=""
                       className="h-12 rounded-[20px] border-0 px-4 text-[14px] font-semibold tracking-[-0.03em] outline-none placeholder:text-[#616161] focus:ring-2 focus:ring-white/60"
                       style={{ backgroundColor: INPUT_BG, color: INK }}
                     />
@@ -465,7 +554,7 @@ export function ConsultFormSection() {
                       required
                       value={contact}
                       onChange={(e) => setContact(e.target.value)}
-                      placeholder="010-0000-0000"
+                      placeholder=""
                       className="h-12 rounded-[20px] border-0 px-4 text-[14px] font-semibold tracking-[-0.03em] outline-none placeholder:text-[#616161] focus:ring-2 focus:ring-white/60"
                       style={{ backgroundColor: INPUT_BG, color: INK }}
                     />
@@ -563,12 +652,12 @@ export function ConsultFormSection() {
 
                 <button
                   type="submit"
-                  className="group inline-flex shrink-0 items-center gap-3 self-end rounded-full bg-[#242424] px-5 py-3 text-[14px] font-semibold tracking-[-0.03em] text-[#FFFFFA] transition-colors hover:bg-black sm:self-auto"
+                  className="group inline-flex shrink-0 items-center gap-[25px] self-end rounded-full bg-[#242424] px-[15px] py-[10px] text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] text-[#FFFFFA] transition-colors hover:bg-black sm:self-auto md:gap-3 md:px-5 md:py-3"
                 >
                   {submitted ? "신청 완료" : "상담 신청하기"}
                   <span
                     aria-hidden
-                    className="size-2.5 rounded-full bg-[#F7F7ED] transition-transform group-hover:scale-110"
+                    className="size-[10px] rounded-full bg-[#F7F7ED] transition-transform group-hover:scale-110"
                   />
                 </button>
               </div>
@@ -577,11 +666,28 @@ export function ConsultFormSection() {
 
           {/* Stats — under the form column */}
           <div className="mx-auto flex w-full max-w-[1480px] justify-end pt-12 md:pt-14">
-            <div className="flex w-full flex-col gap-12 sm:flex-row sm:flex-wrap sm:gap-x-12 sm:gap-y-4 lg:w-[min(100%,600px)] lg:-ml-3 xl:w-[640px] xl:-ml-5">
-              {[
-                { value: "12,000+", label: "누적 상담" },
-                { value: "98%", label: "의뢰인 만족도" },
-              ].map((stat, i) => (
+            {/* Mobile only — Kora-style scroll count-up + reveal */}
+            <div
+              ref={statsRef}
+              className="flex w-full flex-col gap-12 md:hidden"
+            >
+              {CONSULT_STATS.map((stat, i) => (
+                <MobileConsultStat
+                  key={stat.label}
+                  end={stat.end}
+                  suffix={stat.suffix}
+                  format={stat.format}
+                  label={stat.label}
+                  index={i}
+                  inView={statsInView}
+                  reduceMotion={reduceMotion}
+                />
+              ))}
+            </div>
+
+            {/* Desktop — unchanged */}
+            <div className="hidden w-full flex-col gap-12 sm:flex-row sm:flex-wrap sm:gap-x-12 sm:gap-y-4 md:flex lg:w-[min(100%,600px)] lg:-ml-3 xl:w-[640px] xl:-ml-5">
+              {CONSULT_STATS.map((stat, i) => (
                 <motion.div
                   key={stat.label}
                   className="flex items-baseline gap-x-5 sm:gap-3"

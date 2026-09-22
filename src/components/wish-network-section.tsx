@@ -31,6 +31,8 @@ const TITLE_LINE_2 = [
 
 const W = layout.W;
 const H = layout.H;
+/** Mobile artboard — near-square so faces stack vertically */
+const H_MOBILE = Math.round(W * 0.92);
 const STROKE = 4.25;
 const SEG = 3;
 const EASE = [0.19, 1, 0.22, 1] as const;
@@ -54,7 +56,15 @@ const CIRCLE_SRCS = [
   "/images/pastel-skyblue-humble-grandfather-v2.png", // 11 sky far-right
 ] as const;
 
-const CIRCLES = layout.circles.map((c, i) => ({
+type CircleNode = {
+  x: number;
+  y: number;
+  sizePct: number;
+  rPx: number;
+  src: string;
+};
+
+const CIRCLES: CircleNode[] = layout.circles.map((c, i) => ({
   x: c.x,
   y: c.y,
   sizePct: c.sizePct,
@@ -62,11 +72,74 @@ const CIRCLES = layout.circles.map((c, i) => ({
   src: CIRCLE_SRCS[i],
 }));
 
+/** Mobile — Slack-like sparse clusters by color. PC keeps CIRCLES.
+ *  Top triangle: mint L ↔ mint R (line), navy seated lower between them.
+ *  rPx ~0.68 of geometric radius so dashes meet the visible face (PNG has padding). */
+const MOBILE_CIRCLES: CircleNode[] = [
+  // 0 mint — top-left green
+  { x: 14, y: 20, sizePct: 16, rPx: 38, src: CIRCLE_SRCS[0] },
+  // 1 purple — bottom-left
+  { x: 14, y: 76, sizePct: 15.5, rPx: 42, src: CIRCLE_SRCS[1] },
+  // 2 dark — below & between the two mints
+  { x: 46, y: 24, sizePct: 16, rPx: 44, src: CIRCLE_SRCS[2] },
+  // 3 purple — mid-left (baby)
+  { x: 28, y: 50, sizePct: 15.5, rPx: 42, src: CIRCLE_SRCS[3] },
+  // 4 dark — lower left (hangs below)
+  { x: 12, y: 110, sizePct: 15.5, rPx: 42, src: CIRCLE_SRCS[4] },
+  // 5 mint — top-right green (단발) · links to 0
+  { x: 70, y: 7, sizePct: 16, rPx: 38, src: CIRCLE_SRCS[5] },
+  // 6 yellow — center
+  { x: 50, y: 78, sizePct: 17, rPx: 38, src: CIRCLE_SRCS[6] },
+  // 7 yellow — mid-right of yellow cluster
+  { x: 64, y: 44, sizePct: 16, rPx: 38, src: CIRCLE_SRCS[7] },
+  // 8 sky — under yellow center (hangs below artboard)
+  { x: 44, y: 118, sizePct: 15.5, rPx: 42, src: CIRCLE_SRCS[8] },
+  // 9 sky — upper-right
+  { x: 90, y: 28, sizePct: 15.5, rPx: 42, src: CIRCLE_SRCS[9] },
+  // 10 yellow — lower-right (hangs lower like sky under center)
+  { x: 80, y: 108, sizePct: 16, rPx: 34, src: CIRCLE_SRCS[10] },
+  // 11 sky — mid-right lower
+  { x: 88, y: 78, sizePct: 15.5, rPx: 42, src: CIRCLE_SRCS[11] },
+];
+
+/** Mobile bubble positions — gaps in current face layout */
+const MOBILE_BUBBLE_POS: Record<string, { x: number; y: number }> = {
+  recovery: { x: 20, y: 27 },
+  team: { x: 52, y: 56 },
+  rights: { x: 18, y: 92 },
+  precious: { x: 42, y: 8 },
+  free: { x: 18, y: 56 },
+};
+
+/** Mobile bubble corner radii — scaled down vs desktop 56px */
+const MOBILE_BUBBLE_RADIUS: Record<string, string> = {
+  recovery: "0 28px 28px 28px",
+  rights: "28px 28px 28px 0",
+  team: "28px 28px 28px 0",
+  precious: "28px 28px 0 28px",
+  free: "28px 28px 28px 0",
+};
+
+/** Mobile line weight — desktop STROKE reads too thin on phone */
+const STROKE_MOBILE = 9;
+const DASH_DESKTOP = "2.6 9";
+/**
+ * Gap must exceed stroke (+ round caps) or dashes visually fuse into a solid line.
+ * Pattern: short dash, wide gap — Slack-like dotted path.
+ */
+const DASH_MOBILE = "3.2 14";
+
 const COLORS = {
   sky: "#D9EEF8",
   mint: "#B8EBD9",
+  /** Stronger mint for the top green↔green link on mobile */
+  mintLine: "#7ED9B8",
   yellow: "#F5EBB8",
+  /** Brighter yellow for yellow↔yellow links on mobile */
+  yellowLine: "#FFE566",
   purple: "#D0CFE0",
+  /** Stronger purple for purple links / stubs on mobile */
+  purpleLine: "#B8B6D4",
   dark: "#C5D6EE",
 } as const;
 
@@ -132,6 +205,8 @@ const LINE_DEFS: {
  * Bubble copy + locked positions (do not nudge without user ask).
  * Scene A — 3 bubbles · Scene B — 2 bubbles
  */
+const SHOW_BUBBLES = true;
+
 const BUBBLE_SCENES = [
   {
     id: "three",
@@ -218,8 +293,8 @@ type BuiltLine = {
   delay: number;
 };
 
-function toPx(c: { x: number; y: number }) {
-  return { x: (c.x / 100) * W, y: (c.y / 100) * H };
+function toPx(c: { x: number; y: number }, artH: number) {
+  return { x: (c.x / 100) * W, y: (c.y / 100) * artH };
 }
 
 /** Pull endpoints to circle rims so dashes meet faces, not centers */
@@ -227,14 +302,16 @@ function rimPoint(
   from: { x: number; y: number },
   to: { x: number; y: number },
   radius: number,
+  artH: number,
+  strokeW: number,
   rimScale = 1,
 ) {
-  const a = toPx(from);
-  const b = toPx(to);
+  const a = toPx(from, artH);
+  const b = toPx(to, artH);
   const dx = b.x - a.x;
   const dy = b.y - a.y;
   const dist = Math.hypot(dx, dy) || 1;
-  const pad = radius * rimScale + STROKE * 0.35;
+  const pad = radius * rimScale + strokeW * 0.35;
   return {
     x: a.x + (dx / dist) * pad,
     y: a.y + (dy / dist) * pad,
@@ -249,13 +326,49 @@ function buildLine(
   color: string,
   opacity: number,
   delay: number,
+  circles: readonly CircleNode[],
+  artH: number,
+  strokeW: number,
   biasX = 0,
   rimScale = 1,
 ): BuiltLine {
-  const st = CIRCLES[stIdx];
-  const ed = CIRCLES[edIdx];
-  const a = rimPoint(st, ed, st.rPx, rimScale);
-  const b = rimPoint(ed, st, ed.rPx, rimScale);
+  const st = circles[stIdx];
+  const ed = circles[edIdx];
+  const a = rimPoint(st, ed, st.rPx, artH, strokeW, rimScale);
+  const b = rimPoint(ed, st, ed.rPx, artH, strokeW, rimScale);
+  return strokeCubic(a, b, sidePos, bendRatio, color, opacity, delay, biasX);
+}
+
+/** Mobile — dangling yellow stub from a face out past the cluster (Slack-like) */
+function buildOutgoingLine(
+  fromIdx: number,
+  tipPct: { x: number; y: number },
+  sidePos: number,
+  bendRatio: number,
+  color: string,
+  opacity: number,
+  delay: number,
+  circles: readonly CircleNode[],
+  artH: number,
+  strokeW: number,
+  rimScale = 0.55,
+): BuiltLine {
+  const st = circles[fromIdx];
+  const a = rimPoint(st, tipPct, st.rPx, artH, strokeW, rimScale);
+  const b = toPx(tipPct, artH);
+  return strokeCubic(a, b, sidePos, bendRatio, color, opacity, delay, 0);
+}
+
+function strokeCubic(
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+  sidePos: number,
+  bendRatio: number,
+  color: string,
+  opacity: number,
+  delay: number,
+  biasX = 0,
+): BuiltLine {
   const dx = b.x - a.x;
   const dy = b.y - a.y;
   const dist = Math.hypot(dx, dy) || 1;
@@ -399,24 +512,117 @@ export function WishNetworkSection() {
   const currentLine = useRef(0);
   const [sceneIdx, setSceneIdx] = useState(0);
   const [bubblesOn, setBubblesOn] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const built = LINE_DEFS.map((def) =>
-      buildLine(
+    const media = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  const activeCircles = isMobile ? MOBILE_CIRCLES : CIRCLES;
+  const artH = isMobile ? H_MOBILE : H;
+  const strokeW = isMobile ? STROKE_MOBILE : STROKE;
+  const dashArray = isMobile ? DASH_MOBILE : DASH_DESKTOP;
+
+  useEffect(() => {
+    const circles = isMobile ? MOBILE_CIRCLES : CIRCLES;
+    const h = isMobile ? H_MOBILE : H;
+    const strokeW = isMobile ? STROKE_MOBILE : STROKE;
+    const built = LINE_DEFS.map((def) => {
+      const isMintLink = def.st === 0 && def.ed === 5;
+      const isYellowLink =
+        (def.st === 7 && def.ed === 6) || (def.st === 6 && def.ed === 10);
+      const isNavyLink = def.st === 2 && def.ed === 4;
+      // Mobile same-color links: gentle arc that clearly joins matching faces
+      let sidePos = def.sidePos;
+      let bend = def.bend;
+      let color = def.color;
+      let opacity = def.opacity;
+      let biasX = def.biasX ?? 0;
+      let rimScale = def.rimScale ?? 1;
+
+      if (isMobile && isMintLink) {
+        sidePos = 1;
+        bend = 0.06;
+        color = COLORS.mintLine;
+        opacity = 1;
+        biasX = 0;
+        rimScale = 0.55;
+      } else if (isMobile && isYellowLink) {
+        // 6↔10 bend flipped (was -1); 7↔6 unchanged at 1
+        sidePos = 1;
+        bend = 0.07;
+        color = COLORS.yellowLine;
+        opacity = 1;
+        biasX = 0;
+        rimScale = 0.55;
+      } else if (isMobile && isNavyLink) {
+        // Same bend side as desktop; mild arc clearing center yellow (6)
+        sidePos = 1;
+        bend = 0.15;
+        biasX = 4;
+        rimScale = 0.65;
+      } else if (isMobile) {
+        rimScale = (def.rimScale ?? 1) * 0.72;
+      }
+
+      return buildLine(
         def.st,
         def.ed,
-        def.sidePos,
-        def.bend,
-        def.color,
-        def.opacity,
+        sidePos,
+        bend,
+        color,
+        opacity,
         def.delay,
-        def.biasX ?? 0,
-        def.rimScale ?? 1,
-      ),
-    );
+        circles,
+        h,
+        strokeW,
+        biasX,
+        rimScale,
+      );
+    });
+
+    // Mobile only — yellow stub gently out to the right edge (slight rise)
+    if (isMobile) {
+      built.push(
+        buildOutgoingLine(
+          10,
+          { x: 118, y: 102 },
+          1,
+          0.09,
+          COLORS.yellowLine,
+          0.95,
+          340,
+          circles,
+          h,
+          strokeW,
+          0.45,
+        ),
+      );
+      // Purple stub out left from male student
+      built.push(
+        buildOutgoingLine(
+          1,
+          { x: -14, y: 70 },
+          -1,
+          0.09,
+          COLORS.purpleLine,
+          0.95,
+          360,
+          circles,
+          h,
+          strokeW,
+          0.45,
+        ),
+      );
+    }
+
     linesData.current = built;
     setLines(built);
-  }, [layout.circles]);
+  }, [isMobile]);
 
   useEffect(() => {
     if (!inView || reduceMotion || lines.length === 0) return;
@@ -461,7 +667,7 @@ export function WishNetworkSection() {
 
   // Bubble loop: scene in (stagger) → hold → scene out → next
   useEffect(() => {
-    if (!inView) return;
+    if (!SHOW_BUBBLES || !inView) return;
     if (reduceMotion) {
       setBubblesOn(true);
       return;
@@ -504,21 +710,21 @@ export function WishNetworkSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-20 w-full overflow-x-clip px-5 py-[52px] md:px-10 md:py-[68px] xl:px-12 xl:py-[84px]"
+      className="relative z-20 w-full overflow-x-visible px-2 py-[52px] md:overflow-x-clip md:px-10 md:py-[68px] xl:px-12 xl:py-[84px]"
       style={{ backgroundColor: "#FCFCFA" }}
       aria-label="이로운 파트너스"
     >
       <WishTitleReveal inView={!!inView} reduceMotion={reduceMotion} />
 
-      <div className="relative mx-auto mt-8 w-full max-w-[1280px] md:mt-10 xl:mt-12">
+      <div className="relative mx-auto mt-14 w-full max-w-[1280px] md:mt-10 xl:mt-12">
         <div
-          className="relative w-full"
-          style={{ paddingBottom: `${(H / W) * 100}%` }}
+          className="relative w-full overflow-visible"
+          style={{ paddingBottom: `${(artH / W) * 100}%` }}
         >
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 overflow-visible">
             <svg
               className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible"
-              viewBox={`0 0 ${W} ${H}`}
+              viewBox={`0 0 ${W} ${artH}`}
               fill="none"
               aria-hidden
             >
@@ -531,10 +737,10 @@ export function WishNetworkSection() {
                   className={reduceMotion ? undefined : "wish-dash-flow"}
                   d={line.d}
                   stroke={line.color}
-                  strokeWidth={STROKE}
+                  strokeWidth={strokeW}
                   strokeLinecap="round"
                   /* Clay: short elongated dashes (not long strokes) */
-                  strokeDasharray="2.6 9"
+                  strokeDasharray={dashArray}
                   opacity={inView || reduceMotion ? line.opacity : 0}
                   style={{
                     transition: reduceMotion
@@ -545,7 +751,7 @@ export function WishNetworkSection() {
               ))}
             </svg>
 
-            {CIRCLES.map((c, i) => {
+            {activeCircles.map((c, i) => {
               const enter = ENTER[i];
               const isCenterYellow = i === 6;
               return (
@@ -623,16 +829,26 @@ export function WishNetworkSection() {
             })}
 
             <AnimatePresence>
-              {bubblesOn &&
-                activeScene.items.map((b) => (
+              {SHOW_BUBBLES &&
+                bubblesOn &&
+                activeScene.items.map((b) => {
+                  const pos =
+                    isMobile && MOBILE_BUBBLE_POS[b.id]
+                      ? MOBILE_BUBBLE_POS[b.id]
+                      : { x: b.x, y: b.y };
+                  const radius =
+                    isMobile && MOBILE_BUBBLE_RADIUS[b.id]
+                      ? MOBILE_BUBBLE_RADIUS[b.id]
+                      : b.radius;
+                  return (
                   <motion.div
                     key={`${activeScene.id}-${b.id}`}
                     className="absolute z-[3]"
                     style={{
-                      left: `${b.x}%`,
-                      top: `${b.y}%`,
+                      left: `${pos.x}%`,
+                      top: `${pos.y}%`,
                       transform: "translate(-50%, -50%)",
-                      transformOrigin: bubbleOrigin(b.radius),
+                      transformOrigin: bubbleOrigin(radius),
                     }}
                     initial={
                       reduceMotion
@@ -668,10 +884,10 @@ export function WishNetworkSection() {
                       }}
                     >
                       <div
-                        className="relative origin-center scale-[0.72] md:scale-100"
+                        className="relative origin-center scale-[0.92] md:scale-100"
                       >
                       <div
-                        className="relative flex items-center gap-2.5 whitespace-nowrap px-5 py-3.5 text-[15px] leading-none font-semibold tracking-[-0.45px] text-[#1d1c1d] md:gap-3.5 md:px-8 md:py-5 md:text-[24px]"
+                        className="relative flex items-center gap-1.5 whitespace-nowrap px-3.5 py-2.5 text-[14px] leading-none font-semibold tracking-[-0.4px] text-[#1d1c1d] md:gap-3.5 md:px-8 md:py-5 md:text-[24px]"
                         style={{ fontFamily: FONT }}
                       >
                         <span
@@ -679,9 +895,10 @@ export function WishNetworkSection() {
                           className="absolute inset-0 -z-[1]"
                           style={{
                             background: "#fff",
-                            borderRadius: b.radius,
-                            boxShadow:
-                              "0 10px 36px 0 rgba(211, 211, 224, 0.9)",
+                            borderRadius: radius,
+                            boxShadow: isMobile
+                              ? "0 6px 20px 0 rgba(211, 211, 224, 0.85)"
+                              : "0 10px 36px 0 rgba(211, 211, 224, 0.9)",
                           }}
                         />
                         <span>{b.text}</span>
@@ -690,7 +907,7 @@ export function WishNetworkSection() {
                           src={b.emoji}
                           alt=""
                           draggable={false}
-                          className="relative size-[26px] shrink-0 object-contain md:size-[38px]"
+                          className="relative size-[20px] shrink-0 object-contain md:size-[38px]"
                           animate={
                             reduceMotion
                               ? undefined
@@ -711,7 +928,8 @@ export function WishNetworkSection() {
                       </div>
                     </motion.div>
                   </motion.div>
-                ))}
+                  );
+                })}
             </AnimatePresence>
           </div>
         </div>

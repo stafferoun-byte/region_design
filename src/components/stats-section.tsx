@@ -154,37 +154,36 @@ function ChartBar({
   return (
     <div className="relative w-full">
       <div
-        className="relative z-[1] h-[72px] overflow-hidden md:h-[84px]"
+        className="relative z-[1] h-[56px] overflow-hidden md:h-[84px]"
         style={{ width }}
       >
         {/* Bar fill scales — keep labels outside so Wanted Sans isn’t distorted */}
         <motion.div
-          className="absolute inset-0 will-change-transform"
+          className="absolute inset-0 will-change-transform rounded-[14px] md:rounded-[18px]"
           style={{
             backgroundColor: isWith ? EROUN_GREEN : BAR_GRAY,
-            borderRadius: 18,
             transformOrigin: "left center",
           }}
           initial={reduceMotion ? false : { scaleX: 0 }}
           animate={show ? { scaleX: 1 } : { scaleX: 0 }}
           transition={{
-            duration: reduceMotion ? 0 : 0.95,
+            duration: reduceMotion ? 0 : 1.05,
             delay: reduceMotion ? 0 : delay,
-            ease: easeOut,
+            ease: [0.16, 1, 0.3, 1],
           }}
         />
         <motion.div
-          className="relative z-[1] flex h-full items-center justify-between gap-2 px-3.5 md:block md:px-0"
-          initial={reduceMotion ? false : { opacity: 0 }}
-          animate={show ? { opacity: 1 } : { opacity: 0 }}
+          className="relative z-[1] flex h-full items-end justify-between gap-1.5 px-3 pb-2.5 md:block md:px-0 md:pb-0"
+          initial={reduceMotion ? false : { opacity: 0, x: -6 }}
+          animate={show ? { opacity: 1, x: 0 } : { opacity: 0, x: -6 }}
           transition={{
-            duration: reduceMotion ? 0 : 0.4,
-            delay: reduceMotion ? 0 : delay + 0.45,
+            duration: reduceMotion ? 0 : 0.45,
+            delay: reduceMotion ? 0 : delay + 0.55,
             ease: easeOut,
           }}
         >
           <span
-            className="min-w-0 shrink text-[13px] leading-[1.25] font-bold tracking-[-0.03em] break-keep md:absolute md:bottom-3 md:left-[18px] md:text-[18px] md:leading-[1.4]"
+            className="min-w-0 shrink text-[13px] leading-[1.2] font-bold tracking-[-0.03em] break-keep md:absolute md:bottom-3 md:left-[18px] md:text-[18px] md:leading-[1.4]"
             style={{
               fontFamily: FONT_WANTED,
               color: labelColor,
@@ -193,7 +192,7 @@ function ChartBar({
             {label}
           </span>
           <span
-            className="shrink-0 text-right text-[17px] leading-[1.05] font-bold tracking-[-0.05em] break-keep sm:text-[20px] md:absolute md:top-1/2 md:right-4 md:-translate-y-1/2 md:text-[38px] md:tracking-[-0.07em]"
+            className="shrink-0 text-right text-[14px] leading-[1.05] font-bold tracking-[-0.04em] break-keep sm:text-[15px] md:absolute md:top-1/2 md:right-4 md:-translate-y-1/2 md:text-[38px] md:tracking-[-0.07em]"
             style={{
               fontFamily: FONT_WANTED,
               color: labelColor,
@@ -222,8 +221,8 @@ export function StatsSection() {
   });
   const chartInView = useInView(chartRef, {
     once: true,
-    amount: 0.35,
-    margin: "0px 0px -10% 0px",
+    amount: 0.25,
+    margin: "0px 0px -6% 0px",
   });
   const reduceMotion = useReducedMotion();
 
@@ -234,7 +233,7 @@ export function StatsSection() {
       aria-label="Services"
       style={{ backgroundColor: SECTION_BG }}
     >
-      <div className="flex min-h-svh w-full items-center px-5 pt-[100px] pb-[60px] md:px-10 md:pt-[140px] md:pb-[90px] xl:px-12 xl:pt-[180px] xl:pb-[120px]">
+      <div className="flex w-full items-center px-5 pt-[80px] pb-10 md:min-h-svh md:px-10 md:pt-[140px] md:pb-[90px] xl:px-12 xl:pt-[180px] xl:pb-[120px]">
         <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-[30px] md:gap-[50px] xl:gap-20">
           <div ref={headerRef}>
             <SectionTitleReveal
@@ -247,21 +246,21 @@ export function StatsSection() {
             />
           </div>
 
-          <div className="flex w-full flex-col items-start gap-[30px] md:gap-[50px]">
+          <div className="flex w-full flex-col items-start gap-4 md:gap-[50px]">
             <div className="flex w-full max-w-[750px] flex-col gap-5">
               <CharReveal
                 segments={BODY_SEGMENTS}
                 inView={headerInView}
                 reduceMotion={reduceMotion}
-                className="text-[20px] leading-[1.3] font-semibold tracking-[-0.04em] md:text-[25px]"
+                className="text-[15px] leading-[1.4] font-semibold tracking-[-0.04em] md:text-[25px] md:leading-[1.3]"
               />
             </div>
 
-            <div ref={chartRef} className="relative w-full px-[15px] py-10">
-              <div className="relative w-full pt-12 pb-5">
+            <div ref={chartRef} className="relative w-full px-3 py-4 md:px-[15px] md:py-10">
+              <div className="relative w-full pt-6 pb-4 md:pt-12 md:pb-5">
                 <motion.div
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 top-0 bottom-[14px] z-0 overflow-visible"
+                  className="pointer-events-none absolute inset-x-0 top-0 bottom-[12px] z-0 overflow-visible md:bottom-[14px]"
                   initial={reduceMotion ? false : { opacity: 0 }}
                   animate={
                     chartInView || reduceMotion
@@ -269,8 +268,8 @@ export function StatsSection() {
                       : { opacity: 0 }
                   }
                   transition={{
-                    duration: reduceMotion ? 0 : 0.5,
-                    delay: reduceMotion ? 0 : 0.2,
+                    duration: reduceMotion ? 0 : 0.55,
+                    delay: reduceMotion ? 0 : 0.08,
                     ease: easeOut,
                   }}
                 >
@@ -290,13 +289,13 @@ export function StatsSection() {
                   </div>
                 </motion.div>
 
-                <div className="relative z-[1] flex flex-col gap-4">
+                <div className="relative z-[1] flex flex-col gap-2.5 md:gap-4">
                   <ChartBar
                     label="누적 사건처리 규모"
                     valueLabel="557,821,000원+"
                     width={WITH_WIDTH}
                     variant="with"
-                    delay={0}
+                    delay={0.12}
                     inView={chartInView}
                     reduceMotion={reduceMotion}
                   />
@@ -305,30 +304,30 @@ export function StatsSection() {
                     valueLabel="37,000건+"
                     width={WITHOUT_WIDTH}
                     variant="without"
-                    delay={0.12}
+                    delay={0.28}
                     inView={chartInView}
                     reduceMotion={reduceMotion}
                   />
                 </div>
 
                 <motion.div
-                  className="absolute right-0 bottom-0 left-0 z-[1] flex h-5 items-end justify-between"
-                  initial={reduceMotion ? false : { opacity: 0 }}
+                  className="absolute right-0 bottom-0 left-0 z-[1] flex h-4 items-end justify-between md:h-5"
+                  initial={reduceMotion ? false : { opacity: 0, y: 4 }}
                   animate={
                     chartInView || reduceMotion
-                      ? { opacity: 1 }
-                      : { opacity: 0 }
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 4 }
                   }
                   transition={{
                     duration: reduceMotion ? 0 : 0.5,
-                    delay: reduceMotion ? 0 : 0.35,
+                    delay: reduceMotion ? 0 : 0.4,
                     ease: easeOut,
                   }}
                 >
                   {AXIS_TICKS.map((tick) => (
                     <span
                       key={tick}
-                      className="w-0 text-center text-[13px] leading-none font-semibold tracking-[-0.025em]"
+                      className="w-0 text-center text-[10px] leading-none font-semibold tracking-[-0.025em] md:text-[13px]"
                       style={{ fontFamily: FONT_WANTED, color: TEXT_MUTED }}
                     >
                       <span className="inline-block -translate-x-1/2">

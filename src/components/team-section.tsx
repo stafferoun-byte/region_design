@@ -193,7 +193,7 @@ function TitleReveal({
 
   return (
     <motion.h2
-      className="text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep md:text-[clamp(32px,8vw,68px)] md:leading-[1.28] md:tracking-[-0.05em]"
+      className="text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep md:text-[clamp(32px,8vw,68px)] md:leading-[1.28] md:tracking-[-0.05em]"
       style={{ fontFamily: FONT }}
       variants={container}
       initial="hidden"
@@ -375,12 +375,12 @@ function TeamRow({
         ) : (
           /* Title — always 2 lines; concern↔name swaps on hover, fields stay */
           <span className="relative z-[1] flex min-h-[58px] min-w-0 flex-1 items-center gap-5 md:min-h-[64px]">
-            <span className="flex min-w-0 flex-1 flex-col gap-2 md:gap-3">
+            <span className="flex min-w-0 flex-1 flex-col gap-1 md:gap-3">
               <AnimatePresence mode="wait" initial={false}>
                 {active ? (
                   <motion.span
                     key="detail-title"
-                    className="block text-[20px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
+                    className="block text-[16px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
                     style={{ fontFamily: FONT, color: DARK }}
                     initial={reduceMotion ? false : { opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -392,7 +392,7 @@ function TeamRow({
                 ) : (
                   <motion.span
                     key="concern-title"
-                    className="block text-[20px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
+                    className="block text-[16px] leading-[1.3] font-bold tracking-[-0.03em] break-keep md:text-[22px] xl:text-[24px]"
                     style={{ fontFamily: FONT, color: CREAM }}
                     initial={reduceMotion ? false : { opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -404,7 +404,7 @@ function TeamRow({
                 )}
               </AnimatePresence>
               <span
-                className="block truncate whitespace-nowrap text-[16px] leading-[1.5] font-semibold tracking-[-0.03em] transition-colors duration-200 md:text-[17px] xl:text-[18px]"
+                className="block truncate whitespace-nowrap text-[13px] leading-[1.4] font-medium tracking-[-0.03em] transition-colors duration-200 md:text-[17px] md:font-semibold xl:text-[18px]"
                 style={{
                   fontFamily: FONT,
                   color: active ? "#616161" : "rgba(255,255,255,0.55)",
@@ -568,7 +568,7 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
       >
         <div className="flex w-full max-w-[280px] flex-col items-start gap-[15px] min-[810px]:max-w-[400px] min-[810px]:gap-5 min-[1200px]:max-w-[520px]">
           <motion.h3
-            className="w-full text-[25px] leading-[1.1] font-bold tracking-[-0.04em] break-keep min-[810px]:text-[30px] min-[1200px]:text-[45px]"
+            className="w-full text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep min-[810px]:text-[30px] min-[810px]:leading-[1.1] min-[1200px]:text-[45px]"
             style={{ fontFamily: FONT, fontVariationSettings: '"wght" 700' }}
             variants={wordContainer}
             initial="hidden"
@@ -580,7 +580,7 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
             {renderLine(HIRE_LINE_2)}
           </motion.h3>
           <motion.p
-            className="w-max max-w-none whitespace-nowrap text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] min-[810px]:text-[15px] min-[1200px]:text-[17px]"
+            className="w-max max-w-none whitespace-nowrap text-[15px] leading-[1.4] font-semibold tracking-[-0.03em] min-[810px]:text-[15px] min-[1200px]:text-[17px]"
             style={{ fontFamily: FONT, color: CREAM }}
             initial={
               reduceMotion
@@ -619,7 +619,7 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
             ease: easeOut,
           }}
         >
-          <PillCtaButton href="#consult" label="함께 방법을 찾아보기" />
+          <PillCtaButton href="#consult" label="함께 방법을 찾아보기" compact />
         </motion.div>
       </div>
     </div>
