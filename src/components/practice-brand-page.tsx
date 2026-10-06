@@ -187,15 +187,15 @@ export function PracticeBrandPage() {
       const scrollY = window.scrollY;
 
       let activeIdx = -1;
-      let live:
-        | {
-            label: string;
-            top: number;
-            font: number;
-            pad: number;
-            seam: number;
-          }
-        | null = null;
+      const pin: {
+        current: {
+          label: string;
+          top: number;
+          font: number;
+          pad: number;
+          seam: number;
+        } | null;
+      } = { current: null };
 
       sectionRefs.current.forEach((sec, idx) => {
         const name = nameRefs.current[idx];
@@ -257,7 +257,7 @@ export function PracticeBrandPage() {
           return;
         }
 
-        live = {
+        pin.current = {
           label,
           // Photo still below the pin line: ride the seam. Otherwise lock top at 340.
           top: kvRect.top > spec.pinY ? kvRect.top : spec.pinY,
@@ -267,6 +267,7 @@ export function PracticeBrandPage() {
         };
       });
 
+      const live = pin.current;
       if (!live?.label) {
         pinEl.style.display = "none";
         pinEl.textContent = "";
