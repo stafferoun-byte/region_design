@@ -1,5 +1,6 @@
+import { PartnerAboutSections } from "@/components/partner-about-sections";
+import { PartnerIntroScroll } from "@/components/partner-intro-scroll";
 import { SitePageFrame } from "@/components/site-page-frame";
-import { WishNetworkSection } from "@/components/wish-network-section";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,10 +10,9 @@ export const metadata: Metadata = {
 
 export default function PartnersPage() {
   return (
-    <SitePageFrame>
-      <div className="pb-8 md:pb-12">
-        <WishNetworkSection />
-      </div>
+    <SitePageFrame tone="none">
+      <PartnerIntroScroll />
+      <PartnerAboutSections />
     </SitePageFrame>
   );
 }

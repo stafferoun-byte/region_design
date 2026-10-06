@@ -1,0 +1,903 @@
+/* Faithful port of joonganggroup.com keyVisual (common-ko.css) */
+
+/*
+ * JoongAng uses commercial YoonGothicPro770/780 (not publicly served).
+ * Pretendard Bold reads closest among fonts already loaded on this site —
+ * SUIT stand-in looked too round / off compared to the live screenshot.
+ */
+.jg-track {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 16px;
+  color: #000;
+}
+
+.jg-sectionWrap {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100svh;
+  background: #fff;
+}
+
+.jg-sectionWrap.is-fixed {
+  position: sticky;
+  top: 0;
+  left: 0;
+}
+
+.jg-keyVisual {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 800px;
+  margin-left: -315px;
+  min-height: 100svh;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+.jg-keyVisual.is-scrollAfter {
+  z-index: 99;
+}
+
+.jg-visualSlideBox {
+  position: relative;
+}
+
+.jg-keyText {
+  display: block;
+  font-family: "Pretendard Variable", "Pretendard", -apple-system,
+    BlinkMacSystemFont, system-ui, sans-serif;
+  /* YoonGothicPro770 reports weight 700 */
+  font-weight: 700;
+  font-size: 74px;
+  line-height: 102px;
+  letter-spacing: -0.02em;
+  padding-top: 110px;
+  margin-bottom: 90px;
+  color: #000;
+  transition: transform 0.7s ease, opacity 0.8s ease;
+  white-space: normal;
+}
+
+.jg-keyVisual.is-scrollAfter .jg-keyText {
+  opacity: 0;
+  transform: translateY(-200%);
+}
+
+.jg-hoverAccent {
+  color: inherit;
+  transition: color 0.25s ease;
+  cursor: default;
+}
+
+.jg-hoverAccent:hover {
+  color: #5dc39b;
+}
+
+.jg-txtLine {
+  display: block;
+  overflow: hidden;
+}
+
+.jg-txtLine > span,
+.jg-txtLine > em {
+  display: inline-block;
+  transform: translate(0, 100%);
+  transition: transform 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.jg-visualSlideBox.is-intro .jg-keyText .jg-txtLine > span,
+.jg-visualSlideBox.is-intro .jg-beforeBox .jg-txtLine > span,
+.jg-visualSlideBox.is-intro .jg-beforeBox .jg-txtLine > em {
+  transform: translate(0, 0);
+}
+
+.jg-visualSlideInner {
+  position: relative;
+  height: 381px;
+  max-height: none;
+  overflow: visible;
+}
+
+.jg-keyVisual.is-scrollAfter .jg-visualSlideInner {
+  overflow: visible;
+  height: 381px;
+  max-height: none;
+}
+
+.jg-beforeBox {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+}
+
+.jg-keyVisual.is-start .jg-beforeBox {
+  display: none;
+}
+
+.jg-line {
+  display: block;
+  opacity: 0;
+  width: 420px;
+  height: 1px;
+  background: #000;
+  transition: 0.3s ease;
+}
+
+.jg-visualSlideBox.is-intro .jg-line {
+  opacity: 1;
+}
+
+.jg-titleBox {
+  position: relative;
+  padding-top: 15px;
+  width: 420px;
+  min-height: 70px;
+}
+
+.jg-beforeBox .jg-subject {
+  display: block;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  color: #000;
+}
+
+.jg-beforeBox .jg-subject em {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.jg-beforeBox .jg-subject .jg-txtLine {
+  display: inline-block;
+}
+
+.jg-name {
+  display: block;
+  margin-top: 39px;
+  margin-bottom: 20px;
+  font-family: Inter, "NeueHaasGroteskTextW02", Helvetica, sans-serif;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #000;
+}
+
+.jg-name :lang(en) {
+  font-family: Inter, "NeueHaasGroteskTextW02", Helvetica, sans-serif;
+  font-weight: 550;
+  letter-spacing: -0.03em;
+}
+
+.jg-afterBox {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  transform: translateY(0);
+  transition: 0.5s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.jg-keyVisual.is-scrollAfter .jg-afterBox {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.jg-afterBox .jg-titleBox {
+  width: auto;
+  padding-top: 15px;
+  min-height: 0;
+}
+
+.jg-afterBox .jg-subject {
+  display: block;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 94px;
+  /* YoonGothicPro780 at font-weight 400 — same cut as the other section titles */
+  font-weight: 700;
+  font-style: normal;
+  line-height: 134px;
+  letter-spacing: 0;
+  color: #000;
+}
+
+.jg-afterBox .jg-subject .jg-txtLine {
+  display: block;
+  height: 134px;
+  line-height: 134px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.jg-afterBox .jg-subject em {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 94px;
+  line-height: 134px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.jg-afterBox .jg-txtLine > em,
+.jg-afterBox .jg-txtLine > span,
+.jg-afterBox .jg-btnView {
+  opacity: 0;
+  transform: translate(0, 100%);
+  transition: transform 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.jg-keyVisual.is-scrollAfter.is-start .jg-afterBox .jg-txtLine > em,
+.jg-keyVisual.is-scrollAfter.is-start .jg-afterBox .jg-txtLine > span,
+.jg-keyVisual.is-scrollAfter.is-start .jg-afterBox .jg-btnView {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.jg-keyVisual.is-scrollAfter.is-start .jg-afterBox .jg-paragraph .jg-txtLine > span {
+  transition-delay: 0.3s;
+}
+
+.jg-keyVisual.is-scrollAfter.is-start .jg-afterBox .jg-btnHover .jg-btnView {
+  transition-delay: 0.4s;
+}
+
+.jg-paragraph {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 22px;
+  line-height: 38px;
+  letter-spacing: 0;
+  margin: 55px 0 71px 0;
+  color: #000;
+  font-weight: 400;
+}
+
+.jg-paragraph .jg-txtLine {
+  display: block;
+  height: 38px;
+  line-height: 38px;
+  overflow: hidden;
+}
+
+.jg-paragraph .jg-txtLine > span {
+  font-size: 22px;
+  line-height: 38px;
+  font-weight: 400;
+}
+
+.jg-btnView {
+  position: relative;
+  display: inline-block;
+  width: 140px;
+  height: 41px;
+  line-height: 41px;
+  background: #000;
+  font-size: 12px;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+}
+
+.jg-btnView span {
+  position: relative;
+  display: block;
+  padding-left: 20px;
+}
+
+.jg-btnView span::after {
+  display: block;
+  content: "";
+  width: 20px;
+  height: 11px;
+  background: url(/images/joongang/arr_btn_view.svg) no-repeat right 0;
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  transition: all 0.3s 0.2s ease;
+}
+
+.jg-btnView:hover {
+  background: #fff;
+  color: #000;
+}
+
+.jg-btnView:hover span::after {
+  background-image: url(/images/joongang/arr_btn_view_on.svg);
+}
+
+/* Thumb — JoongAng: large box + scale(0.188) in intro; full-bleed on scrollAfter */
+.jg-thumb {
+  position: relative;
+  left: 0;
+  top: 157px;
+  overflow: hidden;
+  max-width: 1920px;
+  width: 100vw;
+  /* Layout size like JoongAng; visual size comes from scale(0.188) */
+  height: calc(100vw * 1380 / 1440);
+  max-height: none;
+  padding-bottom: 0;
+  perspective: 700px;
+  transform: translateX(0) scale(0.188, 0.18);
+  transform-origin: left top;
+  transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.jg-keyVisual.is-scrollAfter .jg-thumb {
+  left: 0;
+  top: 0;
+  width: 100vw;
+  max-width: 1920px;
+  /* height set by JS to (viewport − white seam); image scrubs inside */
+  overflow: hidden;
+  padding-bottom: 0;
+  transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.jg-bg {
+  display: block;
+  position: relative;
+  max-width: 1920px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  opacity: 0;
+  transform: rotateX(-90deg) translateX(0);
+  transform-origin: 100% 0 0;
+  transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+}
+
+/* Film-grain noise (same approach as team / cases photos) */
+.jg-bg::before,
+.jg-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.jg-bg::before {
+  opacity: 0.28;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+.jg-bg::after {
+  opacity: 0.2;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
+}
+
+.jg-visualSlideBox.is-intro .jg-bg {
+  transform: rotateX(0deg);
+  opacity: 1;
+}
+
+.jg-keyVisual.is-scrollAfter .jg-bg {
+  opacity: 1;
+  filter: none;
+  transform: rotateX(0deg);
+  transition: none;
+  background-size: 100% auto;
+  background-position: 0 0;
+}
+
+.jg-mHide {
+  display: block;
+}
+.jg-wHide {
+  display: none;
+}
+
+/* Desktop mid widths */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .jg-keyVisual {
+    margin-left: -21.87vw;
+    width: 55.55vw;
+  }
+  .jg-keyText {
+    font-size: 5.13vw;
+    line-height: 6.1vw;
+    padding-top: 6.1vw;
+    margin-bottom: 6.25vw;
+  }
+  .jg-line {
+    width: 29.16vw;
+  }
+  .jg-afterBox .jg-subject {
+    font-size: 6.52vw;
+    line-height: 7.5vw;
+  }
+  .jg-afterBox .jg-subject em {
+    font-size: 6.52vw;
+    line-height: 7.5vw;
+  }
+  .jg-afterBox .jg-subject .jg-txtLine {
+    height: 7.5vw;
+    line-height: 7.5vw;
+  }
+  .jg-paragraph {
+    font-size: 1.52vw;
+    line-height: 2.35vw;
+    margin: 3.81vw 0 4.93vw 0;
+  }
+  .jg-paragraph .jg-txtLine {
+    height: 2.35vw;
+    line-height: 2.35vw;
+  }
+  .jg-paragraph .jg-txtLine > span {
+    font-size: 1.52vw;
+    line-height: 2.35vw;
+  }
+}
+
+/* Mobile — JoongAng .ui-m */
+@media (max-width: 767px) {
+  .jg-keyVisual {
+    width: auto;
+    left: 0;
+    margin-left: 21.33vw;
+    padding: 0 5.33vw;
+  }
+
+  .jg-keyText {
+    font-size: 10.13vw;
+    line-height: 12.2vw;
+    margin-bottom: 9vw;
+    margin-top: 6.66vw;
+    padding-top: 0;
+    letter-spacing: -0.06vw;
+  }
+
+  .jg-visualSlideInner {
+    height: auto;
+    max-height: none;
+  }
+
+  .jg-line {
+    width: 56vw;
+  }
+
+  .jg-titleBox {
+    width: auto;
+    padding-top: 3vw;
+  }
+
+  .jg-beforeBox .jg-subject {
+    font-size: 4.1vw;
+    line-height: 6vw;
+  }
+
+  .jg-name {
+    font-size: 5.6vw;
+    margin-top: 6vw;
+    margin-bottom: 4vw;
+  }
+
+  .jg-afterBox .jg-subject {
+    font-size: 9.6vw;
+    line-height: 11.2vw;
+    letter-spacing: -0.06vw;
+    font-weight: 700;
+  }
+  .jg-afterBox .jg-subject em {
+    font-size: 9.6vw;
+    line-height: 11.2vw;
+    letter-spacing: -0.06vw;
+  }
+  .jg-afterBox .jg-subject .jg-txtLine {
+    height: 11.2vw;
+    line-height: 11.2vw;
+  }
+  .jg-paragraph {
+    font-size: 3.73vw;
+    line-height: 6vw;
+    margin: 7.06vw 0 9.33vw 0;
+  }
+  .jg-paragraph .jg-txtLine {
+    height: 6vw;
+    line-height: 6vw;
+  }
+  .jg-paragraph .jg-txtLine > span {
+    font-size: 3.73vw;
+    line-height: 6vw;
+  }
+
+  .jg-btnView {
+    width: 29.2vw;
+    height: 9.06vw;
+    line-height: 9.06vw;
+    font-size: 2.93vw;
+  }
+
+  .jg-btnView span {
+    padding-left: 4vw;
+  }
+
+  .jg-btnView span::after {
+    width: 4vw;
+    height: 2.4vw;
+    right: 4vw;
+    background-size: contain;
+  }
+
+  .jg-thumb {
+    top: 29.13vw;
+    height: calc(100vw * 769 / 1024);
+    padding-bottom: 0;
+    transform: translateX(0) scale(0.624);
+  }
+
+  .jg-keyVisual.is-scrollAfter .jg-thumb {
+    left: 0;
+    top: 0;
+    width: 100vw;
+    min-height: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+
+  .jg-bg {
+    background-position: center 20%;
+    background-size: cover;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .jg-mHide {
+    display: none;
+  }
+  .jg-wHide {
+    display: block;
+  }
+}
+
+/* Same breakpoint as common-ko.css: the intro stack must fit one viewport */
+@media (max-height: 900px) and (min-width: 768px) {
+  .jg-keyText {
+    font-size: 56px;
+    line-height: 78px;
+    margin-bottom: 48px;
+  }
+  .jg-beforeBox .jg-subject {
+    font-size: 16px;
+  }
+  .jg-name {
+    font-size: 24px;
+    margin-top: 0;
+  }
+  .jg-thumb {
+    top: 117px;
+  }
+}
+
+/* About-page follow: mission statement, then affiliate list.
+   Measures from joonganggroup.com/about common-ko.css */
+.jg-about {
+  background: #fff;
+  color: #000;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+}
+
+.jg-subTit {
+  margin: 0 0 75px 120px;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 74px;
+  letter-spacing: -0.03em;
+}
+
+.jg-mission {
+  padding: 301px 65px 0 65px;
+}
+
+.jg-missionArea {
+  position: relative;
+  left: 50%;
+  display: inline-block;
+  margin-left: -315px;
+  width: calc(50% + 315px);
+}
+
+.jg-subTxt {
+  margin: 0 0 112px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 44px;
+  word-break: keep-all;
+}
+
+.jg-missionImg {
+  margin-left: -50px;
+}
+
+.jg-missionImg img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.jg-missionCap {
+  margin: 0;
+  padding-top: 110px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 44px;
+  word-break: keep-all;
+}
+
+.jg-affiliate {
+  padding: 263px 65px 160px 65px;
+}
+
+.jg-affiliate .jg-subTit {
+  margin-bottom: 120px;
+}
+
+.jg-affList {
+  position: relative;
+  margin: 0 120px;
+  border-top: 1px solid #000;
+  padding: 33px 0 27px;
+}
+
+.jg-affList ol {
+  margin: 0;
+  padding: 0 0 0 50%;
+  list-style: none;
+}
+
+.jg-affList li {
+  margin: 0 0 70px;
+}
+
+.jg-affList li:last-child {
+  margin-bottom: 0;
+}
+
+.jg-affList p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  word-break: keep-all;
+}
+
+.jg-affList strong,
+.jg-affList a {
+  position: relative;
+  display: inline-block;
+  margin-top: 13px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-decoration: none;
+}
+
+.jg-affList a {
+  padding-right: 17px;
+  background: url(/images/joongang/brand/bg_arr_link.svg) no-repeat right top;
+  background-size: 7px;
+}
+
+.jg-affList a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0;
+  height: 1px;
+  background: #000;
+  transition: width 0.3s;
+}
+
+.jg-affList a:hover::after {
+  width: 100%;
+}
+
+.jg-affTit {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  margin: 0;
+  font-family: Inter, "Neue Haas Grotesk Text", Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.jg-affList--top {
+  border-top: 0;
+  padding-top: 6px;
+  padding-bottom: 34px;
+}
+
+.jg-affList--top li {
+  height: 129px;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid #000;
+}
+
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .jg-subTit {
+    margin-left: 8.33vw;
+    font-size: 4.02vw;
+    line-height: 5.13vw;
+  }
+
+  .jg-mission {
+    padding: 18vw 4.51vw 0;
+  }
+
+  .jg-mission .jg-subTit {
+    margin-bottom: 5.2vw;
+  }
+
+  .jg-subTxt,
+  .jg-missionCap {
+    font-size: 1.8vw;
+    line-height: 3.05vw;
+  }
+
+  .jg-subTxt {
+    margin-bottom: 7.7vw;
+  }
+
+  .jg-missionCap {
+    padding-top: 7.6vw;
+  }
+
+  .jg-affiliate {
+    padding: 18.26vw 4.51vw 12vw;
+  }
+
+  .jg-affiliate .jg-subTit {
+    margin-bottom: 8.33vw;
+  }
+
+  .jg-affList {
+    margin: 0 8.33vw;
+    padding: 2.29vw 0 1.87vw;
+  }
+
+  .jg-affTit {
+    top: 2.08vw;
+    font-size: 1.66vw;
+  }
+
+  .jg-affList li {
+    margin-bottom: 4.86vw;
+  }
+
+  .jg-affList p,
+  .jg-affList strong,
+  .jg-affList a {
+    font-size: 1.11vw;
+  }
+
+  .jg-affList p {
+    line-height: 2.22vw;
+  }
+
+  .jg-affList--top li {
+    height: 8.95vw;
+    padding-top: 1.11vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .jg-subTit {
+    margin-left: 0;
+    font-size: 8vw;
+    line-height: 10.2vw;
+  }
+
+  .jg-mission {
+    padding: 24.33vw 5.33vw 0;
+  }
+
+  .jg-mission .jg-subTit {
+    margin-bottom: 10.66vw;
+  }
+
+  .jg-missionArea {
+    left: 0;
+    display: block;
+    width: auto;
+    margin-left: 10.67vw;
+  }
+
+  .jg-subTxt,
+  .jg-missionCap {
+    font-size: 4.8vw;
+    line-height: 8vw;
+  }
+
+  .jg-subTxt {
+    margin-bottom: 11.33vw;
+  }
+
+  .jg-missionImg {
+    margin-left: -16vw;
+    margin-right: -5.33vw;
+  }
+
+  .jg-missionCap {
+    padding-top: 12vw;
+  }
+
+  .jg-affiliate {
+    padding: 34.66vw 5.33vw 18vw;
+  }
+
+  .jg-affiliate .jg-subTit {
+    margin-bottom: 17.33vw;
+  }
+
+  .jg-affList {
+    margin: 0;
+    padding: 0;
+    border-top: 0;
+  }
+
+  .jg-affList ol {
+    padding-left: 0;
+  }
+
+  .jg-affTit {
+    position: static;
+    display: block;
+    margin: 5.06vw 0 8.4vw;
+    font-size: 4vw;
+  }
+
+  .jg-affList li {
+    margin-bottom: 12vw;
+  }
+
+  .jg-affList p {
+    font-size: 3.46vw;
+    line-height: 6.13vw;
+  }
+
+  .jg-affList strong,
+  .jg-affList a {
+    margin-top: 3.06vw;
+    font-size: 3.36vw;
+  }
+
+  .jg-affList--top li {
+    height: auto;
+    margin-bottom: 12vw;
+    padding-top: 4.26vw;
+  }
+}

@@ -348,16 +348,16 @@ const CASES_TITLE_LINE_2 = [
 ] as const;
 
 export function WinningCases({
-  reveal = true,
+  reveal = false,
   titleOpacity,
 }: {
   reveal?: boolean;
-  /** When set, delays the section title until the overlay split headline is gone */
+  /** Desktop only — fades title in after L/R split */
   titleOpacity?: MotionValue<number>;
 }) {
   const [reverse, setReverse] = useState(false);
   const reduceMotion = useReducedMotion();
-  const show = reveal || !!reduceMotion;
+  const showTitle = reveal || reduceMotion === true;
 
   return (
     <section
@@ -366,19 +366,44 @@ export function WinningCases({
       style={{ backgroundColor: "#FCFCFA" }}
       aria-label="승소사례"
     >
-      <motion.div
-        className="pr-5 md:pr-12 xl:pr-20"
-        style={titleOpacity ? { opacity: titleOpacity } : undefined}
-      >
-        <SectionTitleReveal
-          lines={[CASES_TITLE_LINE_1, CASES_TITLE_LINE_2]}
-          inView={show}
-          reduceMotion={reduceMotion}
-          className="text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep"
-          style={{ fontFamily: FONT }}
-          ariaLabel="진심이 결과가 되는 순간. 이로운 성공사례를 소개합니다."
-        />
-      </motion.div>
+      {/*
+        Remount when reveal flips so word-stagger always plays while the
+        parent cases layer is already opaque (opacity:0 parents skip paint).
+      */}
+      <div className="relative z-[3] pr-5 md:pr-12 xl:pr-20">
+        <div className="sticky top-[72px] bg-[#FCFCFA] pb-2 md:static md:bg-transparent md:pb-0">
+          {/* Mobile */}
+          <div className="md:hidden">
+            <SectionTitleReveal
+              key={showTitle ? "cases-title-on" : "cases-title-off"}
+              lines={[CASES_TITLE_LINE_1, CASES_TITLE_LINE_2]}
+              inView={showTitle}
+              reduceMotion={reduceMotion}
+              delay={0.12}
+              className="text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform]"
+              style={{ fontFamily: FONT }}
+              ariaLabel="진심이 결과가 되는 순간. 이로운 성공사례를 소개합니다."
+            />
+          </div>
+
+          {/* Desktop */}
+          <motion.div
+            className="hidden md:block"
+            style={titleOpacity ? { opacity: titleOpacity } : undefined}
+          >
+            <SectionTitleReveal
+              key={showTitle ? "cases-title-desk-on" : "cases-title-desk-off"}
+              lines={[CASES_TITLE_LINE_1, CASES_TITLE_LINE_2]}
+              inView={showTitle}
+              reduceMotion={reduceMotion}
+              delay={0.06}
+              className="text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
+              style={{ fontFamily: FONT }}
+              ariaLabel="진심이 결과가 되는 순간. 이로운 성공사례를 소개합니다."
+            />
+          </motion.div>
+        </div>
+      </div>
 
       <div className="relative mx-auto mt-8 w-full max-w-[1920px] md:mt-10 xl:mt-12">
         {/* Mobile */}

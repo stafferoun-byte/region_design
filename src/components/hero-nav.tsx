@@ -15,13 +15,11 @@ type HeroNavProps = {
 
 export function HeroNav({
   variant = "overlay",
-  stickyTone = "cream",
+  stickyTone: _stickyTone = "cream",
 }: HeroNavProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const isSticky = variant === "sticky";
-  const stickyBg =
-    stickyTone === "paper" ? "bg-[#F6F6F4]/90" : "bg-[#FCFCFA]/90";
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -59,7 +57,7 @@ export function HeroNav({
       ref={rootRef}
       className={
         isSticky
-          ? `sticky top-0 z-50 w-full ${stickyBg} px-5 pt-5 pb-3 backdrop-blur-md md:px-10 xl:px-12`
+          ? "sticky top-0 z-50 w-full bg-transparent px-5 pt-5 pb-3 md:px-10 xl:px-12"
           : /* Kora: floating pill stays on screen while scrolling */
             "fixed inset-x-0 top-0 z-50 px-[calc(1.25rem+4px)] pt-[calc(1.25rem+8px)] sm:px-[calc(1.25rem+6px)] md:px-[calc(1.25rem+16px)] md:pt-[calc(1.25rem+16px)]"
       }
