@@ -41,7 +41,7 @@ export function WordReveal({
     show: {
       transition: reduceMotion
         ? { duration: 0 }
-        : { staggerChildren: 0.055, delayChildren: delay },
+        : { staggerChildren: 0.08, delayChildren: delay },
     },
   };
 
@@ -51,11 +51,11 @@ export function WordReveal({
         show: { opacity: 1, y: 0 },
       }
     : {
-        hidden: { opacity: 0, y: 8 },
+        hidden: { opacity: 0, y: 12 },
         show: {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.4, ease: easeOut },
+          transition: { duration: 0.5, ease: easeOut },
         },
       };
 
@@ -105,7 +105,7 @@ export function WordReveal({
   );
 }
 
-type SectionTitleRevealProps = Omit<WordRevealProps, "as" | "delay">;
+type SectionTitleRevealProps = Omit<WordRevealProps, "as">;
 
 export function SectionTitleReveal(props: SectionTitleRevealProps) {
   return <WordReveal {...props} as="h2" />;

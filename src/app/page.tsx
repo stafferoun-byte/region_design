@@ -132,7 +132,10 @@ function HeroMobileCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
 function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
   const cardTriggerRef = useRef<HTMLDivElement | null>(null);
   const [casesReveal, setCasesReveal] = useState(!!reduceMotion);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(max-width: 767px)").matches;
+  });
   /** Manual scroll progress — Framer useScroll skips frames with Lenis/touch on mobile */
   const splitProgress = useMotionValue(0);
 
@@ -232,28 +235,56 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
 
   const casesOpacity = useTransform(splitLocal, (v) => {
     if (reduceMotion) return 1;
-    const a = isMobile ? 0.35 : 0.45;
-    const b = isMobile ? 0.65 : 0.75;
+    if (isMobile) {
+      // Section fades in; title word-stagger starts only after this hits 1
+      if (v <= 0.18) return 0;
+      if (v >= 0.4) return 1;
+      return (v - 0.18) / 0.22;
+    }
+    const a = 0.45;
+    const b = 0.75;
     if (v <= a) return 0;
     if (v >= b) return 1;
     return 0.85 * ((v - a) / (b - a));
   });
 
   const casesTitleOpacity = useTransform(splitLocal, (v) => {
-    if (reduceMotion) return 1;
-    const a = isMobile ? 0.58 : 0.72;
-    const b = isMobile ? 0.82 : 0.9;
+    if (reduceMotion || isMobile) return 1;
+    const a = 0.72;
+    const b = 0.9;
     if (v <= a) return 0;
     if (v >= b) return 1;
     return (v - a) / (b - a);
   });
 
-  useMotionValueEvent(splitLocal, "change", (v) => {
-    const threshold = isMobile ? 0.4 : 0.55;
-    if (reduceMotion || v >= threshold) {
+  /** Kill the whole L/R headline layer once cases are on — don’t leave z-2 text over the title */
+  const splitLayerOpacity = useTransform(splitLocal, (v) => {
+    if (reduceMotion) return 0;
+    if (isMobile) {
+      if (v <= 0.2) return 1;
+      if (v >= 0.42) return 0;
+      return 1 - (v - 0.2) / 0.22;
+    }
+    if (v <= 0.55) return 1;
+    if (v >= 0.82) return 0;
+    return 1 - (v - 0.55) / 0.27;
+  });
+
+  /**
+   * Start title stagger only after the cases layer is fully opaque.
+   * Firing earlier finishes the animation while parent opacity is still 0.
+   */
+  useMotionValueEvent(casesOpacity, "change", (o) => {
+    if (reduceMotion || o >= 0.98) {
       setCasesReveal((prev) => prev || true);
     }
   });
+
+  useEffect(() => {
+    if (reduceMotion || casesOpacity.get() >= 0.98) {
+      setCasesReveal(true);
+    }
+  }, [reduceMotion, casesOpacity]);
 
   const enterTransition = reduceMotion
     ? { duration: 0 }
@@ -276,7 +307,10 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
             Headline sits in a true viewport-height layer (h-svh), not the full
             sticky content height — so it stays vertically centered on any phone.
           */}
-          <div className="pointer-events-none absolute top-0 right-0 left-0 z-[2] flex h-svh items-center justify-center overflow-x-clip">
+          <motion.div
+            style={{ opacity: splitLayerOpacity }}
+            className="pointer-events-none absolute top-0 right-0 left-0 z-[2] flex h-svh items-center justify-center overflow-x-clip"
+          >
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -313,11 +347,11 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                 <span className="ml-[0.08em] text-[0.72em]">.</span>
               </motion.div>
             </motion.div>
-          </div>
+          </motion.div>
 
           <motion.div
             style={{ opacity: casesOpacity, backgroundColor: "#FCFCFA" }}
-            className="relative z-[1] flex min-h-svh flex-col justify-start pt-[104px] pb-16 md:pt-[148px] md:pb-20"
+            className="relative z-[3] flex min-h-svh flex-col justify-start pt-[104px] pb-16 md:pt-[148px] md:pb-20"
           >
             <WinningCases
               reveal={casesReveal}
