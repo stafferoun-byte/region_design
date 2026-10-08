@@ -169,7 +169,8 @@ export function LocationSection() {
                   className="mt-3.5 space-y-1 text-[15px] leading-[1.4] font-bold tracking-[-0.035em] break-keep text-[#242424] md:text-[16px]"
                   style={{ fontFamily: FONT }}
                 >
-                  <p>2026. 9 개소예정</p>
+                  <p>서울 강남구 청담동 53-4</p>
+                  <p>파라곤빌딩 5층</p>
                 </div>
               </div>
 

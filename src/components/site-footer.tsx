@@ -273,6 +273,12 @@ export function SiteFooter() {
                       style={{ width: "auto" }}
                     />
                   </Link>
+                  <p
+                    className="mt-3 text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-[#242424] md:text-[15px]"
+                    style={{ fontFamily: FONT_WANTED }}
+                  >
+                    대표변호사 이창재
+                  </p>
                 </div>
 
                 {/* Pitch + contact — spans logo + address rows on desktop */}
@@ -314,7 +320,9 @@ export function SiteFooter() {
                     className="mt-2 space-y-1 text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-black md:mt-3 md:text-[15px]"
                     style={{ fontFamily: FONT_WANTED }}
                   >
-                    <p>서울주사무소 2026. 9 개소예정</p>
+                    <p>
+                      서울주사무소 서울 강남구 청담동 53-4 파라곤빌딩 5층
+                    </p>
                     <p>
                       남양주분사무소 경기 남양주시 다산중앙로82번안길 152
                       중앙법조타워 2층 202호
