@@ -299,7 +299,7 @@ export function SiteFooter() {
                         alt="이창재 대표변호사"
                         fill
                         sizes="128px"
-                        quality={90}
+                        quality={100}
                         className="object-cover object-[center_20%]"
                       />
                     </div>
@@ -403,6 +403,7 @@ export function SiteFooter() {
 
                 <div className="order-3 lg:order-none lg:col-start-2 lg:row-start-3">
                   <p
+                    lang="en"
                     className="text-[14px] font-semibold tracking-[-0.02em] text-[#616161]"
                     style={{ fontFamily: FONT_WANTED }}
                   >

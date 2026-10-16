@@ -27,6 +27,7 @@ type Item = {
   term: string;
   subtitle: string;
   image?: string;
+  objectPosition?: string;
 };
 
 const ACCENT = "#5DC39B";
@@ -101,6 +102,7 @@ const ITEMS: Item[] = [
     term: "유류분",
     subtitle: "유언으로도 빼앗을 수 없는,\n법이 남겨둔 최소한의 몫",
     image: "/images/eff650fb-8405-456c-85e1-9b2dd692e4c1.png",
+    objectPosition: "center 68%",
   },
   {
     id: "divorce-consolation",
@@ -131,6 +133,7 @@ const ITEMS: Item[] = [
     term: "성년후견",
     subtitle: "혼자 판단하기 어려운 가족을\n대신해 권리를 지키는 제도",
     image: "/images/legal-terms/성년후견.jpg",
+    objectPosition: "center 22%",
   },
   {
     id: "provisional-attachment",
@@ -228,6 +231,7 @@ function TermPill({
             style={{
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
+              transform: "translateZ(1px)",
               backgroundColor: ACCENT,
             }}
           >
@@ -237,7 +241,8 @@ function TermPill({
                   src={item.image}
                   alt=""
                   fill
-                  className="object-cover object-[center_40%]"
+                  className="object-cover"
+                  style={{ objectPosition: item.objectPosition ?? "center 40%" }}
                   sizes="80px"
                 />
                 <span
@@ -270,7 +275,7 @@ function TermPill({
               backgroundColor: ACCENT,
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
-              transform: "rotateY(180deg)",
+              transform: "rotateY(180deg) translateZ(1px)",
             }}
           >
             {item.term.split("\n").map((line) => (

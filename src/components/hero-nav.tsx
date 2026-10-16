@@ -14,6 +14,8 @@ type HeroNavProps = {
   variant?: "overlay" | "sticky";
   /** Sticky bar wash — match page background */
   stickyTone?: "cream" | "paper";
+  /** Fixed over the first screen so it does not push the page down */
+  fixedBar?: boolean;
 };
 
 const linkClass =
@@ -31,6 +33,7 @@ function submenuId(href: string) {
 export function HeroNav({
   variant = "overlay",
   stickyTone: _stickyTone = "cream",
+  fixedBar = false,
 }: HeroNavProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -102,7 +105,7 @@ export function HeroNav({
       ref={rootRef}
       className={
         isSticky
-          ? "sticky top-0 z-50 w-full bg-transparent px-5 pt-5 pb-3 md:px-10 xl:px-12"
+          ? `${fixedBar ? "fixed inset-x-0" : "sticky"} top-0 z-50 w-full bg-transparent px-5 pt-5 pb-3 md:px-10 xl:px-12`
           : /* Kora: floating pill stays on screen while scrolling */
             "fixed inset-x-0 top-0 z-50 px-[calc(1.25rem+4px)] pt-[calc(1.25rem+8px)] sm:px-[calc(1.25rem+6px)] md:px-[calc(1.25rem+16px)] md:pt-[calc(1.25rem+16px)]"
       }
@@ -202,16 +205,10 @@ export function HeroNav({
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="group block whitespace-nowrap px-5 py-2.5 text-[13px] font-normal tracking-[-0.03em] text-white transition-colors duration-300 ease-out hover:font-semibold"
+                            className="block whitespace-nowrap px-5 py-2.5 text-[13px] font-normal tracking-[-0.03em] text-white transition-colors duration-300 ease-out hover:font-semibold"
                             onClick={() => setOpenKey(null)}
                           >
-                            <span className="relative inline-block">
-                              {child.label}
-                              <span
-                                aria-hidden
-                                className="absolute -bottom-0.5 left-0 h-[2px] w-full origin-left scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100"
-                              />
-                            </span>
+                            {child.label}
                           </Link>
                         ))}
                         </div>
@@ -284,7 +281,7 @@ export function HeroNav({
                     <button
                       type="button"
                       aria-expanded={openKey === link.href}
-                      className={`block w-full cursor-pointer px-5 py-3.5 text-left text-[18px] font-medium tracking-[-0.03em] transition-colors ${
+                      className={`block w-full cursor-pointer px-5 py-3 text-left text-[15px] font-medium tracking-[-0.03em] transition-colors ${
                         openKey === link.href
                           ? "bg-[#5DC39B] text-white"
                           : "text-[#292929] hover:bg-[#5DC39B]/10"
@@ -300,7 +297,7 @@ export function HeroNav({
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="block py-3 pr-5 pl-9 text-[16px] font-medium tracking-[-0.03em] text-[#292929] transition-colors hover:bg-[#5DC39B]/10"
+                            className="block py-2.5 pr-5 pl-9 text-[14px] font-medium tracking-[-0.03em] text-[#292929] transition-colors hover:bg-[#5DC39B]/10"
                             onClick={() => {
                               setMenuOpen(false);
                               setOpenKey(null);
@@ -315,7 +312,7 @@ export function HeroNav({
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block px-5 py-3.5 text-[18px] font-medium tracking-[-0.03em] text-[#292929] transition-colors hover:bg-[#5DC39B]/10"
+                    className="block px-5 py-3 text-[15px] font-medium tracking-[-0.03em] text-[#292929] transition-colors hover:bg-[#5DC39B]/10"
                     onClick={() => setMenuOpen(false)}
                   >
                     {link.label}

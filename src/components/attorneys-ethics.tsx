@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import "./attorneys-ethics.css";
 
@@ -8,6 +9,7 @@ type AttorneysEthicsProps = {
   imageAlt: string;
   aspectRatio: string;
   paragraphs: readonly string[];
+  headline?: readonly [string, string];
 };
 
 /** Layout of https://www.joonganggroup.com/ethics/ plus the homepage value block. */
@@ -16,6 +18,7 @@ export function AttorneysEthics({
   imageAlt,
   aspectRatio,
   paragraphs,
+  headline = ["중앙그룹이 지키고", "실천하겠습니다"],
 }: AttorneysEthicsProps) {
   const [on, setOn] = useState(false);
   const [valueIn, setValueIn] = useState(false);
@@ -64,24 +67,17 @@ export function AttorneysEthics({
           <div className="jg-ethics-txt">
             <dl>
               <dt>
-                중앙그룹이
-                <br className="wHide" /> 지키고
+                <span className="jg-ethics-keep">{headline[0]}</span>
                 <br />
-                실천하겠습니다
+                {headline[1]}
               </dt>
               {paragraphs.map((paragraph) => (
                 <dd key={paragraph}>{paragraph}</dd>
               ))}
             </dl>
-            <a
-              href="https://jebo.joonganggroup.com/"
-              className="jg-ethics-report"
-              target="_blank"
-              rel="noreferrer"
-              title="새 창으로 이동"
-            >
-              <span>제보하기</span>
-            </a>
+            <Link href="/about" className="jg-ethics-report">
+              <span>이로운 파트너스</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -93,7 +89,7 @@ export function AttorneysEthics({
       <div className="jg-value-wrap">
         <strong className="jg-value-title">
           <span className="jg-value-reveal">
-            <span>세상의 중심은</span>
+            <span>법의 중심은</span>
           </span>
           <span className="jg-value-reveal">
             <span>사람입니다</span>
@@ -102,77 +98,58 @@ export function AttorneysEthics({
         <div className="jg-value-list">
           <ul>
             <li className={cardsOn >= 1 ? "jg-value-card is-on" : "jg-value-card"}>
-              <span className="jg-value-line" />
-              <div className="jg-value-copy">
-                <span className="jg-value-reveal">
-                  <span>중앙그룹은 우리 사회 곳곳에</span>
-                </span>
-                <span className="jg-value-reveal">
-                  <span>밝은 희망을 전달합니다.</span>
-                </span>
-              </div>
-              <strong className="jg-value-name">
-                <span className="jg-value-reveal">
-                  <span lang="en">Share</span>
-                </span>
-              </strong>
-              <a
-                href="https://www.joonganggroup.com/share/"
-                className="jg-value-thumb"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span>
-                  <picture>
-                    <source
-                      media="(max-width: 1023px)"
-                      srcSet="/images/joongang/main/m_img_main_share.png"
+              <Link href="/lawyers" className="jg-value-card-link">
+                <span className="jg-value-line" />
+                <div className="jg-value-copy">
+                  <span className="jg-value-reveal">
+                    <span>한 사람의 삶을 먼저 생각하는</span>
+                  </span>
+                  <span className="jg-value-reveal">
+                    <span>이로운 변호사들입니다.</span>
+                  </span>
+                </div>
+                <strong className="jg-value-name">
+                  <span className="jg-value-reveal">
+                    <span lang="en">Lawyers</span>
+                  </span>
+                </strong>
+                <span className="jg-value-thumb">
+                  <span>
+                    <img
+                      src="/images/partners/eroun-team.jpg"
+                      alt="이로운 변호사들"
+                      style={{ objectPosition: "center 22%" }}
                     />
-                    <img src="/images/joongang/main/img_main_share.png" alt="" />
-                  </picture>
+                  </span>
                 </span>
-              </a>
+              </Link>
             </li>
             <li className={cardsOn >= 2 ? "jg-value-card is-on" : "jg-value-card"}>
-              <span className="jg-value-line" />
-              <div className="jg-value-copy">
-                <span className="jg-value-reveal mHide">
-                  <span>중앙그룹과 함께하는 길은 언제나</span>
-                </span>
-                <span className="jg-value-reveal wHide">
-                  <span>중앙그룹과 함께하는 길은</span>
-                </span>
-                <span className="jg-value-reveal mHide">
-                  <span>열려있습니다.</span>
-                </span>
-                <span className="jg-value-reveal wHide">
-                  <span>언제나 열려있습니다.</span>
-                </span>
-              </div>
-              <strong className="jg-value-name">
-                <span className="jg-value-reveal">
-                  <span lang="en">Recruit</span>
-                </span>
-              </strong>
-              <a
-                href="https://www.joonganggroup.com/recruit/"
-                className="jg-value-thumb"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span>
-                  <picture>
-                    <source
-                      media="(max-width: 1023px)"
-                      srcSet="/images/joongang/main/m_img_main_recruit.png"
-                    />
+              <Link href="/practice" className="jg-value-card-link">
+                <span className="jg-value-line" />
+                <div className="jg-value-copy">
+                  <span className="jg-value-reveal">
+                    <span>당신의 일상을 지키는</span>
+                  </span>
+                  <span className="jg-value-reveal">
+                    <span>이로운 법률 서비스를 만나보세요.</span>
+                  </span>
+                </div>
+                <strong className="jg-value-name">
+                  <span className="jg-value-reveal">
+                    <span lang="en">Practice</span>
+                  </span>
+                </strong>
+                <span className="jg-value-thumb">
+                  <span>
                     <img
-                      src="/images/joongang/main/img_main_recruit.png"
-                      alt=""
+                      src="/images/practice/hero-bg.jpg"
+                      alt="법률 상담"
+                      style={{ objectPosition: "center 45%" }}
                     />
-                  </picture>
+                  </span>
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

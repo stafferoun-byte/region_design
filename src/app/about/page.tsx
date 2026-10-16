@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function PartnersPage() {
   return (
     <div className={ibmSans.variable}>
-      <SitePageFrame tone="none">
+      <SitePageFrame tone="none" navFixed>
         <PartnerIntroScroll />
         <PartnerAboutSections />
       </SitePageFrame>

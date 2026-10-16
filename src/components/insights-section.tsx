@@ -67,7 +67,7 @@ const INSIGHTS: Insight[] = [
     category: "상속",
     date: "2026. 3. 3.",
     datetime: "2026-03-03",
-    title: "상속재산과 유류분,\n계산이 갈리는 지점",
+    title: "생전에 받은 재산도\n상속할 때 포함될까요?",
     image: "/images/insights/family-law.png",
     icon: "target",
   },

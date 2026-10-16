@@ -53,7 +53,7 @@ const CASES: WinningCase[] = [
     title: "보증금 4억 4천만원\n반환",
     lawyer: "이로운 부동산전문센터",
     avatar: "/images/logo.black.png",
-    image: "/images/practice/realestate.png",
+    image: "/images/cases/deposit.jpg",
   },
   {
     id: "3",
@@ -61,7 +61,7 @@ const CASES: WinningCase[] = [
     title: "무혐의 종결\n수사 종결",
     lawyer: "이로운 형사전문센터",
     avatar: "/images/logo.black.png",
-    image: "/images/practice/criminal.png",
+    image: "/images/cases/no-charge.jpg?v=3",
   },
   {
     id: "4",
@@ -69,7 +69,7 @@ const CASES: WinningCase[] = [
     title: "청구액 전액\n인용 판결",
     lawyer: "이로운 민사전문센터",
     avatar: "/images/logo.black.png",
-    image: "/images/practice/civil.png",
+    image: "/images/cases/judgment.jpg",
   },
   {
     id: "5",
@@ -77,7 +77,7 @@ const CASES: WinningCase[] = [
     title: "양육권 · 재산분할\n유리한 조정",
     lawyer: "이로운 이혼전문센터",
     avatar: "/images/logo.black.png",
-    image: "/images/practice/family.png",
+    image: "/images/cases/custody.jpg",
   },
   {
     id: "6",
@@ -85,7 +85,7 @@ const CASES: WinningCase[] = [
     title: "피해금 회수\n절차 성공",
     lawyer: "이로운 형사전문센터",
     avatar: "/images/logo.black.png",
-    image: "/images/insights/case-files.png",
+    image: "/images/cases/recovery.jpg",
   },
 ];
 
@@ -420,7 +420,7 @@ export function WinningCases({
           <div className="relative">
             <div className="mb-2 flex items-center justify-end pr-5">
               <a
-                href="#cases"
+                href="/cases"
                 className="mr-3 inline-flex h-7 items-center justify-center rounded-full border px-2.5 text-[10px] font-light tracking-[1px] no-underline"
                 style={{
                   borderColor: "#F5F5E9",
@@ -452,7 +452,7 @@ export function WinningCases({
                   labelNext="왼쪽 흐름"
                 />
                 <a
-                  href="#cases"
+                  href="/cases"
                   className="mr-4 inline-flex h-8 w-[96px] items-center justify-center rounded-full border text-[13px] font-light tracking-[1px] no-underline xl:mr-6"
                   style={{
                     borderColor: "#F5F5E9",

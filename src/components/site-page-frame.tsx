@@ -9,12 +9,15 @@ export function SitePageFrame({
   children,
   tone = "cream",
   showNav = true,
+  navFixed = false,
 }: {
   children: ReactNode;
   /** cream = default site · paper = Küemmerlein soft-grey0 · none = no fill */
   tone?: "cream" | "paper" | "none";
   /** false when a page embeds its own hero nav (e.g. practice) */
   showNav?: boolean;
+  /** Overlay the first screen instead of pushing it down */
+  navFixed?: boolean;
 }) {
   const bg =
     tone === "none" ? "#ffffff" : tone === "paper" ? "#F6F6F4" : "#FCFCFA";
@@ -27,6 +30,7 @@ export function SitePageFrame({
       {showNav ? (
         <HeroNav
           variant="sticky"
+          fixedBar={navFixed}
           stickyTone={tone === "paper" ? "paper" : "cream"}
         />
       ) : null}

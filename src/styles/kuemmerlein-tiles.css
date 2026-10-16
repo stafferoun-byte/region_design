@@ -342,8 +342,7 @@
   padding: 0 16px;
   background-color: var(--soft-grey1);
   border-radius: 999px;
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
-    sans-serif;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
   font-size: 15px;
   line-height: 1.2;
   font-weight: 500;
@@ -527,6 +526,109 @@
   font-size: 14px;
   color: #000;
   line-height: 1;
+}
+
+/* Columns and cases pages, phone only */
+@media (max-width: 767px) {
+  .kuem-insights--columns,
+  .kuem-insights--cases,
+  .kuem-insights--locations {
+    --insights-inset-x: 16px;
+  }
+
+  .kuem-insights--columns .kuem-insights__pad,
+  .kuem-insights--cases .kuem-insights__pad,
+  .kuem-insights--locations .kuem-insights__pad {
+    padding-top: 24px;
+    padding-bottom: 72px;
+  }
+
+  .kuem-insights--columns .kuem-insights__title,
+  .kuem-insights--cases .kuem-insights__title,
+  .kuem-insights--locations .kuem-insights__title {
+    font-size: 34px;
+    line-height: 1.2;
+  }
+
+  .kuem-insights--columns .kuem-insights__lead,
+  .kuem-insights--cases .kuem-insights__lead,
+  .kuem-insights--locations .kuem-insights__lead {
+    font-size: 16px;
+    line-height: 1.45;
+    margin-top: 23px;
+    max-width: none;
+  }
+
+  .kuem-insights--columns .kuem-insights__filter,
+  .kuem-insights--cases .kuem-insights__filter {
+    width: calc(100% - 2 * var(--insights-inset-x));
+    margin-right: var(--insights-inset-x);
+    margin-top: 42px;
+    margin-bottom: 28px;
+    padding: 18px 16px;
+    gap: 10px 32px;
+  }
+
+  .kuem-insights--columns .kuem-insights__filter-link,
+  .kuem-insights--cases .kuem-insights__filter-link {
+    font-size: 13px;
+    font-weight: 400;
+    padding: 2px 0;
+  }
+
+  .kuem-insights--columns .kuem-tile__title {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .kuem-insights--columns .kuem-tile__tag {
+    border-radius: 8px;
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+      sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .kuem-insights--locations .location-contact {
+    margin-top: 42px;
+    margin-right: var(--insights-inset-x);
+  }
+
+  .kuem-insights--locations .location-maps {
+    margin-right: var(--insights-inset-x);
+  }
+
+  .kuem-insights--locations .location-map {
+    border-radius: 18px;
+  }
+
+  html:has(.kuem-insights--locations),
+  body:has(.kuem-insights--locations),
+  body:has(.kuem-insights--locations) .kuem-insights--locations {
+    background-color: #ffffff !important;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .kuem-insights--columns .insight-card-rise {
+    animation: insight-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-play-state: paused;
+  }
+
+  .kuem-insights--columns .insight-card-rise.is-in {
+    animation-play-state: running;
+  }
+}
+
+@keyframes insight-rise {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes kuem-ul-appear {

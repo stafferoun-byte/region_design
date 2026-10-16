@@ -54,9 +54,6 @@ const ibmSans = IBM_Plex_Sans_KR({
   display: "swap",
 });
 
-/** Mobile hero copy — off for now; restore when ready */
-const SHOW_HERO_MOBILE_COPY = false;
-
 /** Hero inset at 1440 → 24px pad / 40px radius; scales with viewport, never below min */
 const HERO_DESIGN_WIDTH = 1440;
 function fluidHeroPad(width = typeof window !== "undefined" ? window.innerWidth : HERO_DESIGN_WIDTH) {
@@ -107,36 +104,35 @@ function HeroVideoLine({
   );
 }
 
-function HeroMobileCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
-  return (
-    <div className="pointer-events-none flex h-full w-full items-center justify-center px-6">
-      <div
-        className="flex w-full max-w-[22ch] translate-y-24 flex-col text-[clamp(22px,5.8vw,28px)] leading-[1.35] tracking-[-0.03em] text-white antialiased"
-        style={{
-          fontFamily: FONT_PRETENDARD,
-          WebkitFontSmoothing: "antialiased",
-        }}
-        aria-label="하나의 사건번호가 아닌, 한 사람의 삶으로. 이로운 변호사들, 이로운 파트너스"
-      >
-        {/* Left block — mirrors video left captions */}
-        <div className="flex flex-col self-start text-left font-light">
-          <HeroVideoLine delay={0.7} reduceMotion={reduceMotion}>
-            하나의 사건번호가 아닌,
-          </HeroVideoLine>
-          <HeroVideoLine delay={2.1} reduceMotion={reduceMotion}>
-            <span className="font-semibold">한 사람의 삶</span>으로
-          </HeroVideoLine>
-        </div>
+function HeroVideoCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
+  const type =
+    "text-[clamp(20px,5.2vw,26px)] leading-[1.38] tracking-[-0.03em] text-white antialiased md:text-[2.05vw] md:leading-[1.35]";
 
-        {/* Right block — mirrors video right captions */}
-        <div className="mt-8 flex flex-col self-end text-right font-light">
-          <HeroVideoLine delay={4.2} reduceMotion={reduceMotion}>
-            이로운 변호사들,
-          </HeroVideoLine>
-          <HeroVideoLine delay={5.4} reduceMotion={reduceMotion}>
-            <span className="font-semibold">이로운 파트너스</span>
-          </HeroVideoLine>
-        </div>
+  return (
+    <div
+      className="pointer-events-none absolute inset-0"
+      style={{
+        fontFamily: FONT_PRETENDARD,
+        WebkitFontSmoothing: "antialiased",
+      }}
+      aria-label="하나의 사건번호가 아닌, 한 사람의 삶으로. 이로운 변호사들, 이로운 파트너스"
+    >
+      <div className={`absolute top-1/2 left-[8%] flex max-w-[14em] -translate-y-[calc(50%+46px)] flex-col text-left font-light md:left-[7.5%] md:-translate-y-1/2 ${type}`}>
+        <HeroVideoLine delay={0.7} reduceMotion={reduceMotion}>
+          하나의 사건번호가 아닌,
+        </HeroVideoLine>
+        <HeroVideoLine delay={2.1} reduceMotion={reduceMotion}>
+          <span className="font-semibold">한 사람의 삶</span>으로
+        </HeroVideoLine>
+      </div>
+
+      <div className={`absolute top-1/2 right-[8%] flex max-w-[14em] -translate-y-[calc(50%-64px)] flex-col items-start text-left font-light md:right-[7.5%] md:-translate-y-1/2 ${type}`}>
+        <HeroVideoLine delay={3.8} reduceMotion={reduceMotion}>
+          이로운 변호사들,
+        </HeroVideoLine>
+        <HeroVideoLine delay={5.75} reduceMotion={reduceMotion}>
+          <span className="font-semibold">이로운 파트너스</span>
+        </HeroVideoLine>
       </div>
     </div>
   );
@@ -508,14 +504,12 @@ export default function Home() {
           preload="auto"
         />
 
-        {SHOW_HERO_MOBILE_COPY ? (
-          <motion.div
-            className="absolute inset-0 z-[1] md:hidden"
-            style={{ opacity: logoOpacity }}
-          >
-            <HeroMobileCopy reduceMotion={reduceMotion} />
-          </motion.div>
-        ) : null}
+        <motion.div
+          className="absolute inset-0 z-[1]"
+          style={{ opacity: logoOpacity }}
+        >
+          <HeroVideoCopy reduceMotion={reduceMotion} />
+        </motion.div>
 
         <motion.div
           className="institution-logo-strip pointer-events-none absolute right-auto bottom-8 left-6 z-[1] max-w-[72%] sm:bottom-10 sm:left-10 sm:max-w-[62%] md:bottom-[56px] md:left-[48px] md:max-w-[58%]"

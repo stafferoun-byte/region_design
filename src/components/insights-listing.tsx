@@ -2,6 +2,7 @@
 
 import type { InsightArticle, InsightCategory } from "@/data/insights";
 import { INSIGHT_ARTICLES, INSIGHT_FILTERS } from "@/data/insights";
+import { useAfterPageWipe, WordReveal } from "@/components/section-title-reveal";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -63,8 +64,51 @@ function ArrowSvg() {
 }
 
 function ArticleCard({ article }: { article: InsightArticle }) {
+  const riseRef = useRef<HTMLDivElement | null>(null);
+  const [risen, setRisen] = useState(false);
+
+  useEffect(() => {
+    const el = riseRef.current;
+    if (!el) return;
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!mobile || reduce) {
+      setRisen(true);
+      return;
+    }
+    let done = false;
+    const reveal = () => {
+      if (done) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top > window.innerHeight * 0.88) return;
+      done = true;
+      setRisen(true);
+      window.removeEventListener("scroll", reveal);
+      lenis?.off?.("scroll", reveal);
+    };
+    const lenis = (
+      window as unknown as { __lenis?: { on?: Function; off?: Function } }
+    ).__lenis;
+    reveal();
+    window.addEventListener("scroll", reveal, { passive: true });
+    lenis?.on?.("scroll", reveal);
+    return () => {
+      window.removeEventListener("scroll", reveal);
+      lenis?.off?.("scroll", reveal);
+    };
+  }, []);
+
   return (
-    <article className="kuem-tile group">
+    <div
+      ref={riseRef}
+      className={risen ? "insight-card-rise is-in" : "insight-card-rise"}
+    >
+    <article className="kuem-tile group relative">
+      <Link
+        href={article.href}
+        className="absolute inset-0 z-[2]"
+        aria-label={article.title}
+      />
       <div className="kuem-tile__top">
         <div className="kuem-tile__content">
           <div className="kuem-tile__img">
@@ -114,6 +158,7 @@ function ArticleCard({ article }: { article: InsightArticle }) {
         </div>
       </div>
     </article>
+    </div>
   );
 }
 
@@ -123,6 +168,7 @@ export function InsightsListing() {
   const headerRef = useRef<HTMLElement | null>(null);
   const headerInView = useInView(headerRef, { once: true, amount: 0.35 });
   const reduceMotion = useReducedMotion();
+  const pageReady = useAfterPageWipe();
 
   const fieldParam = searchParams.get("field");
   const activeField: "all" | InsightCategory =
@@ -157,7 +203,7 @@ export function InsightsListing() {
   };
 
   return (
-    <div className="kuem-insights kuem-insights--on-white">
+    <div className="kuem-insights kuem-insights--on-white kuem-insights--columns">
       <div className="kuem-insights__pad">
         <header ref={headerRef}>
           <motion.h1
@@ -171,22 +217,44 @@ export function InsightsListing() {
           >
             이로운 인사이트
           </motion.h1>
-          <motion.p
-            className="kuem-insights__lead will-change-[opacity,transform]"
-            initial={appear.initial}
-            animate={appear.animate}
-            transition={{
-              duration: reduceMotion ? 0 : 0.85,
-              ease: easeOut,
-              delay: reduceMotion ? 0 : 0.1,
-            }}
-          >
-            이로운 칼럼에서는 현장에서 쌓은 경험을 바탕으로,
-            <br />
-            의뢰인에게 실제로 도움이 되는 법률 이야기를 짧게 전합니다.
-            <br />
-            복잡한 쟁점을 정리해 다음 결정을 위한 공간을 엽니다.
-          </motion.p>
+          <WordReveal
+            as="p"
+            lines={[
+              [
+                { text: "이로운" },
+                { text: "칼럼에서는" },
+                { text: "현장에서" },
+                { text: "쌓은" },
+                { text: "경험을" },
+                { text: "바탕으로," },
+              ],
+              [
+                { text: "의뢰인에게" },
+                { text: "실제로" },
+                { text: "도움이" },
+                { text: "되는" },
+                { text: "법률" },
+                { text: "이야기를" },
+                { text: "짧게" },
+                { text: "전합니다." },
+              ],
+              [
+                { text: "복잡한" },
+                { text: "쟁점을" },
+                { text: "정리해" },
+                { text: "다음" },
+                { text: "결정을" },
+                { text: "위한" },
+                { text: "공간을" },
+                { text: "엽니다." },
+              ],
+            ]}
+            inView={!!headerInView && pageReady}
+            reduceMotion={reduceMotion}
+            delay={0.1}
+            className="kuem-insights__lead"
+            ariaLabel="이로운 칼럼에서는 현장에서 쌓은 경험을 바탕으로, 의뢰인에게 실제로 도움이 되는 법률 이야기를 짧게 전합니다. 복잡한 쟁점을 정리해 다음 결정을 위한 공간을 엽니다."
+          />
         </header>
 
         <nav className="kuem-insights__filter" aria-label="분야">
@@ -205,7 +273,16 @@ export function InsightsListing() {
                   aria-current={selected ? "page" : undefined}
                   aria-haspopup={children ? "menu" : undefined}
                 >
-                  {f.label}
+                  {f.id === "all" ? (
+                    <>
+                      <span className="max-md:hidden">{f.label}</span>
+                      <span className="hidden max-md:inline" lang="en">
+                        All
+                      </span>
+                    </>
+                  ) : (
+                    f.label
+                  )}
                 </Link>
                 {children ? (
                   <ul className="kuem-insights__filter-menu" role="menu">

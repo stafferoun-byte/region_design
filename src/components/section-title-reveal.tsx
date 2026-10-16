@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type Ref } from "react";
+import { useEffect, useRef, useState, type Ref } from "react";
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 
 export type TitleWord = {
@@ -13,6 +13,19 @@ export type TitleWord = {
 };
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
+
+/** Wait out the page circle wipe so an above-the-fold subtitle is seen staggering in. */
+export function useAfterPageWipe(delay = 680) {
+  const reduceMotion = useReducedMotion();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setReady(true), reduceMotion ? 0 : delay);
+    return () => window.clearTimeout(id);
+  }, [reduceMotion, delay]);
+
+  return ready;
+}
 
 type WordRevealProps = {
   id?: string;

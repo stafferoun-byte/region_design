@@ -29,6 +29,16 @@
   left: 0;
 }
 
+/* default-ko.js .sectionWrap.fixed — hold the expanded frame, then release */
+.jg-sectionWrap.is-pinned {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  z-index: 30;
+}
+
 .jg-keyVisual {
   position: absolute;
   left: 50%;
@@ -140,7 +150,6 @@
 
 .jg-beforeBox .jg-titleBox {
   width: max-content;
-  min-height: 0;
 }
 
 .jg-beforeBox .jg-subject {
@@ -170,7 +179,7 @@
 
 .jg-name {
   display: block;
-  margin-top: 4px;
+  margin-top: 39px;
   margin-bottom: 20px;
   font-family: "Times Sans Serif", "Times New Roman", Times, serif;
   font-weight: 400;
@@ -346,11 +355,12 @@
   /* Layout size like JoongAng; visual size comes from scale(0.188) */
   height: calc(100vw * 1380 / 1440);
   max-height: none;
-  padding-bottom: 0;
+  /* JoongAng border-box: padding-bottom 1460 wins over height 1380 */
+  padding-bottom: 1460px;
   perspective: 700px;
   transform: translateX(0) scale(0.188, 0.18);
   transform-origin: left top;
-  transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  transition: transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
 .jg-keyVisual.is-scrollAfter .jg-thumb {
@@ -361,7 +371,7 @@
   /* height set by JS to (viewport − white seam); image scrubs inside */
   overflow: hidden;
   padding-bottom: 0;
-  transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  transition: transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
 .jg-bg {
@@ -371,9 +381,10 @@
   width: 100%;
   height: 100%;
   min-height: 0;
+  padding-bottom: 100%;
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-position: 0 0;
+  background-position: left top;
   opacity: 0;
   transform: rotateX(-90deg) translateX(0);
   transform-origin: 100% 0 0;
@@ -416,7 +427,7 @@
   transform: rotateX(0deg);
   transition: none;
   background-size: 100% auto;
-  background-position: 0 0;
+  background-position: left top;
 }
 
 .jg-mHide {
@@ -581,7 +592,8 @@
 
   .jg-thumb {
     top: 29.13vw;
-    height: calc(100vw * 769 / 1024);
+    height: calc(100vw * 1380 / 1440);
+    padding-bottom: 0;
     padding-bottom: 0;
     transform: translateX(0) scale(0.624);
   }
@@ -596,8 +608,8 @@
   }
 
   .jg-bg {
-    background-position: center 20%;
-    background-size: cover;
+    background-position: left top;
+    background-size: 100% auto;
     width: 100%;
     min-height: 0;
   }
@@ -621,8 +633,8 @@
     font-size: 24px;
   }
   .jg-name {
-    font-size: 16px;
-    margin-top: 2px;
+    font-size: 24px;
+    margin-top: 0;
   }
   .jg-thumb {
     top: 117px;
@@ -975,5 +987,85 @@
     height: auto;
     margin-bottom: 12vw;
     padding-top: 4.26vw;
+  }
+}
+
+/* Left-edge mark — joonganggroup.com .utilWrap, first screen only */
+.jg-util {
+  position: fixed;
+  left: 65px;
+  right: 65px;
+  bottom: 0;
+  z-index: 130;
+  max-width: 1790px;
+  margin: 0 auto;
+  transform: rotate(-90deg);
+  transform-origin: left top;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s linear;
+}
+
+.jg-util.is-off {
+  opacity: 0;
+}
+
+.jg-utilInner::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.jg-utilCopy {
+  float: left;
+  margin: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  color: #000;
+}
+
+.jg-utilLang {
+  float: left;
+  margin-left: 117px;
+}
+
+.jg-utilLang span {
+  display: block;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.jg-utilLang span.is-on {
+  color: #000;
+}
+
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .jg-util {
+    left: 4.51vw;
+    right: 4.51vw;
+    max-width: 1150px;
+  }
+
+  .jg-utilCopy,
+  .jg-utilLang span {
+    font-size: 0.83vw;
+    line-height: 1.38vw;
+  }
+
+  .jg-utilLang {
+    margin-left: 8.12vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .jg-util {
+    display: none;
   }
 }

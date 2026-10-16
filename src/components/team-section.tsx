@@ -46,7 +46,7 @@ const TEAM = [
     name: "형사 전문센터 경찰조사 밀착대응",
     role: "경찰조사 밀착대응 · 사기 · 학교폭력 · 횡령·배임 · 성범죄",
     bio: "수사 초기부터 재판까지 밀착 대응해 의뢰인의 권리와 일상을 지킵니다.",
-    image: "/images/practice/criminal.png",
+    image: "/images/cases/no-charge.jpg",
     href: "/practice/criminal",
   },
   {
@@ -55,7 +55,7 @@ const TEAM = [
     name: "민사·손해배상 전문센터 끝까지 회수하는 전략",
     role: "대여금 반환 · 공사대금 · 손해배상청구 · 물품대금청구 · 약정금청구",
     bio: "증거 정리와 변론을 한 흐름으로 이어, 회수·배상까지 책임지고 대응합니다.",
-    image: "/images/practice/civil.png",
+    image: "/images/cases/judgment.jpg",
     href: "/practice/civil",
   },
   {
@@ -64,7 +64,7 @@ const TEAM = [
     name: "이혼·가사 전문센터 이로운 결과를 설계",
     role: "이혼재산분할 · 상간소송 · 위자료 · 양육권 · 친양자입양 · 친생자관계부존재",
     bio: "감정보다 절차와 합의에 집중해, 가족과 일상을 다시 세울 해법을 설계합니다.",
-    image: "/images/practice/family.png",
+    image: "/images/cases/custody.jpg",
     href: "/practice/divorce",
   },
   {
@@ -73,7 +73,7 @@ const TEAM = [
     name: "부동산·임대차 전문센터 가압류·강제집행 즉시대응",
     role: "전세보증금 반환 · 임차권등기명령 · 임대차 분쟁 · 소유권이전·말소 · 부동산 가처분",
     bio: "가압류·강제집행까지 즉시 대응해 부동산·임대차 분쟁을 빠르게 정리합니다.",
-    image: "/images/practice/realestate.png",
+    image: "/images/cases/deposit.jpg",
     href: "/practice/real-estate",
   },
   {

@@ -15,6 +15,7 @@ export default function KangNuriPage() {
         imageSrc="/images/attorneys/kang-nuri.png"
         imageAlt="강누리 변호사"
         aspectRatio="1744 / 1030"
+        headline={["파트너변호사", "강누리변호사"]}
         paragraphs={KANG_NURI_BIO}
       />
     </SitePageFrame>

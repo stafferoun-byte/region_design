@@ -16,9 +16,24 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://erounpartners.com"),
+  applicationName: "이로운 파트너스",
   title: "법무법인 이로운 파트너스",
   description:
     "법무법인 이로운 파트너스는 상속·형사·부동산·이혼·민사·기업 분쟁까지, 의뢰인의 상황을 세심하게 살피고 필요한 법률 해결책을 제시합니다. 따뜻한 소통과 책임 있는 조력으로, 당신의 이로운 내일을 함께합니다.",
+  openGraph: {
+    siteName: "이로운 파트너스",
+    title: "법무법인 이로운 파트너스",
+    description:
+      "법무법인 이로운 파트너스는 상속·형사·부동산·이혼·민사·기업 분쟁까지, 의뢰인의 상황을 세심하게 살피고 필요한 법률 해결책을 제시합니다. 따뜻한 소통과 책임 있는 조력으로, 당신의 이로운 내일을 함께합니다.",
+    url: "https://erounpartners.com",
+    locale: "ko_KR",
+    type: "website",
+  },
+  verification: {
+    other: {
+      "naver-site-verification": "95080f7aead1e8b0126783f984e8e8ce00006def",
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon-16x16.png?v=3", sizes: "16x16", type: "image/png" },
@@ -70,6 +85,18 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-[#FCFCFA]" suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "이로운 파트너스",
+              alternateName: "법무법인 이로운 파트너스",
+              url: "https://erounpartners.com/",
+            }),
+          }}
+        />
         <SmoothScroll>
           <KoraPageEffects>{children}</KoraPageEffects>
         </SmoothScroll>

@@ -235,6 +235,18 @@ export function KoraPageEffects({ children }: { children: ReactNode }) {
   }, [phase, beginEnter]);
 
   useEffect(() => {
+    if (phase !== "enter" && phase !== "gap") return;
+
+    const timer = window.setTimeout(() => {
+      if (phaseRef.current === "enter" || phaseRef.current === "gap") {
+        setPhase("idle");
+      }
+    }, ENTER_MS + ENTER_GAP_MS + 240);
+
+    return () => window.clearTimeout(timer);
+  }, [phase]);
+
+  useEffect(() => {
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || isModifiedClick(event)) return;
 

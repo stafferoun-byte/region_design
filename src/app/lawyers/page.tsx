@@ -6,9 +6,24 @@ const FONT_PRETENDARD =
   '"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
 const ATTORNEYS = [
-  { href: "/lawyers/lee-chang-jae", label: "이창재 대표변호사" },
-  { href: "/lawyers/kang-nuri", label: "강누리 변호사" },
-  { href: "/lawyers/kim-nam-yeol", label: "김남열 변호사" },
+  {
+    href: "/lawyers/lee-chang-jae",
+    label: "이창재 대표변호사",
+    image: "/images/attorneys/lee-chang-jae.png",
+    position: "center 32%",
+  },
+  {
+    href: "/lawyers/kang-nuri",
+    label: "강누리 변호사",
+    image: "/images/attorneys/kang-nuri.png",
+    position: "56% 42%",
+  },
+  {
+    href: "/lawyers/kim-nam-yeol",
+    label: "김남열 변호사",
+    image: "/images/attorneys/kim-nam-yeol.png",
+    position: "58% 40%",
+  },
 ] as const;
 
 export const metadata: Metadata = {
@@ -19,25 +34,40 @@ export const metadata: Metadata = {
 export default function AttorneysPage() {
   return (
     <SitePageFrame tone="none">
-      <section className="px-5 pt-28 pb-32 md:px-10 xl:px-12">
+      <section className="px-5 pt-6 pb-24 md:px-10 md:pt-28 md:pb-32 xl:px-12">
         <h1
-          className="text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] text-black"
+          className="text-[34px] leading-[1.2] font-bold tracking-[-0.04em] text-black md:text-[clamp(30px,3.8vw,48px)] md:leading-[1.15]"
           style={{ fontFamily: "var(--font-ibm-sans), 'IBM Plex Sans KR', sans-serif" }}
         >
           이로운 변호사들
         </h1>
         <nav
           aria-label="변호사"
-          className="mt-12 flex max-w-[960px] border-b border-[#e6e6e6]"
+          className="mt-8 grid max-w-[960px] grid-cols-1 gap-10 md:mt-12 md:grid-cols-3 md:gap-6"
         >
           {ATTORNEYS.map((attorney) => (
             <Link
               key={attorney.href}
               href={attorney.href}
-              className="flex-1 border-b-2 border-transparent px-2 py-5 text-center text-[14px] leading-snug tracking-[-0.03em] break-keep text-black transition-colors hover:border-[#5DC39B] md:text-[18px]"
+              className="block text-black"
               style={{ fontFamily: FONT_PRETENDARD }}
             >
-              {attorney.label}
+              <span className="block aspect-[3/4] overflow-hidden bg-[#f4f4f2]">
+                <img
+                  src={attorney.image}
+                  alt=""
+                  className={`h-full w-full object-cover ${
+                    attorney.href === "/lawyers/lee-chang-jae"
+                      ? "max-md:[object-position:70%_32%] md:[object-position:center_32%]"
+                      : attorney.href === "/lawyers/kang-nuri"
+                        ? "max-md:[object-position:70%_42%] md:[object-position:56%_42%]"
+                        : "max-md:[object-position:72%_40%] md:[object-position:58%_40%]"
+                  }`}
+                />
+              </span>
+              <span className="mt-3 block text-left text-[16px] leading-snug tracking-[-0.03em] break-keep md:text-[18px]">
+                {attorney.label}
+              </span>
             </Link>
           ))}
         </nav>

@@ -15,6 +15,7 @@ export default function KimNamYeolPage() {
         imageSrc="/images/attorneys/kim-nam-yeol.png"
         imageAlt="김남열 변호사"
         aspectRatio="1632 / 964"
+        headline={["변호사", "김남열변호사"]}
         paragraphs={KANG_NURI_BIO}
       />
     </SitePageFrame>
