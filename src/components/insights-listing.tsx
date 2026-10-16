@@ -157,11 +157,11 @@ export function InsightsListing() {
   };
 
   return (
-    <div className="kuem-insights">
+    <div className="kuem-insights kuem-insights--on-white">
       <div className="kuem-insights__pad">
         <header ref={headerRef}>
           <motion.h1
-            className="kuem-insights__title will-change-[opacity,transform]"
+            className="kuem-insights__title kuem-insights__title--ibm will-change-[opacity,transform]"
             initial={appear.initial}
             animate={appear.animate}
             transition={{
@@ -169,7 +169,7 @@ export function InsightsListing() {
               ease: easeOut,
             }}
           >
-            이로운 인사이트.
+            이로운 인사이트
           </motion.h1>
           <motion.p
             className="kuem-insights__lead will-change-[opacity,transform]"

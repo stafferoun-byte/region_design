@@ -8,7 +8,14 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -36,48 +43,48 @@ const CASES: WinningCase[] = [
     id: "1",
     category: "상속 · 유류분",
     title: "유류분 5,800만원\n청구 인용",
-    lawyer: "이창재 대표변호사",
-    avatar: "/images/eroun-logo.png",
+    lawyer: "이로운 상속전문센터",
+    avatar: "/images/logo.black.png",
     image: "/images/practice/inheritance.png",
   },
   {
     id: "2",
     category: "부동산 · 임대차",
     title: "보증금 4억 4천만원\n반환",
-    lawyer: "김남열 변호사",
-    avatar: "/images/eroun-logo.png",
+    lawyer: "이로운 부동산전문센터",
+    avatar: "/images/logo.black.png",
     image: "/images/practice/realestate.png",
   },
   {
     id: "3",
     category: "형사 · 성범죄",
     title: "무혐의 종결\n수사 종결",
-    lawyer: "이창재 대표변호사",
-    avatar: "/images/eroun-logo.png",
+    lawyer: "이로운 형사전문센터",
+    avatar: "/images/logo.black.png",
     image: "/images/practice/criminal.png",
   },
   {
     id: "4",
     category: "민사 · 손해배상",
     title: "청구액 전액\n인용 판결",
-    lawyer: "김남열 변호사",
-    avatar: "/images/eroun-logo.png",
+    lawyer: "이로운 민사전문센터",
+    avatar: "/images/logo.black.png",
     image: "/images/practice/civil.png",
   },
   {
     id: "5",
     category: "가정 · 이혼",
     title: "양육권 · 재산분할\n유리한 조정",
-    lawyer: "이창재 대표변호사",
-    avatar: "/images/eroun-logo.png",
+    lawyer: "이로운 이혼전문센터",
+    avatar: "/images/logo.black.png",
     image: "/images/practice/family.png",
   },
   {
     id: "6",
     category: "보이스피싱",
     title: "피해금 회수\n절차 성공",
-    lawyer: "김남열 변호사",
-    avatar: "/images/eroun-logo.png",
+    lawyer: "이로운 형사전문센터",
+    avatar: "/images/logo.black.png",
     image: "/images/insights/case-files.png",
   },
 ];
@@ -166,11 +173,11 @@ function CaseCard({ item }: { item: WinningCase }) {
                 <img
                   src={item.avatar}
                   alt=""
-                  className="absolute inset-0 h-full w-full object-contain p-1.5"
+                  className="absolute inset-0 h-full w-full object-contain p-2"
                   draggable={false}
                 />
               </span>
-              <span className="min-w-0 whitespace-nowrap leading-[1.3]">
+              <span className="min-w-0 break-keep leading-[1.3]">
                 {item.lawyer}
               </span>
             </div>
@@ -380,8 +387,7 @@ export function WinningCases({
               inView={showTitle}
               reduceMotion={reduceMotion}
               delay={0.12}
-              className="text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform]"
-              style={{ fontFamily: FONT }}
+              className={`${ibmSans.className} text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep text-black will-change-[opacity,transform]`}
               ariaLabel="진심이 결과가 되는 순간. 이로운 성공사례를 소개합니다."
             />
           </div>
@@ -397,8 +403,7 @@ export function WinningCases({
               inView={showTitle}
               reduceMotion={reduceMotion}
               delay={0.06}
-              className="text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
-              style={{ fontFamily: FONT }}
+              className={`${ibmSans.className} text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]`}
               ariaLabel="진심이 결과가 되는 순간. 이로운 성공사례를 소개합니다."
             />
           </motion.div>

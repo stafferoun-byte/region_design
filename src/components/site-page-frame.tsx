@@ -31,10 +31,7 @@ export function SitePageFrame({
         />
       ) : null}
       <main className="relative z-10">{children}</main>
-      <div
-        className="relative z-20 overflow-x-clip"
-        style={{ backgroundColor: bg }}
-      >
+      <div className="relative z-20" style={{ backgroundColor: bg }}>
         <SiteFooter />
       </div>
     </div>

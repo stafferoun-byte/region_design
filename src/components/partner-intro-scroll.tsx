@@ -18,6 +18,16 @@ import {
   type CSSProperties,
 } from "react";
 
+const INTRO_LINES = [
+  "당신 곁 -",
+  "가장 가까이에서",
+  "법을 이야기하는 이로운 변호사들.",
+  "",
+  "사건번호가 아닌,",
+  "한 사람의 삶을 중심에 두고",
+  "복잡한 법률문제 앞에서 가장 이로운 길을 찾아드리겠습니다.",
+] as const;
+
 const HOLD_VH = 0.55;
 const WHITE_BELOW_PX = 160;
 
@@ -52,7 +62,6 @@ export function PartnerIntroScroll() {
   const [intro, setIntro] = useState(false);
   const [scrollAfter, setScrollAfter] = useState(false);
   const [started, setStarted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [trackHeight, setTrackHeight] = useState<CSSProperties["height"]>(
     "180svh",
   );
@@ -71,23 +80,11 @@ export function PartnerIntroScroll() {
       document.head.appendChild(link);
     };
     ensure(
-      "jg-inter",
-      "https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,500..600&display=swap",
-    );
-    ensure(
       "jg-pretendard-var",
       "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css",
     );
     const t = window.setTimeout(() => setIntro(true), 300);
     return () => window.clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
@@ -360,9 +357,7 @@ export function PartnerIntroScroll() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const bgUrl = isMobile
-    ? "/images/joongang/partner_kv_m.jpg"
-    : "/images/joongang/partner_kv.jpg";
+  const bgUrl = "/images/partners/eroun-team.jpg";
 
   return (
     <div ref={trackRef} className="jg-track" style={{ height: trackHeight }}>
@@ -389,19 +384,11 @@ export function PartnerIntroScroll() {
               <div className="jg-txtLine">
                 <span>당신 사이,</span>
               </div>
-              <div className="jg-txtLine jg-mHide">
-                <span>
-                  <span className="jg-hoverAccent">이로운 파트너스</span>가
+              <div className="jg-txtLine">
+                <span className="jg-keyTextKeep">
+                  이로운 파트너스가
                   있습니다
                 </span>
-              </div>
-              <div className="jg-txtLine jg-wHide">
-                <span>
-                  <span className="jg-hoverAccent">이로운 파트너스</span>가
-                </span>
-              </div>
-              <div className="jg-txtLine jg-wHide">
-                <span>있습니다</span>
               </div>
             </strong>
 
@@ -411,13 +398,16 @@ export function PartnerIntroScroll() {
                 <div className="jg-titleBox">
                   <strong className="jg-subject">
                     <div className="jg-txtLine">
-                      <em>하나의 사건번호가 아닌, 한 사람의 삶으로</em>
+                      <em>
+                        든든하고 <span className="jg-point">이로운</span> 변호사들,{" "}
+                        <span className="jg-point">이로운 파트너스</span>
+                      </em>
                     </div>
                   </strong>
                 </div>
                 <strong className="jg-name">
                   <div className="jg-txtLine">
-                    <span lang="en">Eroun Partners</span>
+                    <span lang="en">EROUN PARTNERS</span>
                   </div>
                 </strong>
               </div>
@@ -438,35 +428,27 @@ export function PartnerIntroScroll() {
                 </div>
                 <div className="jg-nextTxt">
                   <div className="jg-paragraph jg-mHide">
-                    {[
-                      "사건번호가 아닌, 한 사람의 삶을",
-                      "중심에 두겠다는 마음으로,",
-                      "이로운 파트너스가 함께합니다.",
-                      "형사·이혼·상속·민사까지,",
-                      "복잡한 법률 문제 앞에서",
-                      "가장 이로운 길을 찾아드립니다.",
-                    ].map((line) => (
-                      <div key={line} className="jg-txtLine">
+                    {INTRO_LINES.map((line, index) => (
+                      <div
+                        key={`${index}-${line}`}
+                        className={line ? "jg-txtLine jg-lead" : "jg-txtLine"}
+                      >
                         <span>{line}</span>
                       </div>
                     ))}
                   </div>
                   <div className="jg-paragraph jg-wHide">
-                    {[
-                      "사건번호가 아닌, 한 사람의 삶을",
-                      "중심에 두겠다는 마음으로,",
-                      "이로운 파트너스가 함께합니다.",
-                      "형사·이혼·상속·민사까지,",
-                      "복잡한 법률 문제 앞에서",
-                      "가장 이로운 길을 찾아드립니다.",
-                    ].map((line) => (
-                      <div key={line} className="jg-txtLine">
+                    {INTRO_LINES.map((line, index) => (
+                      <div
+                        key={`${index}-${line}`}
+                        className={line ? "jg-txtLine jg-lead" : "jg-txtLine"}
+                      >
                         <span>{line}</span>
                       </div>
                     ))}
                   </div>
                   <div className="jg-btnHover jg-txtLine">
-                    <Link href="/practice" className="jg-btnView">
+                    <Link href="/practice/inheritance" className="jg-btnView">
                       <span>더 알아보기</span>
                     </Link>
                   </div>

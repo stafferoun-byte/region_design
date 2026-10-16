@@ -76,6 +76,23 @@
   margin: 0;
 }
 
+.kuem-insights__title--ibm {
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+}
+
+.kuem-insights--on-white {
+  --page_bg_color: #fff;
+  background-color: #fff;
+}
+
+.kuem-insights--on-white .kuem-tile {
+  background-color: #fcfcfa;
+}
+
+.kuem-insights--on-white .kuem-insights__lead {
+  color: #000;
+}
+
 .kuem-insights__lead {
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
     sans-serif;
@@ -100,7 +117,7 @@
   margin-bottom: calc(var(--margin_m) + 8px);
   margin-left: var(--insights-inset-x);
   margin-right: auto;
-  background-color: #5dc39b;
+  background-color: #fcfcfa;
   border-radius: 18px;
   padding: 22px 28px;
   display: flex;
@@ -127,17 +144,17 @@
     sans-serif;
   font-size: 16px;
   line-height: 1.3;
-  color: #fff;
+  color: #000;
   text-decoration: none;
   padding: 6px 14px;
   border-radius: 999px;
   transition: background-color 0.18s ease, color 0.18s ease;
-  font-weight: inherit;
+  font-weight: 600;
 }
 
 .kuem-insights__filter-link:hover,
 .kuem-insights__filter-item:hover > .kuem-insights__filter-link {
-  background-color: #fff;
+  background-color: #f3f3ef;
   color: #000;
 }
 
@@ -338,7 +355,7 @@
 }
 
 .kuem-tile__title {
-  font-family: var(--font-rhymes);
+  font-family: "Kimjungchul Myungjo", "Batang", serif;
   font-size: var(--type__headline_tiles);
   line-height: var(--type__headline_tiles_lh);
   font-weight: 500;

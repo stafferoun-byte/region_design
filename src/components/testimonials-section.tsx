@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 /** Kora Appear spring — bounce 0.29, duration 0.46 */
@@ -19,6 +20,12 @@ const koraSpring = {
 /** Match site stack; Kora uses Manrope — layout/tokens stay 1:1 */
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 /* Exact Kora design tokens */
 const ACCENT = "#5DC39B";
@@ -45,8 +52,8 @@ const HERO = {
   body: "막막했던 상황에서 방향부터 차분히 잡아 주셨고, 불안한 질문에 하나하나 답해 주셨습니다. 재판 과정에서도 제가 이해할 수 있게 설명해 주시니 마음이 놓였고, 결과까지 책임감 있게 이끌어 주셨습니다. 다시 일상으로 돌아올 수 있게 해 주셔서 진심으로 감사합니다.",
   name: "김서연 님",
   role: "가사 사건 의뢰인",
-  avatar:
-    "/images/c2ad675e-3571-4adc-b8fe-7bb0aa39fd56.png",
+  avatar: "/images/testimonials/client-woman.jpg",
+  focus: "center 46%",
 };
 
 const CARDS = [
@@ -56,8 +63,8 @@ const CARDS = [
       "다른 곳에서 형식적인 상담만 받고 불안해하던 중이었습니다. 이로운은 처음부터 끝까지 솔직하게 설명해 주시고, 제가 이해될 때까지 기다려 주셨습니다. 불리한 점도 숨기지 않고 말씀해 주셔서 오히려 신뢰가 생겼고, 그 신뢰가 결과로 이어졌습니다. 혼자였다면 버티기 힘들었을 시간을 함께 걸어 주셔서 감사합니다.",
     name: "박준호 님",
     role: "형사 사건 의뢰인",
-    avatar:
-      "/images/9c00079f-e305-4291-b185-cb7f98589029.png",
+    avatar: "/images/testimonials/client-junho-meadow.jpg",
+    focus: "center 35%",
   },
   {
     id: "david",
@@ -65,8 +72,8 @@ const CARDS = [
       "주변에서는 길게 끌라고만 했습니다. 이로운 변호사님들은 오히려 ‘어디에 힘을 모을지’를 정확히 짚어 주셨고, 불필요한 싸움을 줄여 주셨습니다. 서류 하나, 일정 하나도 허투루 넘기지 않으셨고, 제가 놓치기 쉬운 부분까지 먼저 챙겨 주셨습니다. 그 판단 하나로 시간과 비용을 많이 아낄 수 있었습니다.",
     name: "이도현 님",
     role: "민사 사건 의뢰인",
-    avatar:
-      "/images/2bc8a0dd-2ed6-4203-b843-bd26675b7373.png",
+    avatar: "/images/testimonials/client-dohyun-coast.jpg",
+    focus: "center 48%",
   },
   {
     id: "jennifer",
@@ -74,8 +81,8 @@ const CARDS = [
       "사건이 끝난 뒤에도 ‘다음에 비슷한 일이 생기면 이렇게 하세요’까지 남겨 주셨습니다. 의존하게 만드는 곳이 아니라, 스스로 설 수 있게 도와 주는 파트너였습니다. 진행 중에도 제 상황을 세심하게 물어봐 주시고, 감정적으로 흔들릴 때마다 현실적인 선택지를 차분히 정리해 주셨던 점이 가장 기억에 남습니다.",
     name: "최유진 님",
     role: "부동산 사건 의뢰인",
-    avatar:
-      "/images/1adec6e9-d677-4e1f-9556-ea97118afaba.png",
+    avatar: "/images/testimonials/client-yujin-back.jpg",
+    focus: "center 36%",
   },
 ] as const;
 
@@ -104,7 +111,7 @@ function Stars({ play }: { play: boolean }) {
 }
 
 function PlusMinus({ open }: { open: boolean }) {
-  const color = open ? ACCENT : BLACK;
+  const color = BLACK;
   return (
     <span
       className="relative grid size-8 place-items-center rounded-full"
@@ -145,6 +152,7 @@ function AccordionCard({
   name,
   role,
   avatar,
+  focus,
   open,
   onActivate,
   reduceMotion,
@@ -153,6 +161,7 @@ function AccordionCard({
   name: string;
   role: string;
   avatar: string;
+  focus: string;
   open: boolean;
   onActivate: () => void;
   reduceMotion: boolean | null;
@@ -234,7 +243,10 @@ function AccordionCard({
               alt={name}
               fill
               sizes="58px"
+              quality={100}
+              unoptimized
               className="object-cover"
+              style={{ objectPosition: focus }}
             />
           </span>
           <div className="min-w-0">
@@ -332,8 +344,7 @@ export function TestimonialsSection() {
               lines={[TITLE_LINE]}
               inView={show}
               reduceMotion={reduceMotion}
-              className="pointer-events-none absolute bottom-0 left-5 z-20 max-w-[12em] translate-y-[12%] text-[clamp(32px,9vw,68px)] leading-[1.05] font-bold tracking-[-0.05em] break-keep select-none"
-              style={{ fontFamily: FONT }}
+              className={`${ibmSans.className} pointer-events-none absolute bottom-0 left-5 z-20 max-w-[12em] translate-y-[12%] text-[clamp(32px,9vw,68px)] leading-[1.05] font-bold tracking-[-0.05em] break-keep select-none`}
               ariaLabel="함께 한 분들의 이야기"
             />
           </div>
@@ -388,7 +399,10 @@ export function TestimonialsSection() {
                   alt={HERO.name}
                   fill
                   sizes="44px"
+                  quality={100}
+                  unoptimized
                   className="object-cover"
+                  style={{ objectPosition: HERO.focus }}
                 />
               </span>
               <div>
@@ -435,8 +449,7 @@ export function TestimonialsSection() {
             lines={[TITLE_LINE]}
             inView={show}
             reduceMotion={reduceMotion}
-            className="pointer-events-none absolute top-14 left-10 z-20 max-w-[11em] text-[clamp(42px,5.2vw,68px)] leading-[1.15] font-bold tracking-[-0.05em] break-keep select-none xl:top-16 xl:left-12"
-            style={{ fontFamily: FONT }}
+            className={`${ibmSans.className} pointer-events-none absolute top-14 left-10 z-20 max-w-[11em] text-[clamp(42px,5.2vw,68px)] leading-[1.15] font-bold tracking-[-0.05em] break-keep select-none xl:top-16 xl:left-12`}
             ariaLabel="함께 한 분들의 이야기"
           />
 
@@ -492,7 +505,10 @@ export function TestimonialsSection() {
                       alt={HERO.name}
                       fill
                       sizes="58px"
+                      quality={100}
+                      unoptimized
                       className="object-cover"
+                      style={{ objectPosition: HERO.focus }}
                     />
                   </span>
                   <div>

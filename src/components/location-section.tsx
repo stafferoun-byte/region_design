@@ -8,7 +8,7 @@ const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
 const PHONE = "1800-9730";
-const EMAIL = "legal@erounlaw.com";
+const EMAIL = "consult@erounpartners.com";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -104,12 +104,12 @@ export function LocationSection() {
 
   return (
     <section ref={ref} id="location" aria-labelledby="location-heading">
-      <div className="kuem-insights">
+      <div className="kuem-insights kuem-insights--on-white">
         <div className="kuem-insights__pad">
           <header ref={headerRef}>
             <motion.h1
               id="location-heading"
-              className="kuem-insights__title will-change-[opacity,transform]"
+              className="kuem-insights__title kuem-insights__title--ibm will-change-[opacity,transform]"
               initial={appear.initial}
               animate={appear.animate}
               transition={{
@@ -117,10 +117,11 @@ export function LocationSection() {
                 ease: easeOut,
               }}
             >
-              오시는길.
+              오시는길
             </motion.h1>
             <motion.p
               className="kuem-insights__lead will-change-[opacity,transform]"
+              style={{ color: "#000" }}
               initial={appear.initial}
               animate={appear.animate}
               transition={{

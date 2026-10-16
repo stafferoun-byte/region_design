@@ -1,0 +1,300 @@
+/* Inheritance block — JoongAng About type, rules, and margins. */
+
+.jg-inh {
+  padding: 180px 65px 280px;
+  background: #fff;
+  color: #000;
+  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+.jg-inh-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 120px 100px;
+  align-items: start;
+}
+
+.jg-inh-title {
+  margin: 0;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 86px;
+  letter-spacing: -0.03em;
+}
+
+.jg-inh-copy {
+  margin: 0;
+  padding-top: 10px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 34px;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.jg-inh-copy p {
+  margin: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.jg-inh-copy p + p {
+  margin-top: 22px;
+}
+
+.jg-inh-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 120px;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.jg-inh-close {
+  margin: 88px 120px 0;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.03em;
+}
+
+.jg-inh-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 16px 40px 16px;
+  border-left: 1px solid #000;
+  overflow: hidden;
+}
+
+.jg-inh-item > :not(.jg-inh-photo) {
+  position: relative;
+  z-index: 1;
+}
+
+.jg-inh-photo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 100%;
+  height: 72%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  -webkit-mask-image: linear-gradient(to top, #000 0 34%, transparent 92%),
+    linear-gradient(to left, #000 0 28%, transparent 96%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to top, #000 0 34%, transparent 92%),
+    linear-gradient(to left, #000 0 28%, transparent 96%);
+  mask-composite: intersect;
+}
+
+.jg-inh-item:hover .jg-inh-photo {
+  opacity: 1;
+}
+
+.jg-inh-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+  filter: blur(1px);
+}
+
+.jg-inh-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jg-inh-photo {
+    transition: none;
+  }
+}
+
+.jg-inh-item:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.jg-inh-no {
+  font-family: "NeueHaasGroteskTextW02", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.jg-inh-item h3 {
+  margin: 52px 0 22px;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.03em;
+}
+
+.jg-inh-item p {
+  margin: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 28px;
+  word-break: keep-all;
+}
+
+.jg-inh-item p.jg-inh-no {
+  font-family: "NeueHaasGroteskTextW02", sans-serif;
+}
+
+.jg-inh-item p.jg-inh-tags {
+  margin-top: auto;
+  padding-top: 64px;
+  font-size: 13px;
+  line-height: 22px;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+@media (max-width: 1280px) {
+  .jg-inh {
+    padding: 12vw 4.51vw 16vw;
+  }
+
+  .jg-inh-intro {
+    grid-template-columns: 1fr 1fr;
+    margin: 0 8.33vw 7vw;
+  }
+
+  .jg-inh-grid,
+  .jg-inh-close {
+    margin-right: 8.33vw;
+    margin-left: 8.33vw;
+  }
+
+  .jg-inh-title {
+    font-size: 4.02vw;
+    line-height: 5.97vw;
+  }
+
+  .jg-inh-copy {
+    font-size: 1.25vw;
+    line-height: 2.36vw;
+  }
+
+  .jg-inh-br {
+    display: none;
+  }
+
+  .jg-inh-item p {
+    font-size: 1.11vw;
+    line-height: 2.22vw;
+  }
+
+  .jg-inh-item h3 {
+    margin-top: 3.6vw;
+    font-size: 1.8vw;
+  }
+
+  .jg-inh-no,
+  .jg-inh-tags {
+    font-size: 0.97vw;
+  }
+
+  .jg-inh-item p.jg-inh-tags {
+    white-space: normal;
+  }
+
+  .jg-inh-close {
+    font-size: 2.2vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .jg-inh {
+    padding: 20vw 10.66vw 26vw;
+  }
+
+  .jg-inh-intro,
+  .jg-inh-grid,
+  .jg-inh-close {
+    margin: 0;
+  }
+
+  .jg-inh-intro {
+    display: block;
+    margin-bottom: 12vw;
+  }
+
+  .jg-inh-title {
+    margin-bottom: 8vw;
+    font-size: 8vw;
+    line-height: 12.26vw;
+  }
+
+  .jg-inh-copy {
+    font-size: 4.1vw;
+    line-height: 6.8vw;
+  }
+
+  .jg-inh-br {
+    display: none;
+  }
+
+  .jg-inh-item p {
+    font-size: 3.46vw;
+    line-height: 6.13vw;
+  }
+
+  .jg-inh-close {
+    margin-top: 10vw;
+    font-size: 6.4vw;
+    line-height: 1.45;
+  }
+
+  .jg-inh-mline {
+    display: block;
+  }
+
+  .jg-inh-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jg-inh-item,
+  .jg-inh-item:first-child {
+    padding: 8vw 0 10vw;
+    border-top: 1px solid #000;
+    border-left: 0;
+  }
+
+  .jg-inh-item:first-child {
+    border-top: 0;
+  }
+
+  .jg-inh-item h3 {
+    margin: 5vw 0 3vw;
+    font-size: 5.6vw;
+  }
+
+  .jg-inh-no,
+  .jg-inh-tags {
+    font-size: 3.2vw;
+    line-height: 1.5;
+  }
+
+  .jg-inh-item p.jg-inh-tags {
+    margin-top: 6vw;
+    padding-top: 0;
+  }
+}

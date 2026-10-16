@@ -36,7 +36,7 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     author: "",
     title: "수사 초기, 진술 전에 꼭 알아두어야 할 것들",
     image: "/images/insights/mailbox.png",
-    href: "/insights/1",
+    href: "/columns/1",
   },
   {
     id: "2",
@@ -47,7 +47,7 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     author: "",
     title: "합의 이혼과 소송 이혼, 선택이 갈리는 지점",
     image: "/images/insights/legal-balance.png",
-    href: "/insights/2",
+    href: "/columns/2",
   },
   {
     id: "3",
@@ -58,7 +58,7 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     author: "",
     title: "첫 상담에서 무엇을 준비하면 좋을까요",
     image: "/images/insights/dining-table.png",
-    href: "/insights/3",
+    href: "/columns/3",
   },
   {
     id: "4",
@@ -70,7 +70,7 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     title: "전세보증금 반환, 가압류가 필요한 순간",
     image:
       "https://www.kuemmerlein.de/wp-content/uploads/2026/07/Blatt_Tropfen_V3_2500px.jpg",
-    href: "/insights/4",
+    href: "/columns/4",
   },
   {
     id: "5",
@@ -81,7 +81,7 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     author: "",
     title: "온라인 상담 예약 전에 확인하면 좋은 체크리스트",
     image: "/images/insights/stone-cubes.png",
-    href: "/insights/5",
+    href: "/columns/5",
   },
   {
     id: "6",
@@ -92,62 +92,62 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     author: "",
     title: "교통사고 합의, 서두르기 전에 따져볼 것들",
     image: "/images/insights/case-files.png",
-    href: "/insights/6",
+    href: "/columns/6",
   },
 ];
 
 export const INSIGHT_FILTERS = [
-  { id: "all" as const, label: "전체칼럼", href: "/insights" },
+  { id: "all" as const, label: "전체칼럼", href: "/columns" },
   {
     id: "inheritance" as const,
     label: "상속",
-    href: "/insights?field=inheritance",
+    href: "/columns?field=inheritance",
     children: [
-      { label: "상속재산분할", href: "/insights?field=inheritance" },
-      { label: "유류분반환청구", href: "/insights?field=inheritance" },
-      { label: "성년후견인", href: "/insights?field=inheritance" },
-      { label: "친양자입양", href: "/insights?field=inheritance" },
-      { label: "공유물분할청구소송", href: "/insights?field=inheritance" },
+      { label: "상속재산분할", href: "/columns?field=inheritance" },
+      { label: "유류분반환청구", href: "/columns?field=inheritance" },
+      { label: "성년후견인", href: "/columns?field=inheritance" },
+      { label: "친양자입양", href: "/columns?field=inheritance" },
+      { label: "공유물분할청구소송", href: "/columns?field=inheritance" },
     ],
   },
   {
     id: "criminal" as const,
     label: "형사",
-    href: "/insights?field=criminal",
+    href: "/columns?field=criminal",
     children: [
-      { label: "교통사고", href: "/insights?field=criminal" },
-      { label: "학교폭력", href: "/insights?field=criminal" },
+      { label: "교통사고", href: "/columns?field=criminal" },
+      { label: "학교폭력", href: "/columns?field=criminal" },
     ],
   },
   {
     id: "realestate" as const,
     label: "부동산",
-    href: "/insights?field=realestate",
+    href: "/columns?field=realestate",
     children: [
-      { label: "전세보증금 반환", href: "/insights?field=realestate" },
-      { label: "명도소송", href: "/insights?field=realestate" },
-      { label: "소유권이전등기", href: "/insights?field=realestate" },
-      { label: "유치권", href: "/insights?field=realestate" },
+      { label: "전세보증금 반환", href: "/columns?field=realestate" },
+      { label: "명도소송", href: "/columns?field=realestate" },
+      { label: "소유권이전등기", href: "/columns?field=realestate" },
+      { label: "유치권", href: "/columns?field=realestate" },
     ],
   },
   {
     id: "divorce" as const,
     label: "이혼",
-    href: "/insights?field=divorce",
+    href: "/columns?field=divorce",
     children: [
-      { label: "협의이혼", href: "/insights?field=divorce" },
-      { label: "재판이혼", href: "/insights?field=divorce" },
-      { label: "양육권·양육비", href: "/insights?field=divorce" },
-      { label: "재산분할", href: "/insights?field=divorce" },
+      { label: "협의이혼", href: "/columns?field=divorce" },
+      { label: "재판이혼", href: "/columns?field=divorce" },
+      { label: "양육권·양육비", href: "/columns?field=divorce" },
+      { label: "재산분할", href: "/columns?field=divorce" },
     ],
   },
   {
     id: "other" as const,
     label: "기타",
-    href: "/insights?field=other",
+    href: "/columns?field=other",
     children: [
-      { label: "상담 준비", href: "/insights?field=other" },
-      { label: "일반 민사", href: "/insights?field=other" },
+      { label: "상담 준비", href: "/columns?field=other" },
+      { label: "일반 민사", href: "/columns?field=other" },
     ],
   },
 ] as const;

@@ -6,8 +6,15 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { useMemo, useRef } from "react";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -240,8 +247,7 @@ export function StatsSection() {
               lines={[STATS_TITLE_LINE_1, STATS_TITLE_LINE_2]}
               inView={headerInView}
               reduceMotion={reduceMotion}
-              className="text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]"
-              style={{ fontFamily: FONT_WANTED }}
+              className={`${ibmSans.className} text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep will-change-[opacity,transform]`}
               ariaLabel="편안하고 이로운 상담 결과는 단단하게."
             />
           </div>
@@ -257,10 +263,10 @@ export function StatsSection() {
             </div>
 
             <div ref={chartRef} className="relative w-full px-3 py-4 md:px-[15px] md:py-10">
-              <div className="relative w-full pt-6 pb-4 md:pt-12 md:pb-5">
+              <div className="relative w-full pt-6 md:pt-12">
                 <motion.div
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 top-0 bottom-[12px] z-0 overflow-visible md:bottom-[14px]"
+                  className="pointer-events-none absolute inset-x-0 top-0 bottom-0 z-0 overflow-visible"
                   initial={reduceMotion ? false : { opacity: 0 }}
                   animate={
                     chartInView || reduceMotion
@@ -309,33 +315,6 @@ export function StatsSection() {
                     reduceMotion={reduceMotion}
                   />
                 </div>
-
-                <motion.div
-                  className="absolute right-0 bottom-0 left-0 z-[1] flex h-4 items-end justify-between md:h-5"
-                  initial={reduceMotion ? false : { opacity: 0, y: 4 }}
-                  animate={
-                    chartInView || reduceMotion
-                      ? { opacity: 1, y: 0 }
-                      : { opacity: 0, y: 4 }
-                  }
-                  transition={{
-                    duration: reduceMotion ? 0 : 0.5,
-                    delay: reduceMotion ? 0 : 0.4,
-                    ease: easeOut,
-                  }}
-                >
-                  {AXIS_TICKS.map((tick) => (
-                    <span
-                      key={tick}
-                      className="w-0 text-center text-[10px] leading-none font-semibold tracking-[-0.025em] md:text-[13px]"
-                      style={{ fontFamily: FONT_WANTED, color: TEXT_MUTED }}
-                    >
-                      <span className="inline-block -translate-x-1/2">
-                        {tick}M
-                      </span>
-                    </span>
-                  ))}
-                </motion.div>
               </div>
             </div>
           </div>

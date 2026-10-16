@@ -3,6 +3,7 @@
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal, WordReveal } from "@/components/section-title-reveal";
 import { PillCtaButton } from "@/components/pill-cta-button";
 
@@ -13,6 +14,12 @@ import { PillCtaButton } from "@/components/pill-cta-button";
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 const INK = "#242424";
 const MUTED = "#616161";
@@ -55,6 +62,16 @@ type Insight = {
 
 const INSIGHTS: Insight[] = [
   {
+    id: "2",
+    href: "#",
+    category: "상속",
+    date: "2026. 3. 3.",
+    datetime: "2026-03-03",
+    title: "상속재산과 유류분,\n계산이 갈리는 지점",
+    image: "/images/insights/family-law.png",
+    icon: "target",
+  },
+  {
     id: "1",
     href: "#",
     category: "형사 절차",
@@ -63,16 +80,6 @@ const INSIGHTS: Insight[] = [
     title: "수사 초기, 진술 전에\n꼭 알아두어야 할 것들",
     image: "/images/insights/consultation.png",
     icon: "monitor",
-  },
-  {
-    id: "2",
-    href: "#",
-    category: "이혼·가사",
-    date: "2026. 3. 3.",
-    datetime: "2026-03-03",
-    title: "합의 이혼과 소송 이혼,\n선택이 갈리는 지점",
-    image: "/images/insights/family-law.png",
-    icon: "target",
   },
 ];
 
@@ -243,8 +250,8 @@ export function InsightsSection() {
               lines={[INSIGHTS_TITLE_LINE]}
               inView={inView}
               reduceMotion={reduceMotion}
-              className="text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:text-[clamp(36px,5vw,60px)] md:leading-[1.05]"
-              style={{ color: INK, fontFamily: FONT }}
+              className={`${ibmSans.className} text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:text-[clamp(36px,5vw,60px)] md:leading-[1.05]`}
+              style={{ color: INK }}
             />
             <WordReveal
               as="p"
@@ -272,7 +279,7 @@ export function InsightsSection() {
             }}
           >
             <PillCtaButton
-              href="/insights"
+              href="/columns"
               label="전체 보기"
               bg="#242424"
               cream="#FFFFFA"

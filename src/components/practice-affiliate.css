@@ -1,0 +1,330 @@
+/* JoongAng About affiliate — https://www.joonganggroup.com/about/#affiliate */
+
+@font-face {
+  font-family: "YoonGothicPro780";
+  src: url("/fonts/joongang/YoonGothicPro780.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NeueHaasGroteskTextW02";
+  src: url("/fonts/joongang/NeueHaasGroteskTextW02Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.jg-aff {
+  margin-top: 0;
+  padding: 263px 65px 0;
+  background: #fff;
+  color: #000;
+  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+.jg-aff-title {
+  margin: 0 0 120px 120px;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 86px;
+  letter-spacing: -0.03em;
+}
+
+.jg-aff-wHide {
+  display: none;
+}
+
+.jg-aff-list {
+  position: relative;
+  margin: 0 120px;
+  padding: 33px 0 27px;
+  border-top: 1px solid #000;
+}
+
+.jg-aff-list:last-child {
+  padding-bottom: 13px;
+}
+
+.jg-aff-cat {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  font-family: "NeueHaasGroteskTextW02", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.jg-aff-items {
+  margin: 0;
+  padding-left: 50%;
+  list-style: none;
+}
+
+.jg-aff-items li {
+  position: relative;
+  margin-bottom: 70px;
+}
+
+.jg-aff-list.is-top {
+  padding-top: 6px;
+  padding-bottom: 97px;
+  border-top: 0;
+}
+
+.jg-aff-list.is-top .jg-aff-items li {
+  height: auto;
+  min-height: 129px;
+  margin-bottom: 0;
+  padding-top: 33px;
+  border-top: 1px solid #000;
+}
+
+.jg-aff-desc {
+  margin: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  word-break: keep-all;
+}
+
+.jg-aff-link {
+  position: relative;
+  display: inline-block;
+  margin-top: 13px;
+  color: #000;
+  font-family: "YoonGothicPro780", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.jg-aff-desc + .jg-aff-desc {
+  margin-top: 13px;
+}
+
+.jg-aff-q {
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 30px;
+  white-space: pre-line;
+  transition: color 0.2s ease;
+}
+
+.jg-aff-q.is-active {
+  color: #5dc39b;
+}
+
+a.jg-aff-link,
+button.jg-aff-link {
+  padding-right: 17px;
+  background: url("/images/joongang/about/bg_about_link.svg") no-repeat right center;
+  background-size: 7px;
+}
+
+button.jg-aff-link {
+  padding-left: 0;
+  border: 0;
+  color: #000;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  text-align: left;
+  cursor: pointer;
+}
+
+a.jg-aff-link::after,
+button.jg-aff-link::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #000;
+  transition: width 0.3s;
+}
+
+a.jg-aff-link:hover::after,
+button.jg-aff-link:hover::after {
+  width: calc(100% - 17px);
+}
+
+.jg-aff-more {
+  margin: 13px 0 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
+@media (max-width: 1280px) {
+  .jg-aff {
+    padding: 18.26vw 4.51vw 0;
+  }
+
+  .jg-aff-title {
+    margin-bottom: 8.33vw;
+    margin-left: 8.33vw;
+    font-size: 4.02vw;
+    line-height: 5.97vw;
+  }
+
+  .jg-aff-list {
+    margin: 0 8.33vw;
+    padding: 2.29vw 0 1.87vw;
+  }
+
+  .jg-aff-list:last-child {
+    padding-bottom: 0.9vw;
+  }
+
+  .jg-aff-cat {
+    top: 2.08vw;
+    font-size: 1.66vw;
+  }
+
+  .jg-aff-items li {
+    margin-bottom: 4.86vw;
+  }
+
+  .jg-aff-list.is-top {
+    padding-top: 0.41vw;
+    padding-bottom: 6.73vw;
+  }
+
+  .jg-aff-list.is-top .jg-aff-items li {
+    height: auto;
+    min-height: 8.95vw;
+    padding-top: 2.29vw;
+  }
+
+  .jg-aff-desc {
+    font-size: 1.11vw;
+    line-height: 2.22vw;
+  }
+
+  .jg-aff-q {
+    font-size: 1.28vw;
+    line-height: 2.1vw;
+  }
+
+  .jg-aff-link {
+    margin-top: 0.9vw;
+    font-size: 1.11vw;
+  }
+
+  a.jg-aff-link,
+  button.jg-aff-link {
+    padding-right: 1.18vw;
+    background-size: 0.48vw;
+    font-size: 1.11vw;
+    line-height: 2.22vw;
+  }
+
+  a.jg-aff-link::after,
+  button.jg-aff-link::after {
+    bottom: -0.34vw;
+  }
+
+  .jg-aff-more {
+    font-size: 1.11vw;
+    line-height: 2.22vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .jg-aff {
+    margin-top: 0;
+    padding: 34.66vw 10.66vw 0;
+  }
+
+  .jg-aff-title {
+    margin-bottom: 17.33vw;
+    margin-left: 0;
+    font-size: 8vw;
+    line-height: 12.26vw;
+    white-space: nowrap;
+  }
+
+  .jg-aff-wHide {
+    display: inline;
+  }
+
+  .jg-aff-list {
+    margin: 0;
+    padding: 0;
+  }
+
+  .jg-aff-cat {
+    position: static;
+    display: block;
+    margin-top: 5.06vw;
+    margin-bottom: 8.4vw;
+    font-size: 4vw;
+  }
+
+  .jg-aff-items {
+    padding-left: 0;
+  }
+
+  .jg-aff-items li {
+    margin-bottom: 12vw;
+    padding-right: 5vw;
+  }
+
+  .jg-aff-items li:last-child {
+    margin-bottom: 18.53vw;
+  }
+
+  .jg-aff-desc {
+    font-size: 3.46vw;
+    line-height: 6.13vw;
+  }
+
+  .jg-aff-q {
+    font-size: 4vw;
+    line-height: 6.4vw;
+  }
+
+  .jg-aff-link {
+    margin-top: 3.06vw;
+    font-size: 3.36vw;
+  }
+
+  a.jg-aff-link,
+  button.jg-aff-link {
+    padding-right: 3.6vw;
+    background-position: right center;
+    background-size: 1.46vw;
+    font-size: 3.46vw;
+    line-height: 6.13vw;
+  }
+
+  .jg-aff-more {
+    font-size: 3.46vw;
+    line-height: 6.13vw;
+  }
+
+  .jg-aff-list.is-top .jg-aff-items li {
+    height: auto;
+    min-height: 45.33vw;
+    margin-bottom: 12vw;
+    padding-top: 4.26vw;
+  }
+
+  .jg-aff-list.is-top .jg-aff-items li:last-child {
+    margin-bottom: 0;
+  }
+}

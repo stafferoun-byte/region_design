@@ -1,21 +1,18 @@
-import { PracticeBrandPage } from "@/components/practice-brand-page";
+import { PartnerCentersSection } from "@/components/partner-about-sections";
 import { SitePageFrame } from "@/components/site-page-frame";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "업무분야 | 이로운 법률사무소",
-  description: "이로운 법률사무소 업무분야",
+  title: "업무분야 | 법무법인 이로운 파트너스",
+  description: "법무법인 이로운 파트너스 업무분야",
 };
 
-/**
- * Practice page — JoongAng Brand layout
- * (@see https://www.joonganggroup.com/brand/)
- * HeroNav + footer via SitePageFrame (unchanged).
- */
-export default function PracticePage() {
+export default function PracticeIndexPage() {
   return (
-    <SitePageFrame tone="none">
-      <PracticeBrandPage />
-    </SitePageFrame>
+    <div className="practice-rhythm">
+      <SitePageFrame tone="none">
+        <PartnerCentersSection />
+      </SitePageFrame>
+    </div>
   );
 }

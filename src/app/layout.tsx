@@ -15,8 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "이로운 법률사무소",
-  description: "형사, 이혼, 상속, 민사·부동산 분쟁을 위한 프리미엄 법률 상담 메인페이지 시안",
+  metadataBase: new URL("https://erounpartners.com"),
+  title: "법무법인 이로운 파트너스",
+  description:
+    "법무법인 이로운 파트너스는 상속·형사·부동산·이혼·민사·기업 분쟁까지, 의뢰인의 상황을 세심하게 살피고 필요한 법률 해결책을 제시합니다. 따뜻한 소통과 책임 있는 조력으로, 당신의 이로운 내일을 함께합니다.",
   icons: {
     icon: [
       { url: "/favicon-16x16.png?v=3", sizes: "16x16", type: "image/png" },

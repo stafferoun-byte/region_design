@@ -48,10 +48,13 @@
   position: relative;
 }
 
+.jg-keyTextKeep {
+  white-space: nowrap;
+}
+
 .jg-keyText {
   display: block;
-  font-family: "Pretendard Variable", "Pretendard", -apple-system,
-    BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
   /* YoonGothicPro770 reports weight 700 */
   font-weight: 700;
   font-size: 74px;
@@ -67,16 +70,6 @@
 .jg-keyVisual.is-scrollAfter .jg-keyText {
   opacity: 0;
   transform: translateY(-200%);
-}
-
-.jg-hoverAccent {
-  color: inherit;
-  transition: color 0.25s ease;
-  cursor: default;
-}
-
-.jg-hoverAccent:hover {
-  color: #5dc39b;
 }
 
 .jg-txtLine {
@@ -141,21 +134,34 @@
   min-height: 70px;
 }
 
+.jg-beforeBox .jg-line {
+  width: 760px;
+}
+
+.jg-beforeBox .jg-titleBox {
+  width: max-content;
+  min-height: 0;
+}
+
 .jg-beforeBox .jg-subject {
   display: block;
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
-    sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 28px;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
   color: #000;
+  white-space: nowrap;
 }
 
 .jg-beforeBox .jg-subject em {
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
-    sans-serif;
+  font-family: inherit;
   font-style: normal;
-  font-weight: 500;
+  font-weight: inherit;
+}
+
+.jg-beforeBox .jg-point {
+  color: #5dc39b;
 }
 
 .jg-beforeBox .jg-subject .jg-txtLine {
@@ -164,20 +170,20 @@
 
 .jg-name {
   display: block;
-  margin-top: 39px;
+  margin-top: 4px;
   margin-bottom: 20px;
-  font-family: Inter, "NeueHaasGroteskTextW02", Helvetica, sans-serif;
-  font-weight: 550;
-  font-size: 28px;
+  font-family: "Times Sans Serif", "Times New Roman", Times, serif;
+  font-weight: 400;
+  font-size: 18px;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   color: #000;
 }
 
 .jg-name :lang(en) {
-  font-family: Inter, "NeueHaasGroteskTextW02", Helvetica, sans-serif;
-  font-weight: 550;
-  letter-spacing: -0.03em;
+  font-family: "Times Sans Serif", "Times New Roman", Times, serif;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .jg-afterBox {
@@ -205,8 +211,7 @@
 
 .jg-afterBox .jg-subject {
   display: block;
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
-    sans-serif;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
   font-size: 94px;
   /* YoonGothicPro780 at font-weight 400 — same cut as the other section titles */
   font-weight: 700;
@@ -279,6 +284,12 @@
   font-size: 22px;
   line-height: 38px;
   font-weight: 400;
+}
+
+.jg-paragraph .jg-txtLine.jg-lead,
+.jg-paragraph .jg-txtLine.jg-lead > span {
+  height: 32px;
+  line-height: 32px;
 }
 
 .jg-btnView {
@@ -455,6 +466,11 @@
     font-size: 1.52vw;
     line-height: 2.35vw;
   }
+  .jg-paragraph .jg-txtLine.jg-lead,
+  .jg-paragraph .jg-txtLine.jg-lead > span {
+    height: 2vw;
+    line-height: 2vw;
+  }
 }
 
 /* Mobile — JoongAng .ui-m */
@@ -475,13 +491,19 @@
     letter-spacing: -0.06vw;
   }
 
+  .jg-keyTextKeep {
+    font-size: 6.2vw;
+    line-height: 1.25;
+  }
+
   .jg-visualSlideInner {
     height: auto;
     max-height: none;
   }
 
-  .jg-line {
-    width: 56vw;
+  .jg-line,
+  .jg-beforeBox .jg-line {
+    width: 78vw;
   }
 
   .jg-titleBox {
@@ -492,11 +514,16 @@
   .jg-beforeBox .jg-subject {
     font-size: 4.1vw;
     line-height: 6vw;
+    white-space: normal;
+  }
+
+  .jg-beforeBox .jg-titleBox {
+    width: auto;
   }
 
   .jg-name {
-    font-size: 5.6vw;
-    margin-top: 6vw;
+    font-size: 3.8vw;
+    margin-top: 1.2vw;
     margin-bottom: 4vw;
   }
 
@@ -527,6 +554,11 @@
   .jg-paragraph .jg-txtLine > span {
     font-size: 3.73vw;
     line-height: 6vw;
+  }
+  .jg-paragraph .jg-txtLine.jg-lead,
+  .jg-paragraph .jg-txtLine.jg-lead > span {
+    height: 5vw;
+    line-height: 5vw;
   }
 
   .jg-btnView {
@@ -586,11 +618,11 @@
     margin-bottom: 48px;
   }
   .jg-beforeBox .jg-subject {
-    font-size: 16px;
+    font-size: 24px;
   }
   .jg-name {
-    font-size: 24px;
-    margin-top: 0;
+    font-size: 16px;
+    margin-top: 2px;
   }
   .jg-thumb {
     top: 117px;
@@ -608,6 +640,7 @@
 
 .jg-subTit {
   margin: 0 0 75px 120px;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
   font-size: 58px;
   font-weight: 700;
   line-height: 74px;
@@ -617,6 +650,7 @@
 .jg-mission {
   padding: 301px 65px 0 65px;
 }
+
 
 .jg-missionArea {
   position: relative;
@@ -723,15 +757,39 @@
   width: 100%;
 }
 
-.jg-affTit {
+.jg-affList strong.jg-affTit {
   position: absolute;
   top: 30px;
   left: 0;
   margin: 0;
-  font-family: Inter, "Neue Haas Grotesk Text", Helvetica, sans-serif;
-  font-size: 24px;
+  font-family: "Times Sans Serif", "Times New Roman", Times, serif;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.15;
+}
+
+.jg-affList strong.jg-affTit [lang="en"] {
+  font-weight: 400;
+}
+
+.jg-affList .jg-affKo {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #000;
+}
+
+.jg-affList a.jg-affTags {
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 10px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 .jg-affList--top {
@@ -789,9 +847,18 @@
     padding: 2.29vw 0 1.87vw;
   }
 
-  .jg-affTit {
+  .jg-affList strong.jg-affTit {
     top: 2.08vw;
-    font-size: 1.66vw;
+    font-size: 1.52vw;
+  }
+
+  .jg-affList .jg-affKo {
+    font-size: 1.36vw;
+  }
+
+  .jg-affList a.jg-affTags {
+    margin-bottom: 2vw;
+    font-size: 0.97vw;
   }
 
   .jg-affList li {
@@ -873,11 +940,20 @@
     padding-left: 0;
   }
 
-  .jg-affTit {
+  .jg-affList strong.jg-affTit {
     position: static;
     display: block;
     margin: 5.06vw 0 8.4vw;
-    font-size: 4vw;
+    font-size: 3.7vw;
+  }
+
+  .jg-affList .jg-affKo {
+    font-size: 4.4vw;
+  }
+
+  .jg-affList a.jg-affTags {
+    margin-bottom: 4vw;
+    font-size: 2.9vw;
   }
 
   .jg-affList li {

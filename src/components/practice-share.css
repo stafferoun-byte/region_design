@@ -1,0 +1,340 @@
+/* JoongAng Share key — https://www.joonganggroup.com/share/ */
+
+@font-face {
+  font-family: "YoonGothicPro770";
+  src: url("/fonts/joongang/YoonGothicPro770.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "YoonGothicPro770";
+  src: url("/fonts/joongang/YoonGothicPro770.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NeueHaasGroteskTextW02";
+  src: url("/fonts/joongang/NeueHaasGroteskTextW02Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+.jg-share-track {
+  height: calc(100vh + 1400px);
+  margin-top: -100px;
+  background: #fff;
+  color: #000;
+  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+.jg-share-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.jg-share-key {
+  display: table;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  margin-bottom: 120px;
+  text-align: center;
+}
+
+.jg-share-area {
+  position: relative;
+  display: table-cell;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.jg-share-thumb {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  transform: scale(0.4109) translateY(0);
+  transform-origin: center 50%;
+}
+
+.jg-share-thumb img {
+  display: block;
+  width: 730px;
+  height: auto;
+}
+
+.jg-share-txt {
+  position: absolute;
+  top: 50vh;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  transform: translateY(277px);
+}
+
+.jg-share-txt h2 {
+  margin: 0;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 86px;
+  letter-spacing: -0.03em;
+}
+
+.jg-share-copy {
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 46px;
+  width: min(1040px, calc(100% - 130px));
+  margin: 36px auto 0;
+  padding-bottom: 24px;
+  background: #fff;
+  text-align: left;
+  align-items: stretch;
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity 0.7s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.7s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.jg-share-copy.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jg-share-copy {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.jg-share-col:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.jg-share-paragraph {
+  margin: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: -0.02em;
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.jg-share-paragraph + .jg-share-paragraph {
+  margin-top: 22px;
+}
+
+.jg-share-col:last-child .jg-share-paragraph:last-of-type {
+  margin-bottom: 56px;
+}
+
+.jg-share-copy:has(.jg-share-pdf.is-start) .jg-share-col:last-child .jg-share-paragraph:last-of-type {
+  margin-bottom: 0;
+}
+
+.jg-share-pdf.is-start {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.jg-share-pdf {
+  position: relative;
+  display: block;
+  width: fit-content;
+  margin: auto 0 0 0;
+  padding: 11px 58px 11px 18px;
+  background-color: #5dc39b;
+  color: #fff;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 19px;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.jg-share-pdf::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M16 13.8667H0V16H16V13.8667Z' fill='white'/%3E%3Cpath d='M9.06693 0H6.93359V11.4133H9.06693V0Z' fill='white'/%3E%3Cpath d='M8.00064 12.9215L2.33984 7.26071L3.84811 5.75244L8.00064 9.90497L12.1532 5.75244L13.6614 7.26071L8.00064 12.9215Z' fill='white'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  transition: background-image 0.2s;
+}
+
+.jg-share-pdf:hover {
+  background-color: #fff;
+  color: #111;
+}
+
+.jg-share-pdf:hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M16 13.8667H0V16H16V13.8667Z' fill='%23111'/%3E%3Cpath d='M9.06693 0H6.93359V11.4133H9.06693V0Z' fill='%23111'/%3E%3Cpath d='M8.00064 12.9215L2.33984 7.26071L3.84811 5.75244L8.00064 9.90497L12.1532 5.75244L13.6614 7.26071L8.00064 12.9215Z' fill='%23111'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 1280px) {
+  .jg-share-key {
+    margin-bottom: 8.33vw;
+  }
+
+  .jg-share-thumb {
+    width: 50.69vw;
+    transform: scale(0.4109) translateY(0);
+  }
+
+  .jg-share-thumb img {
+    width: 100%;
+  }
+
+  .jg-share-txt {
+    transform: translateY(19.23vw);
+  }
+
+  .jg-share-txt h2 {
+    font-size: 4.02vw;
+    line-height: 5.97vw;
+  }
+
+  .jg-share-copy {
+    width: min(1040px, calc(100% - 8vw));
+    margin-top: 2.5vw;
+    column-gap: 3.2vw;
+  }
+
+  .jg-share-paragraph {
+    font-size: 1.25vw;
+    line-height: 1.75;
+  }
+
+  .jg-share-paragraph + .jg-share-paragraph {
+    margin-top: 1.6vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .jg-share-track {
+    height: auto;
+    margin-top: 0;
+  }
+
+  .jg-share-sticky {
+    position: relative;
+    height: auto;
+    padding: 14vw 10.66vw 0;
+  }
+
+  .jg-share-key {
+    display: block;
+    height: auto;
+    min-height: 0;
+    margin-bottom: 0;
+  }
+
+  .jg-share-area {
+    display: block;
+    height: auto;
+  }
+
+  .jg-share-mHide {
+    display: none;
+  }
+
+  .jg-share-thumb {
+    display: block;
+    width: 46.67vw;
+    margin: 0 auto;
+    transform: none;
+  }
+
+  .jg-share-thumb img {
+    width: 100%;
+    height: auto;
+  }
+
+  .jg-share-txt {
+    position: relative;
+    top: auto;
+    margin-top: 12.56vw;
+    transform: none;
+  }
+
+  .jg-share-txt h2 {
+    font-size: 8vw;
+    line-height: 12.26vw;
+  }
+
+  .jg-share-copy {
+    display: block;
+    width: auto;
+    margin: 9.73vw 0 0;
+    padding: 0 10.66vw 0;
+    opacity: 1;
+    transform: none;
+  }
+
+  .jg-share-col:last-child {
+    display: block;
+  }
+
+  .jg-share-col + .jg-share-col {
+    margin-top: 6vw;
+  }
+
+  .jg-share-col:last-child .jg-share-paragraph:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .jg-share-pdf,
+  .jg-share-pdf.is-start {
+    position: static;
+    left: auto;
+    bottom: auto;
+    margin: 6vw 0 0;
+    padding: 7px 36px 7px 12px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .jg-share-pdf::before {
+    top: 9px;
+    right: 14px;
+    width: 12px;
+    height: 12px;
+    background-size: 12px 12px;
+  }
+
+  .jg-share-paragraph {
+    font-size: 3.2vw;
+    line-height: 5.86vw;
+    white-space: normal;
+  }
+
+  .jg-share-paragraph + .jg-share-paragraph {
+    margin-top: 6vw;
+  }
+}

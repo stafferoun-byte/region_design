@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 /**
@@ -17,6 +18,12 @@ import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 const ACCENT = "#5DC39B";
 const CREAM = "#F7F7ED";
@@ -352,6 +359,7 @@ export function FaqSection({
   categoryLabel,
   categories: customCategories,
   faqByCategory: customFaqByCategory,
+  background = "#FCFCFA",
 }: {
   items?: FaqItem[];
   /** When set with custom items, shows a single mint pill instead of tabs */
@@ -359,6 +367,7 @@ export function FaqSection({
   /** Custom tab labels (id + label). Requires faqByCategory. */
   categories?: { id: string; label: string }[];
   faqByCategory?: Record<string, FaqItem[]>;
+  background?: string;
 } = {}) {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -427,7 +436,7 @@ export function FaqSection({
       ref={sectionRef}
       id="faq"
       className="relative w-full px-5 py-[60px] md:px-10 md:py-[90px] xl:px-12 xl:py-[120px]"
-      style={{ fontFamily: FONT, backgroundColor: "#FCFCFA" }}
+      style={{ fontFamily: FONT, backgroundColor: background }}
       aria-labelledby="faq-heading"
     >
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-10 md:gap-14 xl:gap-16">
@@ -436,8 +445,7 @@ export function FaqSection({
           lines={[FAQ_TITLE_LINE_1, FAQ_TITLE_LINE_2, FAQ_TITLE_LINE_3]}
           inView={inView}
           reduceMotion={reduceMotion}
-          className="mx-auto max-w-[16em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:leading-[1.28] md:tracking-[-0.05em]"
-          style={{ fontFamily: FONT }}
+          className={`${ibmSans.className} mx-auto max-w-[16em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:leading-[1.28] md:tracking-[-0.05em]`}
         />
 
         <div className="flex w-full flex-col items-center gap-3 md:gap-4">

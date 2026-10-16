@@ -1,12 +1,15 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { useRef, type Ref } from "react";
+import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 
 export type TitleWord = {
   text: string;
   color?: string;
   /** Omit space after this word (e.g. "변호사들" + "의") */
   glue?: boolean;
+  fontSize?: string;
+  lineHeight?: string;
 };
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
@@ -22,6 +25,7 @@ type WordRevealProps = {
   as?: "h2" | "p" | "span" | "div";
   /** Delay before the first word (e.g. stagger list items) */
   delay?: number;
+  ref?: Ref<HTMLElement>;
 };
 
 /** Word-by-word reveal — matches WishTitleReveal / Team TitleReveal */
@@ -35,6 +39,7 @@ export function WordReveal({
   ariaLabel,
   as = "span",
   delay = 0.02,
+  ref,
 }: WordRevealProps) {
   const container: Variants = {
     hidden: {},
@@ -65,11 +70,8 @@ export function WordReveal({
         <motion.span
           variants={word}
           className="inline-block"
-          style={{ color: w.color ?? "#000000" }}
-        >
-          {w.text}
-        </motion.span>
-        {i < words.length - 1 && !w.glue ? " " : null}
+          style={{ color: w.color ?? "#000000", fontSize: w.fontSize, lineHeight: w.lineHeight }}
+        >{w.text}</motion.span>{i < words.length - 1 && !w.glue ? " " : null}
       </span>
     ));
 
@@ -87,6 +89,7 @@ export function WordReveal({
 
   return (
     <Component
+      ref={ref as Ref<HTMLDivElement>}
       id={id}
       className={className}
       style={style}
@@ -109,4 +112,43 @@ type SectionTitleRevealProps = Omit<WordRevealProps, "as">;
 
 export function SectionTitleReveal(props: SectionTitleRevealProps) {
   return <WordReveal {...props} as="h2" />;
+}
+
+/** Section headline that plays the homepage subtitle reveal when it scrolls into view. */
+export function InViewSectionTitle({
+  lines,
+  className,
+  ariaLabel,
+  as = "h2",
+}: {
+  lines: readonly (readonly (string | { text: string; color?: string; glue?: boolean })[])[];
+  className?: string;
+  ariaLabel?: string;
+  as?: "h2" | "span";
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, {
+    once: true,
+    amount: 0.25,
+    margin: "0px 0px -6% 0px",
+  });
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <WordReveal
+      ref={ref}
+      as={as}
+      className={className}
+      lines={lines.map((line) =>
+        line.map((word) =>
+          typeof word === "string"
+            ? { text: word, color: "inherit" }
+            : { text: word.text, color: word.color ?? "inherit", glue: word.glue },
+        ),
+      )}
+      inView={!!inView}
+      reduceMotion={reduceMotion}
+      ariaLabel={ariaLabel}
+    />
+  );
 }

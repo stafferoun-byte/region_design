@@ -1,0 +1,509 @@
+/* Port of joonganggroup.com/ethics (common-ko.css .ethics) */
+
+@font-face {
+  font-family: "Kimjungchul Myungjo";
+  src: url("/fonts/KimjungchulMyungjo-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.jg-ethics {
+  position: relative;
+  max-width: 1920px;
+  margin: -110px auto 0;
+  background: #fff;
+  color: #000;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+}
+
+.jg-ethics-wrap {
+  position: relative;
+  padding-bottom: 80px;
+}
+
+.jg-ethics-box {
+  position: relative;
+}
+
+.jg-ethics-bg {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1632 / 964;
+  margin: 0 auto;
+  overflow: hidden;
+  transition:
+    margin 2.5s cubic-bezier(0.77, 0, 0.175, 1),
+    width 2.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.jg-ethics-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  transform: none;
+}
+
+.jg-ethics-line {
+  display: none;
+}
+
+.jg-ethics.on .jg-ethics-bg {
+  width: calc(100% - 220px);
+  margin-top: 260px;
+}
+
+.jg-ethics-txt {
+  position: relative;
+  left: calc(50% - 100px);
+  display: inline-block;
+  width: 50%;
+  margin-top: 85px;
+}
+
+.jg-ethics-txt dl {
+  margin-bottom: 65px;
+}
+
+.jg-ethics-txt dt {
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 84px;
+}
+
+.jg-ethics-txt dd {
+  margin-top: 40px;
+  font-family: "Kimjungchul Myungjo", "Batang", serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 32px;
+}
+
+.jg-ethics-report {
+  position: relative;
+  display: inline-block;
+  padding-right: 52px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.jg-ethics-report span {
+  display: inline-block;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.jg-ethics-report::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 35px;
+  height: 35px;
+  margin-top: -17.5px;
+  background: url(/images/joongang/ethics/bg_arr_report.svg) no-repeat;
+}
+
+.jg-ethics .wHide {
+  display: none;
+}
+
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .jg-ethics-wrap {
+    padding-bottom: 11.11vw;
+  }
+
+  .jg-ethics.on .jg-ethics-bg {
+    width: calc(100% - 15.26vw);
+    margin-top: 18.05vw;
+  }
+
+  .jg-ethics-txt {
+    left: calc(50% - 7vw);
+    margin-top: 5.9vw;
+  }
+
+  .jg-ethics-txt dl {
+    margin-bottom: 4.51vw;
+  }
+
+  .jg-ethics-txt dt {
+    font-size: 4.02vw;
+    line-height: 5.83vw;
+  }
+
+  .jg-ethics-txt dd {
+    margin-top: 2.77vw;
+    font-size: 1.25vw;
+    line-height: 2.22vw;
+  }
+
+  .jg-ethics-report {
+    padding-right: 3.61vw;
+  }
+
+  .jg-ethics-report span {
+    font-size: 1.8vw;
+  }
+
+  .jg-ethics-report::after {
+    width: 2.43vw;
+    height: 2.43vw;
+    margin-top: -1.25vw;
+    background-size: 2.43vw;
+  }
+}
+
+@media (max-width: 1023px) {
+  .jg-ethics {
+    margin-top: -18.4vw;
+  }
+
+  .jg-ethics-wrap {
+    padding-bottom: 8vw;
+  }
+
+  .jg-ethics.on .jg-ethics-bg {
+    width: calc(100% - 10.66vw);
+    margin-top: 18.4vw;
+  }
+
+  .jg-ethics-txt {
+    left: 26.66vw;
+    width: auto;
+    margin-top: 14vw;
+  }
+
+  .jg-ethics-txt dl {
+    margin-bottom: 8vw;
+  }
+
+  .jg-ethics-txt dt {
+    margin-bottom: 10vw;
+    font-size: 8vw;
+    line-height: 12.26vw;
+  }
+
+  .jg-ethics-txt dd {
+    margin-top: 6.66vw;
+    font-size: 3.73vw;
+    line-height: 6.93vw;
+  }
+
+  .jg-ethics-report {
+    padding-right: 9.6vw;
+  }
+
+  .jg-ethics-report span {
+    font-size: 3.46vw;
+  }
+
+  .jg-ethics-report::after {
+    width: 6.66vw;
+    height: 6.66vw;
+    margin-top: -3.33vw;
+    background-image: url(/images/joongang/ethics/m_bg_arr_report.svg);
+    background-size: 6.66vw;
+  }
+
+  .jg-ethics .wHide {
+    display: inline;
+  }
+
+  .jg-ethics .mHide {
+    display: none;
+  }
+}
+
+/* Homepage value block — joonganggroup.com .section.value */
+.jg-value {
+  box-sizing: border-box;
+  display: table;
+  width: 100%;
+  max-width: 1920px;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 60px 65px 220px;
+  background: #fff;
+  color: #000;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    sans-serif;
+  font-size: 16px;
+}
+
+.jg-value-wrap {
+  display: table-cell;
+  vertical-align: bottom;
+  text-align: right;
+}
+
+.jg-value-title {
+  display: block;
+  margin-top: 215px;
+  margin-left: 38px;
+  text-align: left;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 74px;
+  font-weight: 700;
+  line-height: 102px;
+}
+
+.jg-value-list {
+  margin-top: 208px;
+}
+
+.jg-value-list ul {
+  display: inline-block;
+}
+
+.jg-value-list ul::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.jg-value-card {
+  float: left;
+  width: 315px;
+  margin-left: 25px;
+  text-align: left;
+}
+
+.jg-value-line {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #000;
+  opacity: 0;
+}
+
+.jg-value-copy {
+  height: 56px;
+  margin-top: 18px;
+  margin-bottom: 50px;
+}
+
+.jg-value-reveal {
+  display: block;
+  overflow: hidden;
+}
+
+.jg-value-title .jg-value-reveal {
+  line-height: 102px;
+}
+
+.jg-value-copy .jg-value-reveal {
+  line-height: 28px;
+}
+
+.jg-value-reveal > span {
+  display: inline-block;
+  transform: translateY(100%);
+}
+
+.jg-value-name {
+  display: block;
+  margin-bottom: 18px;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.jg-value-thumb {
+  display: block;
+  width: 315px;
+  height: 185px;
+  overflow: hidden;
+  perspective: 700px;
+  transition: transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.jg-value-thumb span,
+.jg-value-thumb picture {
+  display: block;
+  height: 100%;
+}
+
+.jg-value-thumb span {
+  opacity: 0;
+  transform: rotateX(-90deg);
+  transform-origin: 100% 0 0;
+  filter: grayscale(100%);
+}
+
+.jg-value-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(1);
+  transition: transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.jg-value.is-in .jg-value-title .jg-value-reveal > span {
+  transform: translateY(0);
+  transition: transform 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.jg-value.is-in .jg-value-card.is-on .jg-value-line {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.jg-value.is-in .jg-value-card.is-on .jg-value-copy .jg-value-reveal > span {
+  transform: translateY(0);
+  transition: transform 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.jg-value.is-in .jg-value-card.is-on .jg-value-name .jg-value-reveal > span {
+  transform: translateY(0);
+  transition: transform 0.85s 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.jg-value.is-in .jg-value-card.is-on .jg-value-thumb span {
+  opacity: 1;
+  transform: rotateX(0deg);
+  filter: none;
+  transition: all 0.9s 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (hover: hover) and (min-width: 1024px) {
+  .jg-value-thumb:hover {
+    transform: scale3d(0.95, 0.95, 1);
+  }
+
+  .jg-value-thumb:hover img {
+    transform: scale3d(1.15, 1.15, 1);
+  }
+}
+
+.jg-value .wHide {
+  display: none;
+}
+
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .jg-value {
+    padding: 4.16vw 4.51vw 15vw;
+  }
+
+  .jg-value-title {
+    margin-top: 14.93vw;
+    margin-left: 2.63vw;
+    font-size: 5.13vw;
+    line-height: 7.08vw;
+  }
+
+  .jg-value-list {
+    margin-top: 14.44vw;
+  }
+
+  .jg-value-card {
+    width: 21.87vw;
+    margin-left: 1.73vw;
+  }
+
+  .jg-value-copy {
+    height: 3.88vw;
+    margin-top: 1.25vw;
+    margin-bottom: 3.47vw;
+  }
+
+  .jg-value-title .jg-value-reveal {
+    line-height: 7.08vw;
+  }
+
+  .jg-value-copy .jg-value-reveal {
+    line-height: 1.94vw;
+  }
+
+  .jg-value-name {
+    margin-bottom: 1.25vw;
+    font-size: 1.94vw;
+  }
+
+  .jg-value-thumb {
+    width: 21.87vw;
+    height: 12.84vw;
+  }
+}
+
+@media (max-width: 1023px) {
+  .jg-value {
+    display: block;
+    height: auto;
+    padding: 46.13vw 5.33vw 15.33vw;
+  }
+
+  .jg-value-wrap {
+    display: block;
+    text-align: right;
+  }
+
+  .jg-value-title {
+    margin-top: 0;
+    margin-left: 0;
+    font-size: 10.13vw;
+    line-height: 14.4vw;
+    letter-spacing: -0.06vw;
+  }
+
+  .jg-value-list {
+    margin-top: 27.06vw;
+  }
+
+  .jg-value-list ul {
+    position: relative;
+    left: 50%;
+    display: block;
+    width: 50%;
+  }
+
+  .jg-value-card {
+    float: none;
+    width: auto;
+    margin-top: 13.33vw;
+    margin-left: 0;
+  }
+
+  .jg-value-card:first-child {
+    margin-top: 0;
+  }
+
+  .jg-value-copy {
+    height: auto;
+    margin-top: 2.66vw;
+    margin-bottom: 7.6vw;
+  }
+
+  .jg-value-title .jg-value-reveal {
+    line-height: 14.4vw;
+  }
+
+  .jg-value-copy .jg-value-reveal {
+    font-size: 3.2vw;
+    line-height: 5.33vw;
+  }
+
+  .jg-value-name {
+    margin-bottom: 3.86vw;
+    font-size: 5.33vw;
+  }
+
+  .jg-value-thumb {
+    width: 44.66vw;
+    height: 26.26vw;
+  }
+
+  .jg-value .wHide {
+    display: block;
+  }
+
+  .jg-value .mHide {
+    display: none;
+  }
+}

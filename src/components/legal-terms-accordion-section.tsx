@@ -7,7 +7,14 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal, WordReveal } from "@/components/section-title-reveal";
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 /**
  * Legal-terms ticker — layout from Kümmerlein Über uns team ticker
@@ -351,8 +358,8 @@ export function LegalTermsAccordionSection() {
             lines={[TITLE_LINE_1, TITLE_LINE_2, TITLE_LINE_3, TITLE_LINE_4]}
             inView={inView}
             reduceMotion={reduceMotion}
-            className="max-w-[16em] text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:text-[clamp(28px,3.6vw,48px)] md:leading-[1.2] md:tracking-[-0.05em]"
-            style={{ fontFamily: FONT, color: "#FFFFFF" }}
+            className={`${ibmSans.className} max-w-[16em] text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep will-change-[opacity,transform] md:text-[clamp(28px,3.6vw,48px)] md:leading-[1.2] md:tracking-[-0.05em]`}
+            style={{ color: "#FFFFFF" }}
             ariaLabel="변호사에게는 익숙한 용어지만, 당신에게는 처음일 수 있으니까"
           />
           <WordReveal

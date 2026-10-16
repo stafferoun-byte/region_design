@@ -1,0 +1,264 @@
+/* Strategy block — same JoongAng About mood as the inheritance section. */
+
+.jg-st {
+  padding: 240px 65px 140px;
+  background: #fff;
+  color: #000;
+  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+.jg-st-intro,
+.jg-st-grid,
+.jg-st-close {
+  margin-right: 120px;
+  margin-left: 120px;
+}
+
+.jg-st-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+.jg-st-title {
+  margin: 0;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 86px;
+  letter-spacing: -0.03em;
+}
+
+.jg-st-lead {
+  margin: 0;
+  padding-top: 10px;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 34px;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.jg-st-lead + .jg-st-lead {
+  margin-top: 22px;
+}
+
+.jg-st-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 100px;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.jg-st-item {
+  position: relative;
+  padding: 28px 24px 40px;
+  border-left: 1px solid #000;
+}
+
+.jg-st-item:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.jg-st-no,
+.jg-st-icon,
+.jg-st-item h3,
+.jg-st-note {
+  position: relative;
+  z-index: 1;
+}
+
+.jg-st-icon {
+  position: relative;
+  top: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: #f5f5e9;
+  color: #171717;
+}
+
+.jg-st-icon svg {
+  stroke: #171717;
+  color: #171717;
+}
+
+.jg-st-item:has(.jg-st-icon) h3 {
+  margin-top: 20px;
+}
+
+.jg-st-no {
+  margin: 0;
+  font-family: "NeueHaasGroteskTextW02", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.jg-st-item h3 {
+  margin: 48px 0 18px;
+  min-height: 2.9em;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+}
+
+.jg-st-note,
+.jg-st-body {
+  margin: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  word-break: keep-all;
+}
+
+.jg-st-body {
+  margin-top: 44px;
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.jg-st-close {
+  position: relative;
+  z-index: 1;
+  margin-top: 88px;
+  margin-bottom: 0;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans KR", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.03em;
+}
+
+@media (max-width: 1280px) {
+  .jg-st {
+    padding: 16vw 4.51vw 10vw;
+  }
+
+  .jg-st-intro,
+  .jg-st-grid,
+  .jg-st-close {
+    margin-right: 8.33vw;
+    margin-left: 8.33vw;
+  }
+
+  .jg-st-title {
+    font-size: 4.02vw;
+    line-height: 5.97vw;
+  }
+
+  .jg-st-br {
+    display: none;
+  }
+
+  .jg-st-lead {
+    font-size: 1.25vw;
+    line-height: 2.36vw;
+  }
+
+  .jg-st-body {
+    font-size: 1.11vw;
+    line-height: 2.22vw;
+  }
+
+  .jg-st-item h3 {
+    margin-top: 3.2vw;
+    font-size: 1.6vw;
+  }
+
+  .jg-st-close {
+    font-size: 2.2vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .jg-st {
+    padding: 26vw 10.66vw 18vw;
+  }
+
+  .jg-st-intro,
+  .jg-st-grid,
+  .jg-st-close {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .jg-st-intro {
+    display: block;
+  }
+
+  .jg-st-title {
+    font-size: 8vw;
+    line-height: 12.26vw;
+  }
+
+  .jg-st-br {
+    display: none;
+  }
+
+  .jg-st-lead {
+    margin-top: 8vw;
+    padding-top: 0;
+    font-size: 4.1vw;
+    line-height: 6.8vw;
+  }
+
+  .jg-st-grid {
+    grid-template-columns: 1fr;
+    margin-top: 12vw;
+  }
+
+  .jg-st-item,
+  .jg-st-item:first-child {
+    padding: 8vw 0 10vw;
+    border-top: 1px solid #000;
+    border-left: 0;
+  }
+
+  .jg-st-item:first-child {
+    border-top: 0;
+  }
+
+  .jg-st-item h3 {
+    margin: 5vw 0 3vw;
+    font-size: 5.6vw;
+  }
+
+  .jg-st-mline {
+    display: block;
+  }
+
+  .jg-st-note,
+  .jg-st-no {
+    font-size: 3.2vw;
+    line-height: 1.5;
+  }
+
+  .jg-st-body {
+    margin-top: 4vw;
+    font-size: 3.46vw;
+    line-height: 6.13vw;
+  }
+
+  .jg-st-close {
+    margin-top: 10vw;
+    font-size: 6.4vw;
+    line-height: 1.45;
+  }
+}

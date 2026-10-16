@@ -33,14 +33,9 @@ const FONT_WANTED =
 /** Exact paths from kora.framer.media social icon masks (viewBox 0 0 40 40) */
 const SOCIAL_LINKS = [
   {
-    label: "X",
-    href: "https://x.com",
-    path: "M 31.502 0 L 37.636 0 L 24.236 15.315 L 40 36.156 L 27.655 36.156 L 17.987 23.516 L 6.925 36.156 L 0.788 36.156 L 15.121 19.775 L 0 0 L 12.655 0 L 21.393 11.553 L 31.499 0 Z M 29.35 32.485 L 32.748 32.485 L 10.81 3.478 L 7.163 3.478 Z",
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com",
-    path: "M 8.395 4.199 C 8.393 6.517 6.513 8.396 4.195 8.395 C 1.877 8.393 -0.001 6.513 0 4.195 C 0.001 1.877 1.881 -0.001 4.199 0 C 6.517 0.001 8.396 1.881 8.395 4.199 Z M 8.52 11.503 L 0.126 11.503 L 0.126 37.778 L 8.52 37.778 Z M 21.784 11.503 L 13.431 11.503 L 13.431 37.778 L 21.7 37.778 L 21.7 23.99 C 21.7 16.308 31.71 15.595 31.71 23.99 L 31.71 37.778 L 40 37.778 L 40 21.135 C 40 8.187 25.184 8.669 21.7 15.028 Z",
+    label: "네이버 블로그",
+    href: "https://blog.naver.com/erounlaw",
+    path: "M 25.34 21.06 L 14.22 5 H 5 V 35 H 14.66 V 18.94 L 25.78 35 H 35 V 5 H 25.34 V 21.06 Z",
   },
   {
     label: "Instagram",
@@ -60,15 +55,18 @@ function SocialIcon({
   path,
   className,
   nudgeX = 0,
+  fillRule = "nonzero",
 }: {
   path: string;
   className?: string;
   nudgeX?: number;
+  fillRule?: "nonzero" | "evenodd";
 }) {
   return (
     <svg viewBox="0 0 40 40" className={className} aria-hidden>
       <path
         fill="currentColor"
+        fillRule={fillRule}
         d={path}
         transform={nudgeX ? `translate(${nudgeX} 0)` : undefined}
       />
@@ -81,11 +79,13 @@ function SocialButton({
   label,
   path,
   nudgeX = 0,
+  fillRule = "nonzero",
 }: {
   href: string;
   label: string;
   path: string;
   nudgeX?: number;
+  fillRule?: "nonzero" | "evenodd";
 }) {
   return (
     <a
@@ -103,6 +103,7 @@ function SocialButton({
       <SocialIcon
         path={path}
         nudgeX={nudgeX}
+        fillRule={fillRule}
         className="relative z-[1] size-4 text-black transition-colors duration-300 group-hover:text-[#F5F5E9] md:size-[22px]"
       />
     </a>
@@ -226,7 +227,7 @@ export function SiteFooter() {
     <footer
       ref={footerRef}
       id="footer"
-      className="relative isolate z-20 w-full overflow-x-clip"
+      className="relative isolate z-20 w-full"
     >
       {/*
         Desktop only: blooming mint circle.
@@ -265,26 +266,21 @@ export function SiteFooter() {
                 <div className="order-1 lg:order-none lg:col-start-1 lg:row-start-1">
                   <Link href="/" aria-label="홈" className="inline-flex w-fit">
                     <Image
-                      src="/images/eroun-logo.png"
-                      alt="이로운 법률사무소"
-                      width={260}
-                      height={64}
-                      className="h-14 w-auto -translate-x-[calc(100%*132/842)] object-contain md:h-16"
+                      src="/images/logo.black.png"
+                      alt="법무법인 이로운 파트너스"
+                      width={2182}
+                      height={628}
+                      className="h-9 w-auto object-contain md:h-10"
                       style={{ width: "auto" }}
                     />
                   </Link>
-                  <p
-                    className="mt-3 text-[13px] leading-[1.5] font-semibold tracking-[-0.025em] text-[#242424] md:text-[15px]"
-                    style={{ fontFamily: FONT_WANTED }}
-                  >
-                    대표변호사 이창재
-                  </p>
                 </div>
 
                 {/* Pitch + contact — spans logo + address rows on desktop */}
                 <div
                   className="order-2 flex w-full flex-col gap-12 scroll-mt-28 lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:gap-14"
                 >
+                  <div className="flex flex-col gap-6">
                   <p
                     className="max-w-[600px] text-[20px] leading-[1.45] font-[650] tracking-[-0.04em] text-[#242424] md:text-[24px]"
                     style={{ fontFamily: FONT_WANTED }}
@@ -296,13 +292,36 @@ export function SiteFooter() {
                     따뜻하고 이로운 변호사가 함께하겠습니다.
                   </p>
 
+                  <div className="flex items-center gap-3">
+                    <div className="relative size-14 shrink-0 overflow-hidden rounded-full">
+                      <Image
+                        src="/images/faq/avatar-ceo-v4.png"
+                        alt="이창재 대표변호사"
+                        fill
+                        sizes="128px"
+                        quality={90}
+                        className="object-cover object-[center_20%]"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-0.5" style={{ fontFamily: FONT_WANTED }}>
+                      <p className="text-[15px] leading-none font-semibold tracking-[-0.03em] text-[#242424] md:text-[16px]">
+                        이창재 대표변호사
+                      </p>
+                      <p lang="en" className="text-[13px] leading-none font-medium tracking-[-0.02em] text-[#616161] md:text-[14px]">
+                        Changjae Lee
+                      </p>
+                    </div>
+                  </div>
+                  </div>
+
                   <div className="flex flex-col items-start gap-3">
                     <a
-                      href="mailto:legal@erounlaw.com"
+                      href="mailto:consult@erounpartners.com"
+                      lang="en"
                       className="text-[13px] leading-none font-semibold tracking-[-0.03em] text-[#616161] transition-colors hover:text-[#242424] md:text-[16px]"
                       style={{ fontFamily: FONT_WANTED }}
                     >
-                      legal@erounlaw.com
+                      consult@erounpartners.com
                     </a>
                     <CopyPhoneRow phone="1800-9730" />
                   </div>
@@ -311,6 +330,7 @@ export function SiteFooter() {
                 {/* Address — desktop only */}
                 <div className="order-5 hidden max-w-[520px] lg:order-none lg:col-start-1 lg:row-start-2 lg:block">
                   <p
+                    lang="en"
                     className="text-[14px] font-semibold tracking-[-0.02em] text-[#616161]"
                     style={{ fontFamily: FONT_WANTED }}
                   >
@@ -334,6 +354,7 @@ export function SiteFooter() {
                 <div className="order-4 flex flex-col gap-10 md:gap-12 lg:order-none lg:col-start-1 lg:row-start-3">
                   <div>
                     <p
+                      lang="en"
                       className="text-[14px] font-semibold tracking-[-0.02em] text-[#616161]"
                       style={{ fontFamily: FONT_WANTED }}
                     >
@@ -354,6 +375,7 @@ export function SiteFooter() {
 
                   <div>
                     <p
+                      lang="en"
                       className="text-[14px] font-semibold tracking-[-0.02em] text-[#616161]"
                       style={{ fontFamily: FONT_WANTED }}
                     >
@@ -413,12 +435,14 @@ export function SiteFooter() {
                   {/* Invisible spacer keeps layout height at full size */}
                   <p
                     aria-hidden
+                    lang="en"
                     className="invisible w-full whitespace-nowrap text-[clamp(118px,28vw,180px)] leading-[0.68] font-semibold tracking-[-0.05em] md:text-[clamp(100px,18vw,400px)]"
                     style={{ fontFamily: FONT_WANTED }}
                   >
                     Eroun
                   </p>
                   <motion.p
+                    lang="en"
                     className="absolute bottom-0 left-0 w-full origin-bottom-left whitespace-nowrap text-[clamp(118px,28vw,180px)] leading-[0.68] font-semibold tracking-[-0.05em] text-[#5DC39B] select-none will-change-transform md:text-[clamp(100px,18vw,400px)]"
                     style={{
                       fontFamily: FONT_WANTED,
@@ -433,7 +457,7 @@ export function SiteFooter() {
                   className="relative z-[1] flex flex-col items-start gap-0.5 pb-5 text-[12px] leading-[1.5] font-medium tracking-[-0.025em] text-[#616161] max-md:order-first max-md:mt-2 max-md:mb-9 max-md:pb-0 md:items-end md:self-end md:text-right md:text-[13px] md:font-semibold"
                   style={{ fontFamily: FONT_WANTED }}
                 >
-                  <p>© 2026 이로운 법률사무소 All rights reserved.</p>
+                  <p>© 2026 법무법인 이로운 파트너스 <span lang="en">All rights reserved.</span></p>
                 </div>
               </div>
             </div>

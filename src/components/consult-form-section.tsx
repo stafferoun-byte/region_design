@@ -18,6 +18,7 @@ import {
   useState,
 } from "react";
 import { SectionTitleReveal, WordReveal } from "@/components/section-title-reveal";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 
 /**
  * Consultation CTA + form — layout/tokens from Kora CTA
@@ -26,6 +27,12 @@ import { SectionTitleReveal, WordReveal } from "@/components/section-title-revea
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 /** Kora: CTA box shrink-on-exit is desktop-only */
 function useIsDesktop(query = "(min-width: 768px)") {
@@ -52,33 +59,10 @@ const RING = "rgba(255, 255, 255, 0.75)";
 /** Checkbox selected: cream circle + muted check (Kora) */
 const CHECK_ON = "#FAFAF7";
 const CHECK_OFF = "rgba(255, 255, 255, 0.35)";
-/** Radio selected: dark fill (Kora #3D3D3D) */
-const RADIO_ON = "#3D3D3D";
-const RADIO_OFF = "rgba(255, 255, 255, 0.5)";
 
 const BG = "/images/consult-seoul-night.jpg";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
-
-const FEATURE_LINES = [
-  [
-    { text: "사건", color: "#FFFFFF" },
-    { text: "초기", color: "#FFFFFF" },
-    { text: "대응", color: "#FFFFFF" },
-    { text: "로드맵", color: "#FFFFFF" },
-  ],
-  [
-    { text: "쟁점·위험", color: "#FFFFFF" },
-    { text: "요소", color: "#FFFFFF" },
-    { text: "진단", color: "#FFFFFF" },
-  ],
-  [
-    { text: "다음", color: "#FFFFFF" },
-    { text: "단계와", color: "#FFFFFF" },
-    { text: "일정", color: "#FFFFFF" },
-    { text: "안내", color: "#FFFFFF" },
-  ],
-] as const;
 
 const CONSULT_TITLE_LINE_1 = [
   { text: "지금,", color: "#FFFFFF" },
@@ -91,14 +75,12 @@ const CONSULT_TITLE_LINE_2 = [
 ] as const;
 
 const PRACTICE_AREAS = [
+  "상속",
   "형사",
   "이혼·가사",
-  "상속",
   "민사·부동산",
   "기타",
 ] as const;
-
-const STAGES = ["상담만", "수사 초기", "기소 전·후", "재판 중"] as const;
 
 const CONSULT_STATS = [
   { value: "12,000+", label: "누적 상담", end: 12000, suffix: "+", format: "comma" as const },
@@ -260,41 +242,27 @@ function CheckChip({
   );
 }
 
-/** Single-select pill — pale circle → solid dark when on */
-function RadioChip({
-  label,
-  checked,
-  onSelect,
-}: {
-  label: string;
-  checked: boolean;
-  onSelect: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="radio"
-      aria-checked={checked}
-      onClick={onSelect}
-      className="inline-flex items-center gap-2.5 rounded-full py-2.5 pr-[13px] pl-2.5 transition-[background-color] duration-200"
-      style={{ backgroundColor: CHIP_BG, fontFamily: FONT }}
-    >
-      <span
-        aria-hidden
-        className="size-[18px] shrink-0 rounded-full transition-colors duration-200"
-        style={{ backgroundColor: checked ? RADIO_ON : RADIO_OFF }}
-      />
-      <span
-        className="text-[13px] leading-[1.5] font-semibold tracking-[-0.025em]"
-        style={{ color: INK }}
-      >
-        {label}
-      </span>
-    </button>
-  );
-}
+const DEFAULT_CONSULT_TITLE = [CONSULT_TITLE_LINE_1, CONSULT_TITLE_LINE_2] as const;
 
-export function ConsultFormSection() {
+export function ConsultFormSection({
+  titleLines = DEFAULT_CONSULT_TITLE,
+  titleClassName = "max-w-[14em] text-[clamp(32px,4.5vw,56px)]",
+  cardIntro,
+  featureLines = [],
+  submitLabel = "상담 신청하기",
+}: {
+  titleLines?: readonly (readonly { text: string; color?: string; fontSize?: string; lineHeight?: string }[])[];
+  titleClassName?: string;
+  cardIntro?: {
+    lead: string;
+    support?: string;
+    more?: readonly string[];
+    /** Practice pages mute the first line. Set false to keep the default dark-then-gray order. */
+    leadMuted?: boolean;
+  };
+  featureLines?: readonly (readonly { text: string; color?: string }[])[];
+  submitLabel?: string;
+} = {}) {
   const reduceMotion = useReducedMotion();
   const isDesktop = useIsDesktop();
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -329,7 +297,6 @@ export function ConsultFormSection() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [areas, setAreas] = useState<string[]>([]);
-  const [stage, setStage] = useState<string>("");
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -382,19 +349,19 @@ export function ConsultFormSection() {
           {/* Main row: left + form stretch so bottoms match */}
           <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-11 lg:flex-row lg:items-stretch lg:gap-8 xl:gap-10">
             {/* Left */}
-            <div className="flex min-w-0 flex-1 flex-col justify-between gap-14 lg:gap-12">
+            <div className="@container flex min-w-0 flex-1 flex-col justify-between gap-14 lg:gap-12">
               <div className="flex flex-col gap-8 md:gap-10">
                 <SectionTitleReveal
                   id="consult-heading"
-                  lines={[CONSULT_TITLE_LINE_1, CONSULT_TITLE_LINE_2]}
+                  lines={titleLines}
                   inView={inView}
                   reduceMotion={reduceMotion}
-                  className="max-w-[14em] text-[clamp(32px,4.5vw,56px)] leading-[1.12] font-bold tracking-[-0.045em] break-keep will-change-[opacity,transform]"
-                  style={{ fontFamily: FONT }}
+                  className={`${ibmSans.className} ${titleClassName} leading-[1.12] font-bold tracking-[-0.045em] break-keep will-change-[opacity,transform]`}
                 />
 
+                {featureLines.length > 0 ? (
                 <ul className="flex flex-col gap-3.5">
-                  {FEATURE_LINES.map((line, i) => (
+                  {featureLines.map((line, i) => (
                     <li
                       key={i}
                       className="flex items-center gap-2.5 text-[14px] leading-[1.35] font-semibold tracking-[-0.03em] text-white md:gap-3 md:text-[17px]"
@@ -412,6 +379,7 @@ export function ConsultFormSection() {
                     </li>
                   ))}
                 </ul>
+                ) : null}
               </div>
 
               {/* Testimonial — bottom aligns with form bottom */}
@@ -451,11 +419,14 @@ export function ConsultFormSection() {
                 <div className="flex items-center gap-3">
                   <span className="relative size-11 overflow-hidden rounded-full bg-white/20">
                     <Image
-                      src="/images/c2ad675e-3571-4adc-b8fe-7bb0aa39fd56.png"
+                      src="/images/testimonials/client-woman.jpg"
                       alt=""
                       fill
                       sizes="44px"
+                      quality={100}
+                      unoptimized
                       className="object-cover"
+                      style={{ objectPosition: "center 46%" }}
                     />
                   </span>
                   <div className="flex flex-col gap-0.5">
@@ -508,9 +479,9 @@ export function ConsultFormSection() {
                 <div className="flex items-center overflow-visible">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/images/eroun-logo.png"
-                    alt="이로운 법률사무소"
-                    className="h-12 w-auto -translate-x-[calc(100%*132/842)] object-contain md:h-10"
+                    src="/images/logo.black.png"
+                    alt="법무법인 이로운 파트너스"
+                    className="h-8 w-auto object-contain"
                     draggable={false}
                   />
                 </div>
@@ -519,16 +490,48 @@ export function ConsultFormSection() {
                   className="mb-2 text-[18px] leading-[1.35] font-semibold tracking-[-0.035em] break-keep md:mb-0 md:text-[20px]"
                   style={{ color: INK }}
                 >
-                  부담 없이 상황을 알려 주세요.
-                  <br />
-                  <span className="md:hidden" style={{ color: MUTED }}>
-                    어떻게 도와드릴 수 있는지
-                    <br />
-                    함께 정리해 드립니다.
-                  </span>
-                  <span className="hidden md:inline" style={{ color: MUTED }}>
-                    어떻게 도와드릴 수 있는지 함께 정리해 드립니다.
-                  </span>
+                  {cardIntro ? (
+                    <>
+                      <span style={{ color: cardIntro.leadMuted === false ? INK : MUTED }}>
+                        {cardIntro.lead.split("\n").map((line, index) => (
+                          <span key={line}>
+                            {index > 0 ? <br /> : null}
+                            {line}
+                          </span>
+                        ))}
+                      </span>
+                      {cardIntro.support ? (
+                        <>
+                          <br />
+                          <span style={{ color: cardIntro.leadMuted === false ? MUTED : INK }}>
+                            {cardIntro.support}
+                          </span>
+                        </>
+                      ) : null}
+                      {cardIntro.more?.map((line) => (
+                        <span
+                          key={line}
+                          style={{ color: cardIntro.leadMuted === false ? MUTED : INK }}
+                        >
+                          <br />
+                          {line}
+                        </span>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      부담 없이 상황을 알려 주세요.
+                      <br />
+                      <span className="md:hidden" style={{ color: MUTED }}>
+                        어떻게 도와드릴 수 있는지
+                        <br />
+                        함께 정리해 드립니다.
+                      </span>
+                      <span className="hidden md:inline" style={{ color: MUTED }}>
+                        어떻게 도와드릴 수 있는지 함께 정리해 드립니다.
+                      </span>
+                    </>
+                  )}
                 </p>
 
                 {/* Name / Contact */}
@@ -578,33 +581,16 @@ export function ConsultFormSection() {
                   </div>
                 </fieldset>
 
-                {/* Stage — single-select radio chips */}
-                <fieldset className="flex flex-col gap-3" role="radiogroup">
-                  <legend>
-                    <FieldLabel>현재 진행 단계</FieldLabel>
-                  </legend>
-                  <div className="flex flex-wrap gap-2">
-                    {STAGES.map((s) => (
-                      <RadioChip
-                        key={s}
-                        label={s}
-                        checked={stage === s}
-                        onSelect={() => setStage(s)}
-                      />
-                    ))}
-                  </div>
-                </fieldset>
-
                 {/* Message */}
                 <label className="flex flex-col gap-2">
                   <FieldLabel>상담하고 싶은 내용</FieldLabel>
                   <textarea
                     name="message"
-                    rows={5}
+                    rows={7}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="사건 경위, 현재 상황, 궁금한 점을 편하게 적어 주세요."
-                    className="min-h-[140px] resize-y rounded-[20px] border-0 px-4 py-3.5 text-[14px] leading-[1.45] font-semibold tracking-[-0.03em] outline-none placeholder:text-[#616161] focus:ring-2 focus:ring-white/60"
+                    className="min-h-[210px] resize-y rounded-[20px] border-0 px-4 py-3.5 text-[14px] leading-[1.45] font-semibold tracking-[-0.03em] outline-none placeholder:text-[#616161] focus:ring-2 focus:ring-white/60"
                     style={{ backgroundColor: INPUT_BG, color: INK }}
                   />
                 </label>
@@ -654,7 +640,7 @@ export function ConsultFormSection() {
                   type="submit"
                   className="group inline-flex shrink-0 items-center gap-[25px] self-end rounded-full bg-[#242424] px-[15px] py-[10px] text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] text-[#FFFFFA] transition-colors hover:bg-black sm:self-auto md:gap-3 md:px-5 md:py-3"
                 >
-                  {submitted ? "신청 완료" : "상담 신청하기"}
+                  {submitted ? "신청 완료" : submitLabel}
                   <span
                     aria-hidden
                     className="size-[10px] rounded-full bg-[#F7F7ED] transition-transform group-hover:scale-110"

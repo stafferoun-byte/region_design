@@ -1,4 +1,12 @@
 /* Küemmerlein typefaces used on insights/column cards */
+
+@font-face {
+  font-family: "Kimjungchul Myungjo";
+  src: url("/fonts/KimjungchulMyungjo-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: "ABC Monument Grotesk";
   src: url("/fonts/kuemmerlein/ABCMonumentGrotesk-Regular.woff2") format("woff2");

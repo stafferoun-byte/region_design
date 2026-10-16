@@ -7,8 +7,15 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
 import layout from "./network-layout.json";
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -107,7 +114,7 @@ const MOBILE_BUBBLE_POS: Record<string, { x: number; y: number }> = {
   recovery: { x: 20, y: 27 },
   team: { x: 52, y: 56 },
   rights: { x: 18, y: 92 },
-  precious: { x: 42, y: 8 },
+  precious: { x: 46, y: 8 },
   free: { x: 18, y: 56 },
 };
 
@@ -249,7 +256,7 @@ const BUBBLE_SCENES = [
         id: "precious",
         text: "가장 소중한 것에 시간을 쓰는 삶",
         emoji: "/images/emojis/sparkles.png",
-        x: 46,
+        x: 50,
         y: 1,
         radius: "56px 56px 0 56px",
         stagger: 0,
@@ -488,8 +495,7 @@ function WishTitleReveal({
 
   return (
     <motion.h2
-      className="mx-auto max-w-[18em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep md:max-w-none"
-      style={{ fontFamily: FONT }}
+      className={`${ibmSans.className} mx-auto max-w-[18em] text-center text-[clamp(30px,3.8vw,48px)] leading-[1.28] font-bold tracking-[-0.05em] break-keep md:max-w-none`}
       variants={container}
       initial="hidden"
       animate={inView || reduceMotion ? "show" : "hidden"}
@@ -887,7 +893,7 @@ export function WishNetworkSection() {
                         className="relative origin-center scale-[0.92] md:scale-100"
                       >
                       <div
-                        className="relative flex items-center gap-1.5 whitespace-nowrap px-3.5 py-2.5 text-[14px] leading-none font-semibold tracking-[-0.4px] text-[#1d1c1d] md:gap-3.5 md:px-8 md:py-5 md:text-[24px]"
+                        className="relative flex items-center gap-1.5 whitespace-nowrap px-3 py-2 text-[13px] leading-none font-semibold tracking-[-0.4px] text-[#1d1c1d] md:gap-3 md:px-7 md:py-4 md:text-[22px]"
                         style={{ fontFamily: FONT }}
                       >
                         <span
@@ -907,7 +913,7 @@ export function WishNetworkSection() {
                           src={b.emoji}
                           alt=""
                           draggable={false}
-                          className="relative size-[20px] shrink-0 object-contain md:size-[38px]"
+                          className="relative size-[18px] shrink-0 object-contain md:size-[34px]"
                           animate={
                             reduceMotion
                               ? undefined

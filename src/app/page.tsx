@@ -7,6 +7,7 @@ import {
   useReducedMotion,
   useTransform,
 } from "framer-motion";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import { HeroNav } from "@/components/hero-nav";
 import { ConsultFormSection } from "@/components/consult-form-section";
 import { FaqSection } from "@/components/faq-section";
@@ -44,14 +45,26 @@ const partnerLogos = [
   { src: "/images/partners/seoul-family.png", alt: "서울가정법원" },
 ];
 
-const FONT_WANTED =
-  '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
-
 const FONT_PRETENDARD =
   '"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
+
 /** Mobile hero copy — off for now; restore when ready */
 const SHOW_HERO_MOBILE_COPY = false;
+
+/** Hero inset at 1440 → 24px pad / 40px radius; scales with viewport, never below min */
+const HERO_DESIGN_WIDTH = 1440;
+function fluidHeroPad(width = typeof window !== "undefined" ? window.innerWidth : HERO_DESIGN_WIDTH) {
+  return Math.min(24, Math.max(12, width * (24 / HERO_DESIGN_WIDTH)));
+}
+function fluidHeroRadius(width = typeof window !== "undefined" ? window.innerWidth : HERO_DESIGN_WIDTH) {
+  return Math.min(40, Math.max(20, width * (40 / HERO_DESIGN_WIDTH)));
+}
 
 /** Soft line dissolve — matches hero.mp4 burned-in caption timing */
 function HeroVideoLine({
@@ -325,9 +338,8 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                   scale: line1Scale,
                   opacity: line1Opacity,
                   transformPerspective: isMobile ? 800 : 1200,
-                  fontFamily: FONT_WANTED,
                 }}
-                className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
+                className={`${ibmSans.className} origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]`}
               >
                 일상의 회복을 위한
               </motion.div>
@@ -338,9 +350,8 @@ function ChangesSection({ reduceMotion }: { reduceMotion: boolean | null }) {
                   scale: line2Scale,
                   opacity: line2Opacity,
                   transformPerspective: isMobile ? 800 : 1200,
-                  fontFamily: FONT_WANTED,
                 }}
-                className="origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]"
+                className={`${ibmSans.className} origin-center text-center text-[28px] leading-[1.15] font-semibold tracking-[-0.06em] text-black will-change-transform sm:text-[35px] md:text-[60px] md:font-bold xl:text-[80px]`}
               >
                 이로운 파트너스의{" "}
                 <span className="text-[#5DC39B]">진심</span>
@@ -386,12 +397,9 @@ export default function Home() {
 
   // Drive hero expand from Lenis/window scroll — Framer useScroll was not updating.
   useEffect(() => {
-    const REST_PAD = isDesktop ? 24 : 16;
-    const REST_RADIUS = isDesktop ? 40 : 28;
-
     if (!enableHeroScrub) {
-      framePad.set(REST_PAD);
-      frameRadius.set(REST_RADIUS);
+      framePad.set(fluidHeroPad());
+      frameRadius.set(fluidHeroRadius());
       darkOpacity.set(0);
       logoOpacity.set(1);
       logoY.set(0);
@@ -399,23 +407,30 @@ export default function Home() {
     }
 
     // Seed inset frame before first scroll tick
-    framePad.set(REST_PAD);
-    frameRadius.set(REST_RADIUS);
+    framePad.set(fluidHeroPad());
+    frameRadius.set(fluidHeroRadius());
 
     const update = () => {
       const el = heroTransitionRef.current;
       if (!el) return;
 
+      const restPad = fluidHeroPad();
+      const restRadius = fluidHeroRadius();
+
       const total = el.offsetHeight - window.innerHeight;
-      if (total <= 0) return;
+      if (total <= 0) {
+        framePad.set(restPad);
+        frameRadius.set(restRadius);
+        return;
+      }
 
       const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
 
       // Expand through first ~55% of the sticky track (Kora-style)
       const t = Math.min(1, p / 0.55);
       const s = t * t * (3 - 2 * t);
-      framePad.set(REST_PAD * (1 - s));
-      frameRadius.set(REST_RADIUS * (1 - s));
+      framePad.set(restPad * (1 - s));
+      frameRadius.set(restRadius * (1 - s));
 
       // Logos fade mid-expand
       const logoT = Math.min(1, Math.max(0, (p - 0.12) / 0.28));
@@ -485,7 +500,7 @@ export default function Home() {
       >
         <video
           className="absolute inset-0 h-full w-full object-cover object-[42%_center] md:object-center"
-          src="/videos/hero.mp4?v=3"
+          src="/videos/hero.mp4?v=4"
           autoPlay
           muted
           loop
@@ -579,7 +594,7 @@ export default function Home() {
         <InsightsSection />
       </div>
       {/* CTA shrinks + footer circle rises — shared scroll stage */}
-      <div className="relative z-20 overflow-x-clip bg-[#FCFCFA]">
+      <div className="relative z-20 bg-[#FCFCFA]">
         <ConsultFormSection />
         <SiteFooter />
       </div>

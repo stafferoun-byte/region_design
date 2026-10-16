@@ -7,9 +7,17 @@ import {
   AnimatePresence,
   type Variants,
 } from "framer-motion";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { PillCtaButton } from "@/components/pill-cta-button";
+
+const ibmSans = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: "700",
+  display: "swap",
+});
 
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
@@ -30,6 +38,7 @@ const TEAM = [
     role: "유류분반환 · 상속재산분할 · 한정승인·상속포기 · 기여분청구 · 특별수익",
     bio: "상속 분쟁의 초기 대응부터 판결·조정까지, 전국 상위 전문성으로 권리를 지킵니다.",
     image: "/images/practice/inheritance.png",
+    href: "/practice/inheritance",
   },
   {
     id: "criminal",
@@ -38,6 +47,7 @@ const TEAM = [
     role: "경찰조사 밀착대응 · 사기 · 학교폭력 · 횡령·배임 · 성범죄",
     bio: "수사 초기부터 재판까지 밀착 대응해 의뢰인의 권리와 일상을 지킵니다.",
     image: "/images/practice/criminal.png",
+    href: "/practice/criminal",
   },
   {
     id: "civil",
@@ -46,6 +56,7 @@ const TEAM = [
     role: "대여금 반환 · 공사대금 · 손해배상청구 · 물품대금청구 · 약정금청구",
     bio: "증거 정리와 변론을 한 흐름으로 이어, 회수·배상까지 책임지고 대응합니다.",
     image: "/images/practice/civil.png",
+    href: "/practice/civil",
   },
   {
     id: "family",
@@ -54,6 +65,7 @@ const TEAM = [
     role: "이혼재산분할 · 상간소송 · 위자료 · 양육권 · 친양자입양 · 친생자관계부존재",
     bio: "감정보다 절차와 합의에 집중해, 가족과 일상을 다시 세울 해법을 설계합니다.",
     image: "/images/practice/family.png",
+    href: "/practice/divorce",
   },
   {
     id: "realestate",
@@ -62,6 +74,7 @@ const TEAM = [
     role: "전세보증금 반환 · 임차권등기명령 · 임대차 분쟁 · 소유권이전·말소 · 부동산 가처분",
     bio: "가압류·강제집행까지 즉시 대응해 부동산·임대차 분쟁을 빠르게 정리합니다.",
     image: "/images/practice/realestate.png",
+    href: "/practice/real-estate",
   },
   {
     id: "traffic",
@@ -70,6 +83,7 @@ const TEAM = [
     role: "음주운전 · 무면허운전 · 교통사고 합의 · 12대 중과실 · 형사처벌 대응",
     bio: "형사처벌과 합의금 대응을 동시에 진행해 사고 이후를 빠르게 수습합니다.",
     image: "/images/practice/traffic.png",
+    href: "/practice/traffic",
   },
 ] as const;
 
@@ -80,6 +94,8 @@ export type TeamItem = {
   role: string;
   bio: string;
   image?: string;
+  /** When set, the row navigates here instead of expanding. */
+  href?: string;
 };
 
 /** Practice-page only — inheritance concern rows (does not affect main) */
@@ -150,11 +166,13 @@ function TitleReveal({
   reduceMotion,
   line1,
   line2,
+  fontClassName,
 }: {
   inView: boolean;
   reduceMotion: boolean | null;
   line1: readonly string[];
   line2: readonly string[];
+  fontClassName?: string;
 }) {
   const container: Variants = {
     hidden: {},
@@ -193,8 +211,8 @@ function TitleReveal({
 
   return (
     <motion.h2
-      className="text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep md:text-[clamp(32px,8vw,68px)] md:leading-[1.28] md:tracking-[-0.05em]"
-      style={{ fontFamily: FONT }}
+      className={`${fontClassName ?? ""} text-[clamp(30px,3.8vw,48px)] leading-[1.15] font-bold tracking-[-0.04em] break-keep md:text-[clamp(32px,8vw,68px)] md:leading-[1.28] md:tracking-[-0.05em]`}
+      style={fontClassName ? undefined : { fontFamily: FONT }}
       variants={container}
       initial="hidden"
       animate={inView || reduceMotion ? "show" : "hidden"}
@@ -224,6 +242,7 @@ function TeamRow({
   rowIndex: number;
 }) {
   const [hovered, setHovered] = useState(false);
+  const router = useRouter();
   const active = open || hovered;
   const rowWrapRef = useRef<HTMLDivElement | null>(null);
   const rowRef = useRef<HTMLButtonElement | null>(null);
@@ -268,13 +287,19 @@ function TeamRow({
       <button
         ref={rowRef}
         type="button"
-        onClick={onToggle}
+        onClick={() => {
+          if (member.href) {
+            router.push(member.href);
+            return;
+          }
+          onToggle();
+        }}
         onMouseEnter={() => {
           measure();
           setHovered(true);
         }}
         onMouseLeave={() => setHovered(false)}
-        aria-expanded={open}
+        aria-expanded={member.href ? undefined : open}
         className="relative flex w-full cursor-pointer items-center gap-5 overflow-hidden rounded-[50px] p-[10px] text-left md:gap-[30px]"
       >
         {/*
@@ -568,8 +593,7 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
       >
         <div className="flex w-full max-w-[280px] flex-col items-start gap-[15px] min-[810px]:max-w-[400px] min-[810px]:gap-5 min-[1200px]:max-w-[520px]">
           <motion.h3
-            className="w-full text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep min-[810px]:text-[30px] min-[810px]:leading-[1.1] min-[1200px]:text-[45px]"
-            style={{ fontFamily: FONT, fontVariationSettings: '"wght" 700' }}
+            className={`${ibmSans.className} w-full text-[30px] leading-[1.15] font-bold tracking-[-0.04em] break-keep min-[810px]:text-[30px] min-[810px]:leading-[1.1] min-[1200px]:text-[45px]`}
             variants={wordContainer}
             initial="hidden"
             animate={show ? "show" : "hidden"}
@@ -676,6 +700,7 @@ export function TeamSection({
               reduceMotion={reduceMotion}
               line1={titleLine1}
               line2={titleLine2}
+              fontClassName={variant === "main" ? ibmSans.className : undefined}
             />
 
             <div

@@ -1,0 +1,57 @@
+/* Practice pages. Equal space from one section's last line to the next title.
+   Mobile keeps each section's own JoongAng spacing. */
+
+@media (min-width: 768px) {
+  .practice-rhythm .jg-share-copy {
+    padding-bottom: 0;
+  }
+
+  .practice-rhythm .jg-aff,
+  .practice-rhythm .jg-inh,
+  .practice-rhythm .jg-st,
+  .practice-rhythm .jg-affiliate {
+    padding-top: 200px;
+  }
+
+  .practice-rhythm .jg-inh,
+  .practice-rhythm .jg-st {
+    padding-bottom: 0;
+  }
+
+  .practice-rhythm .jg-affiliate {
+    padding-bottom: 200px;
+  }
+
+  .practice-rhythm .jg-aff .jg-aff-list:last-child,
+  .practice-rhythm .jg-affiliate .jg-aff-list:last-child {
+    padding-bottom: 0;
+  }
+
+  .practice-rhythm .jg-aff .jg-aff-list:last-child .jg-aff-items li,
+  .practice-rhythm .jg-affiliate .jg-aff-list:last-child .jg-aff-items li {
+    margin-bottom: 0;
+  }
+
+  .practice-rhythm #consult > div {
+    padding-top: 0;
+  }
+
+  .civil-page .jg-aff-q,
+  .realestate-page .jg-aff-q,
+  .traffic-page .jg-aff-q {
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1280px) {
+  .practice-rhythm .jg-aff,
+  .practice-rhythm .jg-inh,
+  .practice-rhythm .jg-st,
+  .practice-rhythm .jg-affiliate {
+    padding-top: 16vw;
+  }
+
+  .practice-rhythm .jg-affiliate {
+    padding-bottom: 16vw;
+  }
+}
