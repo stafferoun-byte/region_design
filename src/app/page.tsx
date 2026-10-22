@@ -44,12 +44,15 @@ const partnerLogos = [
   { src: "/images/partners/seoul-family.png", alt: "서울가정법원" },
 ];
 
-const FONT_PRETENDARD =
-  '"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
-
 const ibmSans = IBM_Plex_Sans_KR({
   subsets: ["latin"],
   weight: "700",
+  display: "swap",
+});
+
+const ibmSansVideo = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: ["300", "600"],
   display: "swap",
 });
 
@@ -109,11 +112,8 @@ function HeroVideoCopy({ reduceMotion }: { reduceMotion: boolean | null }) {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0"
-      style={{
-        fontFamily: FONT_PRETENDARD,
-        WebkitFontSmoothing: "antialiased",
-      }}
+      className={`${ibmSansVideo.className} pointer-events-none absolute inset-0`}
+      style={{ WebkitFontSmoothing: "antialiased" }}
       aria-label="하나의 사건번호가 아닌, 한 사람의 삶으로. 이로운 변호사들, 이로운 파트너스"
     >
       <div className={`absolute top-1/2 left-[8%] flex max-w-[14em] -translate-y-[calc(50%+46px)] flex-col text-left font-light md:left-[7.5%] md:-translate-y-1/2 ${type}`}>
