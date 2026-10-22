@@ -10,7 +10,7 @@ type AttorneysEthicsProps = {
   imageAlt: string;
   aspectRatio: string;
   paragraphs: readonly string[];
-  headline: readonly [string, string];
+  headline: string;
 };
 
 export function AttorneysEthics({
@@ -83,9 +83,7 @@ export function AttorneysEthics({
           <div className="jg-ethics-txt">
             <dl>
               <dt>
-                <span className="jg-ethics-keep">{headline[0]}</span>
-                <br />
-                {headline[1]}
+                <span className="jg-ethics-keep">{headline}</span>
               </dt>
               {paragraphs.map((paragraph) => (
                 <dd key={paragraph}>{paragraph}</dd>

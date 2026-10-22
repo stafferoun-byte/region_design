@@ -16,7 +16,7 @@ export default function LeeChangJaePage() {
         mobileImageSrc="/images/attorneys/lee-chang-jae-mobile.png"
         imageAlt="이창재 변호사"
         aspectRatio="1632 / 963"
-        headline={["이로운 대표변호사", "이창재변호사"]}
+        headline="이창재 대표 변호사"
         paragraphs={LEE_CHANG_JAE_BIO}
       />
     </SitePageFrame>

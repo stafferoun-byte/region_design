@@ -16,7 +16,7 @@ export default function KimNamYeolPage() {
         mobileImageSrc="/images/attorneys/kim-nam-yeol-mobile.png"
         imageAlt="김남열 변호사"
         aspectRatio="1632 / 964"
-        headline={["이로운 파트너변호사", "김남열변호사"]}
+        headline="김남열 파트너 변호사"
         paragraphs={KIM_NAM_YEOL_BIO}
       />
     </SitePageFrame>
