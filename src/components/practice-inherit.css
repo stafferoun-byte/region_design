@@ -1,10 +1,9 @@
-/* Inheritance block — JoongAng About type, rules, and margins. */
 
 .jg-inh {
   padding: 180px 65px 280px;
   background: #fff;
   color: #000;
-  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text KR", "Text EN", sans-serif;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
 }
@@ -129,7 +128,7 @@
 }
 
 .jg-inh-no {
-  font-family: "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text EN", sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 1;
@@ -155,7 +154,7 @@
 }
 
 .jg-inh-item p.jg-inh-no {
-  font-family: "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text EN", sans-serif;
 }
 
 .jg-inh-item p.jg-inh-tags {

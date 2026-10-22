@@ -257,15 +257,8 @@
   }
 }
 
-/* ─── Kora Framer Page Effects (circle clip on root) ───
-   From kora.framer.media script_main global pageEffects:
-   exit  = circle @ 50%/-5%, tween 0.535s, ease [.73,.54,.05,.99]
-   enter = circle @ 50%/105%, scale .85, rotateX/Z -10, y 30%,
-           spring delay .75s (stiffness 825 / damping 84 / mass 3.2 → ~933ms)
-
-   Uses clip-path (not mask + @property) — custom props often fail to
-   interpolate on ::view-transition-* pseudo-elements.
-*/
+/* Circle page transition. clip-path, not mask — custom props often fail to
+   interpolate on ::view-transition-* pseudo-elements. */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
@@ -282,7 +275,7 @@
   backface-visibility: hidden;
 }
 
-@keyframes kora-page-exit {
+@keyframes page-mask-exit {
   from {
     clip-path: circle(150% at 50% -5%);
     opacity: 1;
@@ -294,7 +287,7 @@
   }
 }
 
-@keyframes kora-page-enter {
+@keyframes page-mask-enter {
   from {
     clip-path: circle(0% at 50% 105%);
     opacity: 1;
@@ -312,12 +305,12 @@
 
 /* Kill UA default cross-fade so only our circle runs */
 ::view-transition-old(root) {
-  animation: kora-page-exit 0.535s cubic-bezier(0.73, 0.54, 0.05, 0.99) both !important;
+  animation: page-mask-exit 0.535s cubic-bezier(0.73, 0.54, 0.05, 0.99) both !important;
 }
 
 /* Spring → CSS linear() sampled from framer-motion (825/84/3.2) */
 ::view-transition-new(root) {
-  animation: kora-page-enter 933ms 0.75s
+  animation: page-mask-enter 933ms 0.75s
     linear(
       0,
       0.1068,
@@ -344,6 +337,5 @@
 
 ::view-transition-group(root) {
   animation-duration: 1.7s !important;
-  /* Kora breakpoint fill — shows through circle mask between pages */
   background-color: #5dc39b;
 }

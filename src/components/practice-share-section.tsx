@@ -35,8 +35,6 @@ const DEFAULT_SHARE_COLUMNS = [
 ] as const;
 
 /**
- * JoongAng /share/ key section.
- * Scroll distances match shareUI() skrollr attrs in default-ko.js.
  */
 export function PracticeShareSection({
   ariaLabel = "남겨진 재산 너머의 마음까지 살피겠습니다.",
@@ -71,7 +69,6 @@ export function PracticeShareSection({
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // JoongAng skrollr smoothScrollingDuration is 200ms. Match that scrub on this page.
     let previousDuration: number | undefined;
     const tuneLenis = () => {
       const lenis = (

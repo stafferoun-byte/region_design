@@ -165,7 +165,6 @@ const DEFAULT_STRATEGY_TITLE: readonly TitleLine[] = [
   ],
 ];
 
-/** Strategy block in the JoongAng About mood. */
 export function PracticeStrategySection({
   ariaLabel = "재산 하나, 송금 한 건, 부양의 시간까지.",
   titleLines = DEFAULT_STRATEGY_TITLE,

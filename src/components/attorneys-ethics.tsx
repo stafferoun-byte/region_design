@@ -6,19 +6,20 @@ import "./attorneys-ethics.css";
 
 type AttorneysEthicsProps = {
   imageSrc: string;
+  mobileImageSrc?: string;
   imageAlt: string;
   aspectRatio: string;
   paragraphs: readonly string[];
-  headline?: readonly [string, string];
+  headline: readonly [string, string];
 };
 
-/** Layout of https://www.joonganggroup.com/ethics/ plus the homepage value block. */
 export function AttorneysEthics({
   imageSrc,
+  mobileImageSrc,
   imageAlt,
   aspectRatio,
   paragraphs,
-  headline = ["중앙그룹이 지키고", "실천하겠습니다"],
+  headline,
 }: AttorneysEthicsProps) {
   const [on, setOn] = useState(false);
   const [valueIn, setValueIn] = useState(false);
@@ -26,8 +27,14 @@ export function AttorneysEthics({
   const valueRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const id = requestAnimationFrame(() => setOn(true));
-    return () => cancelAnimationFrame(id);
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setOn(true));
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
   }, []);
 
   useEffect(() => {
@@ -61,7 +68,16 @@ export function AttorneysEthics({
       <div className="jg-ethics-wrap">
         <div className="jg-ethics-box">
           <div className="jg-ethics-bg" style={{ aspectRatio }}>
-            <img src={imageSrc} alt={imageAlt} />
+            <div className="jg-ethics-zoom">
+              <img className="jg-ethics-photo" src={imageSrc} alt={imageAlt} />
+              {mobileImageSrc ? (
+                <img
+                  className="jg-ethics-photo-m"
+                  src={mobileImageSrc}
+                  alt=""
+                />
+              ) : null}
+            </div>
             <div className="jg-ethics-line" />
           </div>
           <div className="jg-ethics-txt">
@@ -116,9 +132,9 @@ export function AttorneysEthics({
                 <span className="jg-value-thumb">
                   <span>
                     <img
-                      src="/images/partners/eroun-team.jpg"
+                      src="/images/hiring.png?v=4"
                       alt="이로운 변호사들"
-                      style={{ objectPosition: "center 22%" }}
+                      style={{ objectPosition: "center 40%" }}
                     />
                   </span>
                 </span>

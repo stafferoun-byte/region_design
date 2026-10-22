@@ -141,7 +141,6 @@ function OfficeMap({
   );
 }
 
-/** Kora contact copy icon — mint circle + overlapping squares */
 function CopyPhoneRow({ phone }: { phone: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -212,8 +211,6 @@ function CopyPhoneRow({ phone }: { phone: string }) {
 }
 
 /**
- * Location page — insights header + Kora contact info row
- * @see https://kora.framer.media/contact
  */
 export function LocationSection() {
   const ref = useRef<HTMLElement | null>(null);
@@ -276,7 +273,6 @@ export function LocationSection() {
             />
           </header>
 
-          {/* Kora contact row — contact left; offices grouped closer on the right */}
           <motion.div
             className="location-contact mt-[calc(var(--margin_m)+72px)] ml-[var(--insights-inset-x)] flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:pr-[min(11vw,168px)]"
             initial={reduceMotion ? false : { opacity: 0, y: 18 }}

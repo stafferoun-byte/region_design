@@ -1,10 +1,9 @@
-/* Strategy block — same JoongAng About mood as the inheritance section. */
 
 .jg-st {
   padding: 240px 65px 140px;
   background: #fff;
   color: #000;
-  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text KR", "Text EN", sans-serif;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
 }
@@ -100,7 +99,7 @@
 
 .jg-st-no {
   margin: 0;
-  font-family: "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text EN", sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 1;

@@ -21,7 +21,7 @@ export const CASE_ITEMS: WinningCaseItem[] = [
     category: "inheritance",
     categoryLabel: "상속",
     center: "이로운 상속전문센터",
-    title: "유류분 5,800만원 청구 인용",
+    title: "상속재산분할 17억 규모 전액 방어",
     image: "/images/practice/inheritance.png",
     href: "/practice/inheritance",
   },

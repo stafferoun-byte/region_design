@@ -1,6 +1,6 @@
 import { QuestionRows } from "@/components/practice-affiliate-section";
 import { InViewSectionTitle } from "@/components/section-title-reveal";
-import "./partner-joongang.css";
+import "./partner-intro.css";
 import { IBM_Plex_Sans_KR } from "next/font/google";
 import Link from "next/link";
 
@@ -59,7 +59,11 @@ const GROUPS = [
 export function PartnerCentersSection({
   titleLines = [
     ["이로운", "파트너스의"],
-    ["전문센터를", "소개합니다"],
+    [
+      { text: "전문센터", color: "#5DC39B", glue: true },
+      "를",
+      "소개합니다",
+    ],
   ],
   items,
 }: {
@@ -115,20 +119,41 @@ export function PartnerAboutSections() {
   return (
     <div className="jg-about">
       <section className="jg-mission">
-        <h2 className="jg-subTit">
-          이로운 파트너스는
-          <br /> 사건번호가 아닌 삶을 보는
-          <br /> 법률사무소입니다
-        </h2>
+        <InViewSectionTitle
+          className="jg-subTit jg-mHide"
+          ariaLabel="이로운 파트너스가 믿는 것."
+          lines={[
+            [
+              { text: "이로운", color: "#5DC39B" },
+              { text: "파트너스", color: "#5DC39B", glue: true },
+              "가",
+              "믿는",
+              "것.",
+            ],
+          ]}
+        />
+        <InViewSectionTitle
+          className="jg-subTit jg-wHide"
+          ariaLabel="이로운 파트너스가 믿는 것."
+          lines={[
+            [
+              { text: "이로운", color: "#5DC39B" },
+              { text: "파트너스", color: "#5DC39B", glue: true },
+              "가",
+            ],
+            ["믿는", "것."],
+          ]}
+        />
         <div className="jg-missionArea">
           <p className="jg-subTxt">
-            당신 곁 -
-            <br /> 가장 가까이에서
-            <br /> 법을 이야기하는 이로운 변호사들.
+            변호사는 단순한 법 기술자가 아닌,
+            <br /> 더 나은 사회를 만들어가는 법률 전문가입니다.
             <br />
-            <br /> 사건번호가 아닌,
-            <br /> 한 사람의 삶을 중심에 두고
-            <br /> 복잡한 법률문제 앞에서 가장 이로운 길을 찾아드리겠습니다.
+            <br /> 법률은 또다른 장벽이 아닌,
+            <br /> 사람들 사이의 갈등을 풀어내는 도구여야 합니다.
+            <br />
+            <br /> 의뢰인의 삶에 이로운 변화를 만드는 것,
+            <br /> 그것이 우리의 사명입니다.
           </p>
           <div className="jg-missionImg">
             <img
@@ -138,10 +163,58 @@ export function PartnerAboutSections() {
               height={1280}
             />
           </div>
-          <p className="jg-missionCap">
-            한 사람의 삶을 중심에 두고,
-            <br /> 가장 이로운 길을 찾습니다
-          </p>
+          <div className="jg-missionCap">
+            <InViewSectionTitle
+              as="p"
+              className="jg-missionCapTit jg-mHide"
+              ariaLabel="이로운 파트너스가 바라는 것."
+              lines={[["이로운", "파트너스가", "바라는", "것."]]}
+            />
+            <InViewSectionTitle
+              as="p"
+              className="jg-missionCapTit jg-wHide"
+              ariaLabel="이로운 파트너스가 바라는 것."
+              lines={[
+                ["이로운", "파트너스가"],
+                ["바라는", "것."],
+              ]}
+            />
+            <p>
+              <InViewSectionTitle
+                as="span"
+                className="jg-missionCapLead"
+                ariaLabel="무너지지 않기를"
+                lines={[["무너지지 않기를"]]}
+              />
+              <br />
+              법적인 문제가 발생하더라도,
+              <br />그 일이 당신의 전부가 되지 않기를 바랍니다.
+            </p>
+            <p>
+              <InViewSectionTitle
+                as="span"
+                className="jg-missionCapLead"
+                ariaLabel="단단해지기를"
+                lines={[["단단해지기를"]]}
+              />
+              <br />
+              당신의 마음이 한결 가벼워지고,
+              <br />
+              일상이 다시 단단해지기를 바랍니다.
+            </p>
+            <p>
+              <InViewSectionTitle
+                as="span"
+                className="jg-missionCapLead"
+                ariaLabel="힘이 되기를"
+                lines={[["힘이 되기를"]]}
+              />
+              <br />
+              우리의 진심 담은 노력이,
+              <br />
+              당신에게 이로운 힘이 되기를 바랍니다.
+            </p>
+          </div>
         </div>
       </section>
 

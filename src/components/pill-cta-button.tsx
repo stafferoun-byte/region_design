@@ -31,7 +31,6 @@ type PillCtaButtonProps = {
   compact?: boolean;
 };
 
-/** Kora Apply Now — text swap + cream bloom from dot (fixed pill width) */
 export function PillCtaButton({
   href,
   label,

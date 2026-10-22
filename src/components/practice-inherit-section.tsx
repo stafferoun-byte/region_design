@@ -56,7 +56,6 @@ const DEFAULT_INHERIT_TITLE: readonly TitleLine[] = [
   ],
 ];
 
-/** Inheritance practice block in the JoongAng About mood. */
 export function PracticeInheritSection({
   ariaLabel = "법정상속분만 계산해서는 알 수 없는 몫.",
   titleLines = DEFAULT_INHERIT_TITLE,

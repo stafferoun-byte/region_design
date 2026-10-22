@@ -1,15 +1,13 @@
 "use client";
 
 /**
- * JoongAng keyVisual (default-ko.js mainUI):
  * 1) Intro — thumb scale(0.188, 0.18), photo peeks at the bottom
- * 2) First scroll — 0.5s ease to full-bleed (translateX -offset, translateY -mItemPos+460)
+ * 2) First scroll — photo eases open, inset from the sides, full image height kept
  * 3) After 500ms — after-copy lines slide up (.is-start)
  * 4) Further scroll — sticky ends and the section leaves
  */
 
-import "./partner-joongang.css";
-import Link from "next/link";
+import "./partner-intro.css";
 import {
   useEffect,
   useLayoutEffect,
@@ -27,6 +25,9 @@ const INTRO_LINES = [
   "한 사람의 삶을 중심에 두고",
   "복잡한 법률문제 앞에서 가장 이로운 길을 찾아드리겠습니다.",
 ] as const;
+
+/** Team photo file is 1024×769. Expanded frame uses this so the bottom stays intact. */
+const PHOTO_RATIO = 2884 / 3840;
 
 /** One extra viewport of rest on the expanded frame, then the next section. */
 const HOLD_VH = 1;
@@ -51,8 +52,15 @@ export function PartnerIntroScroll() {
   const slideInnerRef = useRef<HTMLDivElement | null>(null);
   const afterBoxRef = useRef<HTMLDivElement | null>(null);
   const thumbRef = useRef<HTMLDivElement | null>(null);
+  const thumbFromRef = useRef<{
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
   const scrollAfterRef = useRef(false);
+  const leftIntroRef = useRef(false);
   const startTimerRef = useRef<number | null>(null);
   const utilOnRef = useRef(true);
   const [utilOn, setUtilOn] = useState(true);
@@ -131,9 +139,25 @@ export function PartnerIntroScroll() {
 
     const w = window.innerWidth;
     const viewH = window.innerHeight;
+
+    if (w <= 767) {
+      thumb.style.height = "";
+      thumb.style.width = "";
+      thumb.style.maxWidth = "";
+      thumb.style.transform = "";
+      inner.style.height = "auto";
+      inner.style.maxHeight = "none";
+      inner.style.overflow = "visible";
+      slide.style.paddingTop = "";
+      return {
+        w,
+        mItemPos: inner.offsetTop,
+        kvLeft: kv.getBoundingClientRect().left,
+      };
+    }
+
     const frameH = w * (1380 / 1440);
-    if (w > 767) thumb.style.height = `${frameH}px`;
-    else thumb.style.height = "";
+    thumb.style.height = `${frameH}px`;
 
     inner.style.height = `${outerHeight(before) + frameH * 0.122 + 1}px`;
     inner.style.maxHeight = "none";
@@ -149,40 +173,85 @@ export function PartnerIntroScroll() {
     };
   };
 
-  /** default-ko.js resize.mainResizeNext — photo grows from the intro scale. */
+  /** Photo opens to a centered frame: side margins stay, and the whole image is kept. */
   const placeExpanded = (animate: boolean) => {
     const frame = layoutFrame();
     const after = afterBoxRef.current;
     const thumb = thumbRef.current;
-    if (!frame || !after || !thumb) return;
+    const section = sectionWrapRef.current;
+    if (!frame || !after || !thumb || !section) return;
     const { w, mItemPos, kvLeft } = frame;
+    const viewH = window.innerHeight;
 
     after.style.transition = animate ? "" : "none";
     thumb.style.transition = animate ? "" : "none";
-    thumb.style.width = "";
-    thumb.style.maxWidth = "";
 
-    if (w > 767) thumb.style.height = `${w * (1380 / 1440)}px`;
-
-    // default-ko.js: photo flush to the viewport edges, top locked at +460.
-    if (w <= 767) {
-      after.style.transform = `translateY(calc(${-mItemPos}px + 24.33vw))`;
-      thumb.style.transform = `scale(1) translateX(-26.66vw) translateY(calc(${-mItemPos}px + 41.33vw))`;
-    } else if (w <= 1280) {
-      after.style.transform = `translateY(calc(${-mItemPos}px + 17.36vw))`;
-      thumb.style.transform = `translateX(${-kvLeft}px) translateY(calc(${-mItemPos}px + 31.94vw))`;
-    } else if (w >= 1920) {
-      after.style.transform = `translateY(${-mItemPos + 245}px)`;
-      thumb.style.transform = `translateX(-637px) translateY(${-mItemPos + 460}px)`;
+    const frameW = w <= 767 ? w : Math.min(w * 0.92, 1920);
+    const frameH = frameW * PHOTO_RATIO;
+    const photoTop = w <= 767 ? 0 : w <= 1280 ? w * 0.3194 : 460;
+    if (w > 767) {
+      thumb.style.width = `${frameW}px`;
+      thumb.style.maxWidth = `${frameW}px`;
+      thumb.style.height = `${frameH}px`;
+      thumb.style.transform = `translateX(${(w - frameW) / 2 - kvLeft}px) translateY(${-mItemPos + photoTop}px)`;
     } else {
-      after.style.transform = `translateY(${-mItemPos + 245}px)`;
-      thumb.style.transform = `translateX(${-kvLeft}px) translateY(${-mItemPos + 460}px)`;
+      thumb.style.width = "";
+      thumb.style.maxWidth = "";
+      thumb.style.height = "";
+      thumb.style.transform = "";
     }
+
+    if (w <= 767) {
+      after.style.transform = "translateY(0)";
+      section.style.position = "";
+      section.style.overflow = "";
+      section.style.height = "";
+      section.style.minHeight = "";
+      const tail = Math.round(w * 0.04);
+      const nextTrack = `${section.offsetHeight + tail}px`;
+      setTrackHeight((prev) => (prev === nextTrack ? prev : nextTrack));
+      const from = thumbFromRef.current;
+      thumbFromRef.current = null;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (from && animate && !reduce && from.width > 0 && from.height > 0) {
+        const to = thumb.getBoundingClientRect();
+        const s = from.height / to.height;
+        const scaledW = to.width * s;
+        const visualLeft = from.left + from.width / 2 - scaledW / 2;
+        const visualTop = from.top + from.height - to.height * s;
+        const dx = visualLeft - to.left;
+        const dy = visualTop - to.top;
+        thumb.style.transformOrigin = "top left";
+        thumb.style.transition = "none";
+        thumb.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`;
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            thumb.style.transition =
+              "transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955)";
+            thumb.style.transform = "translate(0px, 0px) scale(1)";
+          });
+        });
+      }
+      return;
+    } else if (w <= 1280) {
+      after.style.transform = `translateY(calc(${-mItemPos}px + 19.2vw))`;
+    } else {
+      after.style.transform = `translateY(${-mItemPos + 274}px)`;
+    }
+
+    const sectionH = Math.max(viewH, photoTop + frameH);
+    section.style.position = "relative";
+    section.style.overflow = "visible";
+    section.style.height = "auto";
+    section.style.minHeight = `${sectionH}px`;
+    const nextTrack = `${sectionH + 40}px`;
+    setTrackHeight((prev) => (prev === nextTrack ? prev : nextTrack));
   };
 
   const clearExpanded = () => {
     const after = afterBoxRef.current;
     const thumb = thumbRef.current;
+    const section = sectionWrapRef.current;
     if (after) {
       after.style.transform = "";
       after.style.transition = "";
@@ -192,7 +261,17 @@ export function PartnerIntroScroll() {
       thumb.style.transition = "";
       thumb.style.width = "";
       thumb.style.maxWidth = "";
+      thumb.style.height = "";
     }
+    if (section) {
+      section.style.position = "";
+      section.style.overflow = "";
+      section.style.height = "";
+      section.style.minHeight = "";
+    }
+    const viewH = window.innerHeight;
+    const next = `${viewH + Math.round(viewH * HOLD_VH) + WHITE_BELOW_PX}px`;
+    setTrackHeight((prev) => (prev === next ? prev : next));
     layoutFrame();
   };
 
@@ -232,10 +311,19 @@ export function PartnerIntroScroll() {
       const shouldExpand = top < -1;
 
       if (shouldExpand && !scrollAfterRef.current) {
+        if (window.innerWidth <= 767 && thumbRef.current) {
+          const from = thumbRef.current.getBoundingClientRect();
+          thumbFromRef.current = {
+            left: from.left,
+            top: from.top,
+            width: from.width,
+            height: from.height,
+          };
+        }
         const y = Math.max(0, window.scrollY + top);
         lockYRef.current = y;
         lockUntilRef.current = performance.now() + LOCK_MS;
-        setPinned(true);
+        if (window.innerWidth > 767) setPinned(true);
         setScrollAfter(true);
         const lenis = (
           window as unknown as {
@@ -272,7 +360,11 @@ export function PartnerIntroScroll() {
         return;
       }
 
-      if (top > 8 && scrollAfterRef.current) {
+      if (rect.bottom < window.innerHeight * 0.4) leftIntroRef.current = true;
+
+      if (leftIntroRef.current && top >= -1 && scrollAfterRef.current) {
+        leftIntroRef.current = false;
+        scrollAfterRef.current = false;
         if (startTimerRef.current) {
           window.clearTimeout(startTimerRef.current);
           startTimerRef.current = null;
@@ -323,23 +415,22 @@ export function PartnerIntroScroll() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const bgUrl = "/images/partners/eroun-team.jpg";
+  const bgUrl = "/images/partners/eroun-team.png?v=4";
+  const bgUrlMobile = "/images/partners/eroun-team-mobile.jpg?v=1";
 
   return (
     <div ref={trackRef} className="jg-track" style={{ height: trackHeight }}>
-      <div className={utilOn ? "jg-util" : "jg-util is-off"} aria-hidden={!utilOn}>
+      <div
+        className={utilOn && !scrollAfter ? "jg-util" : "jg-util is-off"}
+        aria-hidden={!utilOn || scrollAfter}
+      >
         <div className="jg-utilInner">
           <p className="jg-utilCopy">
             © 2026 법무법인 이로운 파트너스
             <br />
             <span lang="en">All Rights Reserved</span>
+            <span className="jg-utilRule" aria-hidden="true" />
           </p>
-          <div className="jg-utilLang">
-            <span className="is-on" lang="en">
-              KOR
-            </span>
-            <span lang="en">ENG</span>
-          </div>
         </div>
       </div>
       <div
@@ -370,8 +461,7 @@ export function PartnerIntroScroll() {
               </div>
               <div className="jg-txtLine">
                 <span className="jg-keyTextKeep">
-                  이로운 파트너스가
-                  있습니다
+                  이로운 파트너스가 <span className="jg-mBr">있습니다</span>
                 </span>
               </div>
             </strong>
@@ -383,8 +473,7 @@ export function PartnerIntroScroll() {
                   <strong className="jg-subject">
                     <div className="jg-txtLine">
                       <em>
-                        든든하고 <span className="jg-point">이로운</span> 변호사들,{" "}
-                        <span className="jg-point">이로운 파트너스</span>
+                        든든하고 <span className="jg-point">이로운 변호사들</span>, 이로운 파트너스
                       </em>
                     </div>
                   </strong>
@@ -422,27 +511,26 @@ export function PartnerIntroScroll() {
                     ))}
                   </div>
                   <div className="jg-paragraph jg-wHide">
-                    {INTRO_LINES.map((line, index) => (
+                    {INTRO_LINES.slice(0, 3).map((line, index) => (
                       <div
                         key={`${index}-${line}`}
-                        className={line ? "jg-txtLine jg-lead" : "jg-txtLine"}
+                        className="jg-txtLine jg-lead"
                       >
                         <span>{line}</span>
                       </div>
                     ))}
-                  </div>
-                  <div className="jg-btnHover jg-txtLine">
-                    <Link href="/practice/inheritance" className="jg-btnView">
-                      <span>더 알아보기</span>
-                    </Link>
                   </div>
                 </div>
               </div>
 
               <div ref={thumbRef} className="jg-thumb">
                 <span
-                  className="jg-bg"
+                  className="jg-bg jg-bgDesk"
                   style={{ backgroundImage: `url(${bgUrl})` }}
+                />
+                <span
+                  className="jg-bg jg-bgM"
+                  style={{ backgroundImage: `url(${bgUrlMobile})` }}
                 />
               </div>
             </div>

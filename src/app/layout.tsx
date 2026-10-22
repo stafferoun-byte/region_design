@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
-import { KoraPageEffects } from "@/components/kora-page-effects";
+import { PageTransition } from "@/components/page-transition";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
@@ -28,6 +28,18 @@ export const metadata: Metadata = {
     url: "https://erounpartners.com",
     locale: "ko_KR",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 800,
+        height: 400,
+        alt: "법무법인 이로운 파트너스",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.png"],
   },
   verification: {
     other: {
@@ -36,19 +48,19 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon-16x16.png?v=3", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png?v=3", sizes: "32x32", type: "image/png" },
-      { url: "/favicon.ico?v=3", sizes: "any", type: "image/x-icon" },
-      { url: "/favicon.png?v=3", sizes: "512x512", type: "image/png" },
+      { url: "/favicon-16x16.png?v=4", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png?v=4", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico?v=4", sizes: "any", type: "image/x-icon" },
+      { url: "/favicon.png?v=4", sizes: "512x512", type: "image/png" },
     ],
     apple: [
       {
-        url: "/apple-touch-icon.png?v=3",
+        url: "/apple-touch-icon.png?v=4",
         sizes: "180x180",
         type: "image/png",
       },
     ],
-    shortcut: [{ url: "/favicon.ico?v=3", type: "image/x-icon" }],
+    shortcut: [{ url: "/favicon.ico?v=4", type: "image/x-icon" }],
   },
 };
 
@@ -64,20 +76,20 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" href="/favicon.ico?v=4" sizes="any" />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href="/favicon-32x32.png?v=3"
+          href="/favicon-32x32.png?v=4"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href="/favicon-16x16.png?v=3"
+          href="/favicon-16x16.png?v=4"
         />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
         <link rel="stylesheet" href="/fonts/wanted-sans/WantedSansVariable.min.css" />
         <link
           rel="stylesheet"
@@ -98,7 +110,7 @@ export default function RootLayout({
           }}
         />
         <SmoothScroll>
-          <KoraPageEffects>{children}</KoraPageEffects>
+          <PageTransition>{children}</PageTransition>
         </SmoothScroll>
       </body>
     </html>

@@ -22,7 +22,6 @@ const ibmSans = IBM_Plex_Sans_KR({
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
-/** Kora tokens from framer CSS */
 const GREEN = "#5DC39B";
 const HOVER_CREAM = "#FFFFF5";
 const PLUS_BG = "#F7F7ED";
@@ -144,7 +143,6 @@ export const PRACTICE_TEAM: readonly TeamItem[] = [
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-/** Kora team row appear — __framer__enter PC + spring IC, threshold 0.5 */
 const ROW_ENTER = { opacity: 0, y: 10, scale: 0.9 } as const;
 const ROW_VISIBLE = { opacity: 1, y: 0, scale: 1 } as const;
 const rowEnterTransition = (index: number) => ({
@@ -442,7 +440,7 @@ function TeamRow({
         )}
 
         {/*
-          Plus — Kora Team Member:
+          Plus button:
           outer spin 0→360 on hover (spring bounce .29 / duration .56);
           circle fills green + strokes go white; open → 45° (×).
         */}
@@ -504,9 +502,6 @@ function TeamRow({
   );
 }
 
-/** Kora Bottom hiring row — breakpoints match Framer:
- * ≥1200 desktop · 810–1199 tablet · <810 mobile
- */
 const HIRE_LINE_1 = ["한", "사람의"] as const;
 const HIRE_LINE_2 = ["소중한", "삶이", "걸린", "일로."] as const;
 

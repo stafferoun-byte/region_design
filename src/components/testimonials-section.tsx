@@ -10,14 +10,12 @@ import { useRef, useState } from "react";
 import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
 
-/** Kora Appear spring — bounce 0.29, duration 0.46 */
-const koraSpring = {
+const appearSpring = {
   type: "spring" as const,
   bounce: 0.29,
   duration: 0.46,
 };
 
-/** Match site stack; Kora uses Manrope — layout/tokens stay 1:1 */
 const FONT =
   '"Wanted Sans Variable", "Wanted Sans", "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
@@ -27,7 +25,6 @@ const ibmSans = IBM_Plex_Sans_KR({
   display: "swap",
 });
 
-/* Exact Kora design tokens */
 const ACCENT = "#5DC39B";
 const BLACK = "#242424";
 const CREAM = "#F5F5E9";
@@ -271,7 +268,6 @@ function AccordionCard({
 
 export function TestimonialsSection() {
   const reduceMotion = useReducedMotion();
-  /** Default open: first card (Kora SSR "1 Open") */
   const [openIndex, setOpenIndex] = useState(0);
 
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -285,7 +281,7 @@ export function TestimonialsSection() {
 
   const show = inView || !!reduceMotion;
   const showCards = cardsInView || !!reduceMotion;
-  const appear = reduceMotion ? { duration: 0 } : koraSpring;
+  const appear = reduceMotion ? { duration: 0 } : appearSpring;
 
   const heroCardHidden = {
     opacity: 0,
@@ -552,7 +548,7 @@ export function TestimonialsSection() {
               transition={
                 reduceMotion
                   ? { duration: 0 }
-                  : { ...koraSpring, delay: i * 0.08 }
+                  : { ...appearSpring, delay: i * 0.08 }
               }
             >
               <AccordionCard

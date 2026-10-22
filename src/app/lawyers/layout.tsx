@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 const ibmSans = IBM_Plex_Sans_KR({
   subsets: ["latin"],
-  weight: "700",
+  weight: ["500", "700"],
   display: "swap",
   variable: "--font-ibm-sans",
 });

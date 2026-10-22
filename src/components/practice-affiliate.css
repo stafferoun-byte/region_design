@@ -1,16 +1,15 @@
-/* JoongAng About affiliate — https://www.joonganggroup.com/about/#affiliate */
 
 @font-face {
-  font-family: "YoonGothicPro780";
-  src: url("/fonts/joongang/YoonGothicPro780.woff") format("woff");
+  font-family: "Text KR Display";
+  src: url("/fonts/text/text-kr-display.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "NeueHaasGroteskTextW02";
-  src: url("/fonts/joongang/NeueHaasGroteskTextW02Bold.woff") format("woff");
+  font-family: "Text EN";
+  src: url("/fonts/text/text-en-bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -21,7 +20,7 @@
   padding: 263px 65px 0;
   background: #fff;
   color: #000;
-  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text KR", "Text EN", sans-serif;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
 }
@@ -54,7 +53,7 @@
   position: absolute;
   top: 30px;
   left: 0;
-  font-family: "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text EN", sans-serif;
   font-size: 24px;
   font-weight: 700;
   line-height: 1;
@@ -99,7 +98,7 @@
   display: inline-block;
   margin-top: 13px;
   color: #000;
-  font-family: "YoonGothicPro780", sans-serif;
+  font-family: "Text KR Display", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
@@ -126,7 +125,7 @@
 a.jg-aff-link,
 button.jg-aff-link {
   padding-right: 17px;
-  background: url("/images/joongang/about/bg_about_link.svg") no-repeat right center;
+  background: url("/images/ui/about/bg_about_link.svg") no-repeat right center;
   background-size: 7px;
 }
 

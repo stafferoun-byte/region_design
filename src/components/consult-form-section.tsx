@@ -21,8 +21,6 @@ import { SectionTitleReveal, WordReveal } from "@/components/section-title-revea
 import { IBM_Plex_Sans_KR } from "next/font/google";
 
 /**
- * Consultation CTA + form — layout/tokens from Kora CTA
- * @see https://kora.framer.media/
  */
 
 const FONT =
@@ -34,7 +32,6 @@ const ibmSans = IBM_Plex_Sans_KR({
   display: "swap",
 });
 
-/** Kora: CTA box shrink-on-exit is desktop-only */
 function useIsDesktop(query = "(min-width: 768px)") {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
@@ -56,7 +53,6 @@ const GLASS = "rgba(227, 227, 227, 0.45)";
 const INPUT_BG = "rgba(255, 255, 255, 0.35)";
 const CHIP_BG = "rgba(255, 255, 255, 0.35)";
 const RING = "rgba(255, 255, 255, 0.75)";
-/** Checkbox selected: cream circle + muted check (Kora) */
 const CHECK_ON = "#FAFAF7";
 const CHECK_OFF = "rgba(255, 255, 255, 0.35)";
 
@@ -87,7 +83,6 @@ const CONSULT_STATS = [
   { value: "98%", label: "의뢰인 만족도", end: 98, suffix: "%", format: "plain" as const },
 ] as const;
 
-/** Mobile-only: Kora CTA stats — count-up + fade/slide when scrolled into view */
 function MobileConsultStat({
   end,
   suffix,
@@ -271,11 +266,9 @@ export function ConsultFormSection({
   const inView = useInView(sectionRef, { once: true, amount: 0.15 });
   /** Mobile stats only — own trigger so count-up fires when stats enter view */
   const statsInView = useInView(statsRef, { once: true, amount: 0.45 });
-  /** Shrink as footer rises — desktop only (Kora mobile has none) */
   const enableBoxScale = isDesktop === true && reduceMotion !== true;
 
   /**
-   * Kora CTA → footer: as the box bottom leaves the viewport,
    * Outer Container eases 1 → ~0.85 while the footer circle rises.
    */
   const { scrollYProgress } = useScroll({
@@ -299,7 +292,8 @@ export function ConsultFormSection({
   const [areas, setAreas] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [company, setCompany] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const toggleArea = (area: string) => {
     setAreas((prev) =>
@@ -307,10 +301,27 @@ export function ConsultFormSection({
     );
   };
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!agreed) return;
-    setSubmitted(true);
+    if (!agreed || status === "sending") return;
+    setStatus("sending");
+    try {
+      const response = await fetch("/api/consult", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          contact,
+          areas,
+          message,
+          company,
+          page: window.location.pathname,
+        }),
+      });
+      setStatus(response.ok ? "sent" : "error");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -595,6 +606,17 @@ export function ConsultFormSection({
                   />
                 </label>
 
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  className="pointer-events-none absolute h-0 w-0 opacity-0"
+                  aria-hidden
+                />
+
                 {/* Terms */}
                 <label className="flex cursor-pointer items-start gap-2.5">
                   <input
@@ -622,8 +644,10 @@ export function ConsultFormSection({
                   className="text-[13px] leading-[1.4] font-semibold tracking-[-0.025em] sm:whitespace-nowrap"
                   style={{ color: INK }}
                 >
-                  {submitted ? (
+                  {status === "sent" ? (
                     <>접수되었습니다. 빠르게 연락드리겠습니다.</>
+                  ) : status === "error" ? (
+                    <>전송되지 않았습니다. 잠시 후 다시 시도해 주세요.</>
                   ) : (
                     <>
                       <span style={{ color: MUTED }}>보통 </span>
@@ -638,9 +662,10 @@ export function ConsultFormSection({
 
                 <button
                   type="submit"
-                  className="group inline-flex shrink-0 items-center gap-[25px] self-end rounded-full bg-[#242424] px-[15px] py-[10px] text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] text-[#FFFFFA] transition-colors hover:bg-black sm:self-auto md:gap-3 md:px-5 md:py-3"
+                  disabled={status === "sending" || status === "sent"}
+                  className="group inline-flex shrink-0 items-center gap-[25px] self-end rounded-full bg-[#242424] px-[15px] py-[10px] text-[14px] leading-[1.5] font-semibold tracking-[-0.03em] text-[#FFFFFA] transition-colors hover:bg-black disabled:cursor-default sm:self-auto md:gap-3 md:px-5 md:py-3"
                 >
-                  {submitted ? "신청 완료" : submitLabel}
+                  {status === "sent" ? "신청 완료" : status === "sending" ? "전송 중" : submitLabel}
                   <span
                     aria-hidden
                     className="size-[10px] rounded-full bg-[#F7F7ED] transition-transform group-hover:scale-110"
@@ -652,7 +677,6 @@ export function ConsultFormSection({
 
           {/* Stats — under the form column */}
           <div className="mx-auto flex w-full max-w-[1480px] justify-end pt-12 md:pt-14">
-            {/* Mobile only — Kora-style scroll count-up + reveal */}
             <div
               ref={statsRef}
               className="flex w-full flex-col gap-12 md:hidden"

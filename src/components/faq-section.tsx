@@ -12,8 +12,6 @@ import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 /**
- * FAQ — layout/tokens from Kora FAQ
- * @see https://kora.framer.media/
  */
 
 const FONT =
@@ -30,7 +28,6 @@ const CREAM = "#F7F7ED";
 const CARD = "#FFFFFA";
 const INK = "#242424";
 const MUTED = "#5C5C5C";
-/** Match contact island width (Kora floating cream panels) */
 const PANEL_MAX = "560px";
 
 const FAQ_TITLE_LINE_1 = [
@@ -254,7 +251,6 @@ const avatarPopVariants = {
   },
 };
 
-/** Kora FAQ Plus: cream 20×20 circle → rotate 180° + V slides out (clipped) → minus */
 function PlusMinus({ open }: { open: boolean }) {
   const icon = "#292929";
   const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
@@ -449,7 +445,6 @@ export function FaqSection({
         />
 
         <div className="flex w-full flex-col items-center gap-3 md:gap-4">
-          {/* Kora cream panel — same width as contact island, ~10px inset */}
           <motion.div
             className="flex w-full flex-col items-center overflow-hidden rounded-[40px] p-[10px]"
             style={{ backgroundColor: CREAM, maxWidth: PANEL_MAX }}
@@ -558,7 +553,6 @@ export function FaqSection({
             </div>
           </motion.div>
 
-          {/* Kora: separate floating contact island — same width */}
           <motion.div
             ref={contactRef}
             className="flex w-full flex-col items-center gap-4 rounded-[40px] px-5 py-5 md:flex-row md:justify-start md:gap-8 md:px-6 md:py-6 md:pl-6 md:pr-8"
@@ -627,7 +621,6 @@ export function FaqSection({
                 className="group inline-flex cursor-pointer items-center gap-2.5 text-left"
                 aria-label={copied ? "번호 복사됨" : `${phone} 복사하기`}
               >
-                {/* Same Kora copy chip as footer */}
                 <span className="relative flex size-[30px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5DC39B] transition-colors duration-200 group-hover:bg-black">
                   <svg
                     viewBox="0 0 48 43"

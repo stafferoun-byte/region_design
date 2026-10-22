@@ -18,6 +18,20 @@ export type InsightArticle = {
   href: string;
 };
 
+/** greeda-style path: 제목 띄어쓰기와 문장부호를 하이픈으로 나눈다. */
+export function columnSlug(title: string) {
+  return title
+    .trim()
+    .replace(/[?？!！.,，、·:："“”"'‘’()[\]{}]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export function columnPath(title: string) {
+  return `/columns/${columnSlug(title)}`;
+}
+
 export const INSIGHT_CATEGORY_LABEL: Record<InsightCategory, string> = {
   inheritance: "상속",
   criminal: "형사",
@@ -26,7 +40,7 @@ export const INSIGHT_CATEGORY_LABEL: Record<InsightCategory, string> = {
   other: "기타",
 };
 
-export const INSIGHT_ARTICLES: InsightArticle[] = [
+const INSIGHT_ARTICLE_SOURCE: InsightArticle[] = [
   {
     id: "1",
     category: "criminal",
@@ -94,7 +108,32 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     image: "/images/insights/case-files.png",
     href: "/columns/6",
   },
+  {
+    id: "7",
+    category: "inheritance",
+    categoryLabel: INSIGHT_CATEGORY_LABEL.inheritance,
+    date: "3. March 2026",
+    datetime: "2026-03-03",
+    author: "",
+    title: "생전에 받은 재산도 상속할 때 포함될까요?",
+    image: "/images/insights/family-law.png",
+    href: "/columns/7",
+  },
 ];
+
+export const INSIGHT_ARTICLES: InsightArticle[] = INSIGHT_ARTICLE_SOURCE.map(
+  (article) => ({
+    ...article,
+    href: columnPath(article.title),
+  }),
+);
+
+export function findColumnArticle(param: string) {
+  const key = decodeURIComponent(param);
+  return INSIGHT_ARTICLES.find(
+    (article) => columnSlug(article.title) === key || article.id === key,
+  );
+}
 
 export const INSIGHT_FILTERS = [
   { id: "all" as const, label: "전체칼럼", href: "/columns" },

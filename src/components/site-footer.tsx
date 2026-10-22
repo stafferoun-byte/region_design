@@ -12,7 +12,14 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { SITE_NAV } from "@/lib/site-nav";
 
-/** Kora: footer circle bloom + card scale are desktop-only */
+const FOOTER_HREF: Record<string, string> = {
+  "이로운 파트너스": "/about",
+  업무분야: "/practice/inheritance",
+  성공사례: "/cases",
+  "이로운 칼럼": "/columns",
+  오시는길: "/locations",
+};
+
 function useIsDesktop(query = "(min-width: 768px)") {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
@@ -30,7 +37,6 @@ function useIsDesktop(query = "(min-width: 768px)") {
 const FONT_WANTED =
   '"Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
-/** Exact paths from kora.framer.media social icon masks (viewBox 0 0 40 40) */
 const SOCIAL_LINKS = [
   {
     label: "네이버 블로그",
@@ -46,7 +52,6 @@ const SOCIAL_LINKS = [
     label: "Facebook",
     href: "https://www.facebook.com",
     path: "M 13.714 23 L 18.612 23 L 20.571 15 L 13.714 15 L 13.714 11 C 13.714 8.94 13.714 7 17.633 7 L 20.571 7 L 20.571 0.28 C 19.933 0.194 17.521 0 14.974 0 C 9.655 0 5.878 3.314 5.878 9.4 L 5.878 15 L 0 15 L 0 23 L 5.878 23 L 5.878 40 L 13.714 40 Z",
-    // Kora FB glyph sits left in the 40×40 viewBox — nudge to optical center
     nudgeX: 9.7,
   },
 ] as const;
@@ -95,7 +100,6 @@ function SocialButton({
       aria-label={label}
       className="group relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#FFFFFA] p-2 md:size-[52px] md:p-2.5"
     >
-      {/* Kora Hover BG — green circle expands from center */}
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 scale-0 rounded-full bg-[#5DC39B] transition-transform duration-300 ease-out group-hover:scale-100"
@@ -128,7 +132,6 @@ function CopyPhoneRow({ phone }: { phone: string }) {
       className="group inline-flex items-center gap-2.5 text-left"
       aria-label={copied ? "번호 복사됨" : "번호 복사"}
     >
-      {/* Exact Kora Framer copy icon (viewBox 0 0 48 43) */}
       <span className="relative flex size-[30px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5DC39B] transition-colors duration-200 group-hover:bg-black">
         <svg
           viewBox="0 0 48 43"
@@ -184,7 +187,6 @@ export function SiteFooter() {
   const footerRef = useRef<HTMLElement | null>(null);
   const reduceMotion = useReducedMotion();
   const isDesktop = useIsDesktop();
-  /** Circle bloom + card scale: desktop only (Kora mobile has none) */
   const enableScrollFx = isDesktop === true && reduceMotion !== true;
   /** Wordmark grow: mobile + desktop */
   const enableWordmarkFx = reduceMotion !== true;
@@ -194,7 +196,6 @@ export function SiteFooter() {
     offset: ["start end", "end end"],
   });
 
-  // Smooth the scroll progress so scale eases like Kora (not 1:1 jumpy)
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: enableScrollFx || enableWordmarkFx ? 55 : 500,
     damping: enableScrollFx || enableWordmarkFx ? 26 : 40,
@@ -209,7 +210,6 @@ export function SiteFooter() {
     enableScrollFx ? [0, 1.1, 3.2, 7, 14] : [14, 14, 14, 14, 14],
   );
 
-  // Outer Container — desktop only (Kora mobile has no shrink/grow)
   const cardScale = useTransform(
     smoothProgress,
     [0, 0.35, 0.65, 0.9, 1],
@@ -231,7 +231,7 @@ export function SiteFooter() {
     >
       {/*
         Desktop only: blooming mint circle.
-        Mobile: no circle, no mint frame — cream card sits on page bg (Kora).
+        Mobile: no circle, no mint frame — cream card sits on the page background.
       */}
       <div
         aria-hidden
@@ -411,9 +411,9 @@ export function SiteFooter() {
                   </p>
                   <ul className="mt-3 flex flex-col gap-0.5">
                     {SITE_NAV.map((link) => (
-                      <li key={link.href}>
+                      <li key={link.label}>
                         <Link
-                          href={link.href}
+                          href={FOOTER_HREF[link.label] ?? link.href}
                           className="group inline-flex items-center gap-2.5 rounded-full py-1.5 pr-4 pl-2.5 -ml-2.5 text-[17px] font-semibold tracking-[-0.02em] text-[#242424] transition-colors duration-200 hover:bg-[#5DC39B] hover:text-[#F5F5E9] md:text-[22px] md:font-bold"
                           style={{ fontFamily: FONT_WANTED }}
                         >
@@ -427,7 +427,7 @@ export function SiteFooter() {
               </div>
 
               {/*
-                Bottom — Kora FitText:
+                Bottom wordmark:
                 - Full size in layout, scales 0.1→1 with origin bottom-left
                   so the wordmark stays glued to the cream card floor while growing
               */}

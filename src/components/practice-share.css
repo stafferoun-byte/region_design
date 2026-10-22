@@ -1,24 +1,23 @@
-/* JoongAng Share key — https://www.joonganggroup.com/share/ */
 
 @font-face {
-  font-family: "YoonGothicPro770";
-  src: url("/fonts/joongang/YoonGothicPro770.woff") format("woff");
+  font-family: "Text KR";
+  src: url("/fonts/text/text-kr.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "YoonGothicPro770";
-  src: url("/fonts/joongang/YoonGothicPro770.woff") format("woff");
+  font-family: "Text KR";
+  src: url("/fonts/text/text-kr.woff") format("woff");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "NeueHaasGroteskTextW02";
-  src: url("/fonts/joongang/NeueHaasGroteskTextW02Medium.woff") format("woff");
+  font-family: "Text EN";
+  src: url("/fonts/text/text-en.woff") format("woff");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -29,7 +28,7 @@
   margin-top: -100px;
   background: #fff;
   color: #000;
-  font-family: "YoonGothicPro770", "NeueHaasGroteskTextW02", sans-serif;
+  font-family: "Text KR", "Text EN", sans-serif;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
 }

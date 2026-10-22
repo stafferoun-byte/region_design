@@ -21,7 +21,6 @@ import { WinningCases } from "@/components/winning-cases";
 import { WishNetworkSection } from "@/components/wish-network-section";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-/** Desktop only — hero sticky zoom scrub (Kora mobile scrolls normally) */
 function useIsDesktop(query = "(min-width: 1024px)") {
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -382,7 +381,6 @@ export default function Home() {
   const heroTransitionRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
   const isDesktop = useIsDesktop();
-  /** Kora: rounded inset → full-bleed on scroll (mobile + desktop) */
   const enableHeroScrub = !reduceMotion;
 
   const framePad = useMotionValue(24);
@@ -422,7 +420,6 @@ export default function Home() {
 
       const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
 
-      // Expand through first ~55% of the sticky track (Kora-style)
       const t = Math.min(1, p / 0.55);
       const s = t * t * (3 - 2 * t);
       framePad.set(restPad * (1 - s));
@@ -547,7 +544,7 @@ export default function Home() {
       <HeroNav />
 
       {/*
-        Kora sequence: rounded inset → full-bleed → (scroll) blur headline → cases.
+        Sequence: rounded inset → full-bleed → (scroll) blur headline → cases.
         Sticky scrub track on both mobile and desktop.
       */}
       <div

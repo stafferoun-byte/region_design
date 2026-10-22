@@ -21,7 +21,6 @@ type HeroNavProps = {
 const linkClass =
   "relative z-10 inline-flex min-w-[6.5rem] cursor-pointer items-center justify-center rounded-full px-3 py-2 text-center transition-colors";
 
-/** Kora nav pill — spring on the selector in script_main (bounce 0.29, duration 0.56). */
 const PILL_SPRING = { type: "spring" as const, duration: 0.56, bounce: 0.29 };
 
 type PillBox = { x: number; y: number; w: number; h: number };
@@ -106,8 +105,7 @@ export function HeroNav({
       className={
         isSticky
           ? `${fixedBar ? "fixed inset-x-0" : "sticky"} top-0 z-50 w-full bg-transparent px-5 pt-5 pb-3 md:px-10 xl:px-12`
-          : /* Kora: floating pill stays on screen while scrolling */
-            "fixed inset-x-0 top-0 z-50 px-[calc(1.25rem+4px)] pt-[calc(1.25rem+8px)] sm:px-[calc(1.25rem+6px)] md:px-[calc(1.25rem+16px)] md:pt-[calc(1.25rem+16px)]"
+          : "fixed inset-x-0 top-0 z-50 px-[calc(1.25rem+4px)] pt-[calc(1.25rem+8px)] sm:px-[calc(1.25rem+6px)] md:px-[calc(1.25rem+16px)] md:pt-[calc(1.25rem+16px)]"
       }
     >
       <div
@@ -131,7 +129,7 @@ export function HeroNav({
               alt="법무법인 이로운 파트너스"
               width={2182}
               height={628}
-              className="h-7 w-auto shrink-0 object-contain"
+              className="h-[30px] w-auto shrink-0 object-contain md:h-7"
               style={{ width: "auto" }}
               priority
             />

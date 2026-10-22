@@ -41,8 +41,8 @@ type WinningCase = {
 const CASES: WinningCase[] = [
   {
     id: "1",
-    category: "상속 · 유류분",
-    title: "유류분 5,800만원\n청구 인용",
+    category: "상속 · 재산분할",
+    title: "상속재산분할\n17억 규모 전액 방어",
     lawyer: "이로운 상속전문센터",
     avatar: "/images/logo.black.png",
     image: "/images/practice/inheritance.png",

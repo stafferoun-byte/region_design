@@ -11,8 +11,6 @@ import { useEffect, useRef, useState } from "react";
 import { SectionTitleReveal } from "@/components/section-title-reveal";
 
 /**
- * Practice process — Kora home “Phase” accordion
- * @see https://kora.framer.media/#top
  */
 
 const FONT =

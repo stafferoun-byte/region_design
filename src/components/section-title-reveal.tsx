@@ -137,7 +137,7 @@ export function InViewSectionTitle({
   lines: readonly (readonly (string | { text: string; color?: string; glue?: boolean })[])[];
   className?: string;
   ariaLabel?: string;
-  as?: "h2" | "span";
+  as?: "h2" | "p" | "span";
 }) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, {

@@ -1,8 +1,32 @@
 import type { NextConfig } from "next";
+import { INSIGHT_ARTICLES, columnSlug } from "./src/data/insights";
 
 const nextConfig: NextConfig = {
   async redirects() {
     return [
+      { source: "/lawyers/lee-chang-jae", destination: "/lawyers/lee", permanent: true },
+      { source: "/lawyers/kim-nam-yeol", destination: "/lawyers/kim", permanent: true },
+      { source: "/lawyers/kang-nuri", destination: "/lawyers/kang", permanent: true },
+      {
+        source: "/partners/attorneys/lee-chang-jae",
+        destination: "/lawyers/lee",
+        permanent: true,
+      },
+      {
+        source: "/partners/attorneys/kim-nam-yeol",
+        destination: "/lawyers/kim",
+        permanent: true,
+      },
+      {
+        source: "/partners/attorneys/kang-nuri",
+        destination: "/lawyers/kang",
+        permanent: true,
+      },
+      ...INSIGHT_ARTICLES.map((article) => ({
+        source: `/columns/${article.id}`,
+        destination: `/columns/${columnSlug(article.title)}`,
+        permanent: true,
+      })),
       {
         source: "/partners/attorneys/:path*",
         destination: "/lawyers/:path*",
@@ -34,7 +58,6 @@ const nextConfig: NextConfig = {
     ];
   },
   experimental: {
-    // Enables React/Next View Transitions — used for Kora-style page circle mask
     viewTransition: true,
   },
   async headers() {

@@ -6,10 +6,9 @@ import { useRef, useState } from "react";
 import { IBM_Plex_Sans_KR } from "next/font/google";
 import { SectionTitleReveal, WordReveal } from "@/components/section-title-reveal";
 import { PillCtaButton } from "@/components/pill-cta-button";
+import { INSIGHT_ARTICLES } from "@/data/insights";
 
 /**
- * Insights — layout/tokens from Kora Insights
- * @see https://kora.framer.media/
  */
 
 const FONT =
@@ -63,7 +62,7 @@ type Insight = {
 const INSIGHTS: Insight[] = [
   {
     id: "2",
-    href: "#",
+    href: INSIGHT_ARTICLES.find((article) => article.id === "7")!.href,
     category: "상속",
     date: "2026. 3. 3.",
     datetime: "2026-03-03",
@@ -73,7 +72,7 @@ const INSIGHTS: Insight[] = [
   },
   {
     id: "1",
-    href: "#",
+    href: INSIGHT_ARTICLES.find((article) => article.id === "1")!.href,
     category: "형사 절차",
     date: "2026. 3. 4.",
     datetime: "2026-03-04",
@@ -147,7 +146,6 @@ function InsightCard({
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
     >
-      {/* Image — Kora: scale up + blur(5px) on hover */}
       <motion.div
         className="absolute inset-0"
         initial={false}
@@ -182,7 +180,6 @@ function InsightCard({
         }}
       />
 
-      {/* Full black overlay — fades in on hover (Kora) */}
       <motion.span
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1]"

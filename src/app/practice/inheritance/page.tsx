@@ -21,8 +21,6 @@ export const metadata: Metadata = {
 };
 
 /**
- * Practice page — JoongAng Share key at the top.
- * @see https://www.joonganggroup.com/share/
  * HeroNav + footer via SitePageFrame.
  */
 export default function PracticePage() {

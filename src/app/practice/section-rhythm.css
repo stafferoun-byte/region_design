@@ -1,5 +1,5 @@
 /* Practice pages. Equal space from one section's last line to the next title.
-   Mobile keeps each section's own JoongAng spacing. */
+   Mobile keeps each section's own spacing. */
 
 @media (min-width: 768px) {
   .practice-rhythm .jg-share-copy {

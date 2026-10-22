@@ -6,7 +6,7 @@ import { IBM_Plex_Sans_KR } from "next/font/google";
 
 const ibmSans = IBM_Plex_Sans_KR({
   subsets: ["latin"],
-  weight: "700",
+  weight: ["600", "700"],
   display: "swap",
   variable: "--font-ibm-sans",
 });
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function PartnersPage() {
   return (
-    <div className={ibmSans.variable}>
+    <div className={`${ibmSans.variable} jg-aboutPage`}>
       <SitePageFrame tone="none" navFixed>
         <PartnerIntroScroll />
         <PartnerAboutSections />
