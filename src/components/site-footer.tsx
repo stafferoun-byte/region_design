@@ -266,7 +266,7 @@ export function SiteFooter() {
                 <div className="order-1 lg:order-none lg:col-start-1 lg:row-start-1">
                   <Link href="/" aria-label="홈" className="inline-flex w-fit">
                     <Image
-                      src="/images/logo.black.png"
+                      src="/images/logo-black.png"
                       alt="법무법인 이로운 파트너스"
                       width={2182}
                       height={628}

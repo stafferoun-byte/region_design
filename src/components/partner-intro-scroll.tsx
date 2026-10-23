@@ -8,6 +8,7 @@
  */
 
 import "./partner-intro.css";
+import Link from "next/link";
 import {
   useEffect,
   useLayoutEffect,
@@ -27,7 +28,7 @@ const INTRO_LINES = [
 ] as const;
 
 /** Team photo file is 1024×769. Expanded frame uses this so the bottom stays intact. */
-const PHOTO_RATIO = 2884 / 3840;
+const PHOTO_RATIO = 575 / 1024;
 
 /** One extra viewport of rest on the expanded frame, then the next section. */
 const HOLD_VH = 1;
@@ -123,7 +124,7 @@ export function PartnerIntroScroll() {
 
   /**
    * default-ko.js resize.mainResizePrev:
-   * thumb height = innerWidth * 1380/1440,
+   * thumb height matches the office photo (1024×575),
    * inner height = beforeBox + that height * 0.122,
    * paddingTop pins the stack to the viewport bottom.
    */
@@ -156,7 +157,7 @@ export function PartnerIntroScroll() {
       };
     }
 
-    const frameH = w * (1380 / 1440);
+    const frameH = w * PHOTO_RATIO;
     thumb.style.height = `${frameH}px`;
 
     inner.style.height = `${outerHeight(before) + frameH * 0.122 + 1}px`;
@@ -294,6 +295,47 @@ export function PartnerIntroScroll() {
   }, []);
 
   useEffect(() => {
+    const lenis = () =>
+      (
+        window as unknown as {
+          __lenis?: {
+            scrollTo: (
+              v: number,
+              opts?: { immediate?: boolean; force?: boolean },
+            ) => void;
+          };
+        }
+      ).__lenis;
+
+    let snapping = false;
+    const snapTop = () => {
+      if (snapping) return;
+      const top = trackRef.current?.getBoundingClientRect().top ?? 0;
+      if (window.scrollY <= 1 && top >= -1) return;
+      snapping = true;
+      lenis()?.scrollTo(0, { immediate: true, force: true });
+      window.scrollTo(0, 0);
+      snapping = false;
+    };
+
+    // Lenis keeps the previous page's scroll in flight across the route
+    // change. That leftover position looks like a scroll and opens the
+    // expanded frame before the visitor has moved. Rest at the intro first.
+    snapTop();
+    let armed = false;
+    let settleTimer: number | null = null;
+    const armIfResting = () => {
+      settleTimer = null;
+      const top = trackRef.current?.getBoundingClientRect().top ?? 0;
+      if (window.scrollY <= 1 && top >= -1) {
+        armed = true;
+        return;
+      }
+      snapTop();
+      settleTimer = window.setTimeout(armIfResting, 80);
+    };
+    settleTimer = window.setTimeout(armIfResting, 80);
+
     const onScroll = () => {
       const el = trackRef.current;
       if (!el) return;
@@ -304,6 +346,10 @@ export function PartnerIntroScroll() {
       if (onFirst !== utilOnRef.current) {
         utilOnRef.current = onFirst;
         setUtilOn(onFirst);
+      }
+      if (!armed) {
+        if (window.scrollY > 1 || top < -1) snapTop();
+        return;
       }
       const locked = performance.now() < lockUntilRef.current;
       if (locked) return;
@@ -402,6 +448,7 @@ export function PartnerIntroScroll() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
     return () => {
+      if (settleTimer) window.clearTimeout(settleTimer);
       if (startTimerRef.current) window.clearTimeout(startTimerRef.current);
       if (releaseTimerRef.current) window.clearTimeout(releaseTimerRef.current);
       (
@@ -415,8 +462,8 @@ export function PartnerIntroScroll() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const bgUrl = "/images/partners/eroun-team.png?v=4";
-  const bgUrlMobile = "/images/partners/eroun-team-mobile.jpg?v=1";
+  const bgUrl = "/images/partners/eroun-office.jpg?v=4";
+  const bgUrlMobile = "/images/partners/eroun-office-mobile.jpg?v=1";
 
   return (
     <div ref={trackRef} className="jg-track" style={{ height: trackHeight }}>
@@ -519,6 +566,11 @@ export function PartnerIntroScroll() {
                         <span>{line}</span>
                       </div>
                     ))}
+                  </div>
+                  <div className="jg-btnHover jg-txtLine">
+                    <Link href="/lawyers" className="jg-btnView">
+                      <span>이로운 변호사</span>
+                    </Link>
                   </div>
                 </div>
               </div>

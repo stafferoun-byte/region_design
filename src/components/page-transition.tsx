@@ -190,8 +190,15 @@ export function PageTransition({ children }: { children: ReactNode }) {
 
       try {
         (
-          window as unknown as { __lenis?: { scrollTo: (y: number) => void } }
-        ).__lenis?.scrollTo(0);
+          window as unknown as {
+            __lenis?: {
+              scrollTo: (
+                y: number,
+                opts?: { immediate?: boolean; force?: boolean },
+              ) => void;
+            };
+          }
+        ).__lenis?.scrollTo(0, { immediate: true, force: true });
       } catch {
         /* ignore */
       }

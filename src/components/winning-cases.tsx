@@ -44,7 +44,7 @@ const CASES: WinningCase[] = [
     category: "상속 · 재산분할",
     title: "상속재산분할\n17억 규모 전액 방어",
     lawyer: "이로운 상속전문센터",
-    avatar: "/images/logo.black.png",
+    avatar: "/images/logo-black.png",
     image: "/images/practice/inheritance.png",
   },
   {
@@ -52,7 +52,7 @@ const CASES: WinningCase[] = [
     category: "부동산 · 임대차",
     title: "보증금 4억 4천만원\n반환",
     lawyer: "이로운 부동산전문센터",
-    avatar: "/images/logo.black.png",
+    avatar: "/images/logo-black.png",
     image: "/images/cases/deposit.jpg",
   },
   {
@@ -60,7 +60,7 @@ const CASES: WinningCase[] = [
     category: "형사 · 성범죄",
     title: "무혐의 종결\n수사 종결",
     lawyer: "이로운 형사전문센터",
-    avatar: "/images/logo.black.png",
+    avatar: "/images/logo-black.png",
     image: "/images/cases/no-charge.jpg?v=3",
   },
   {
@@ -68,7 +68,7 @@ const CASES: WinningCase[] = [
     category: "민사 · 손해배상",
     title: "청구액 전액\n인용 판결",
     lawyer: "이로운 민사전문센터",
-    avatar: "/images/logo.black.png",
+    avatar: "/images/logo-black.png",
     image: "/images/cases/judgment.jpg",
   },
   {
@@ -76,7 +76,7 @@ const CASES: WinningCase[] = [
     category: "가정 · 이혼",
     title: "양육권 · 재산분할\n유리한 조정",
     lawyer: "이로운 이혼전문센터",
-    avatar: "/images/logo.black.png",
+    avatar: "/images/logo-black.png",
     image: "/images/cases/custody.jpg",
   },
   {
@@ -84,7 +84,7 @@ const CASES: WinningCase[] = [
     category: "보이스피싱",
     title: "피해금 회수\n절차 성공",
     lawyer: "이로운 형사전문센터",
-    avatar: "/images/logo.black.png",
+    avatar: "/images/logo-black.png",
     image: "/images/cases/recovery.jpg",
   },
 ];
@@ -324,7 +324,7 @@ function LawyerPopout() {
       <div className="relative flex h-[320px] w-full items-end justify-center overflow-visible md:h-[272px] min-[1072px]:h-[372px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/lawyer-popout01.png"
+          src="/images/cases/lawyer-popout.png"
           alt="이창재 대표변호사"
           className="h-full w-auto max-w-full origin-bottom object-contain object-bottom"
           decoding="async"

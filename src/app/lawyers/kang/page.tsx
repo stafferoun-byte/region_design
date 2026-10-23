@@ -12,10 +12,10 @@ export default function KangNuriPage() {
   return (
     <SitePageFrame tone="none">
       <AttorneysEthics
-        imageSrc="/images/attorneys/kang-nuri-profile.png"
-        mobileImageSrc="/images/attorneys/kang-nuri-mobile.png"
+        imageSrc="/images/attorneys/kang-nuri.jpg"
+        mobileImageSrc="/images/attorneys/kang-nuri-mobile.png?v=3"
         imageAlt="강누리 변호사"
-        aspectRatio="1632 / 964"
+        aspectRatio="3000 / 1733"
         headline="강누리 파트너 변호사"
         paragraphs={KANG_NURI_BIO}
       />

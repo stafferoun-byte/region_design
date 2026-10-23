@@ -569,7 +569,7 @@ function HiringBlock({ reduceMotion }: { reduceMotion: boolean | null }) {
           }}
         >
           <Image
-            src="/images/hiring.png?v=4"
+            src="/images/team/hiring.png"
             alt=""
             fill
             quality={100}

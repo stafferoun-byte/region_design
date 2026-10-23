@@ -125,7 +125,7 @@ export function HeroNav({
         >
           <Link href="/" className="shrink-0" aria-label="법무법인 이로운 파트너스 홈">
             <Image
-              src="/images/logo.black.png"
+              src="/images/logo-black.png"
               alt="법무법인 이로운 파트너스"
               width={2182}
               height={628}

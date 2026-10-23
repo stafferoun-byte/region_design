@@ -56,7 +56,7 @@ const RING = "rgba(255, 255, 255, 0.75)";
 const CHECK_ON = "#FAFAF7";
 const CHECK_OFF = "rgba(255, 255, 255, 0.35)";
 
-const BG = "/images/consult-seoul-night.jpg";
+const BG = "/images/consult/seoul-night.jpg";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -490,7 +490,7 @@ export function ConsultFormSection({
                 <div className="flex items-center overflow-visible">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/images/logo.black.png"
+                    src="/images/logo-black.png"
                     alt="법무법인 이로운 파트너스"
                     className="h-8 w-auto object-contain"
                     draggable={false}

@@ -164,8 +164,8 @@ export default function FamilyPracticePage() {
     <div className={`${ibmSans.variable} practice-rhythm`}>
       <SitePageFrame tone="none">
         <PracticeShareSection
-          ariaLabel="더는 기대하지 않게 되기까지의 시간. 지금부터의 이로운 변화를 위해."
-          titleLines={["더는 기대하지 않게 되기까지의 시간.", "지금부터의 이로운 변화를 위해."]}
+          ariaLabel="기대하지 않게 된 시간. 이제 이로운 변화를 위해."
+          titleLines={["기대하지 않게 된 시간.", "이제 이로운 변화를 위해."]}
           imageSrc="/images/practice/family-hero.jpg"
           columns={SHARE_COLUMNS}
         />
@@ -212,7 +212,14 @@ export default function FamilyPracticePage() {
             <>
               결론을 정하는 숫자보다,
               <br />
-              그 숫자에 이르는 사실관계를 먼저 바로잡습니다.
+              <span className="hidden md:inline">
+                그 숫자에 이르는 사실관계를 먼저 바로잡습니다.
+              </span>
+              <span className="md:hidden">
+                그 숫자에 이르는 사실관계를
+                <br />
+                먼저 바로잡습니다.
+              </span>
             </>
           }
         />
@@ -244,9 +251,18 @@ export default function FamilyPracticePage() {
           steps={STEPS}
           close={
             <>
-              재판이 시작된 뒤 보이는 모습만이 아니라,
-              <br />
-              그 모습이 만들어진 과정까지 사건의 사실관계로 되돌려 놓습니다.
+              <span className="hidden md:inline">
+                재판이 시작된 뒤 보이는 모습만이 아니라,
+                <br />
+                그 모습이 만들어진 과정까지 사건의 사실관계로 되돌려 놓습니다.
+              </span>
+              <span className="md:hidden">
+                시작된 뒤의 모습만이 아니라,
+                <br />
+                그 모습이 만들어진 과정까지
+                <br />
+                사실관계로 되돌려 놓습니다.
+              </span>
             </>
           }
         />

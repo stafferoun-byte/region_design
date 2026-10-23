@@ -137,19 +137,28 @@ export function PracticeAffiliateSection({
       "질문들.",
     ],
   ],
+  mobileTitleLines,
   questions = QUESTIONS,
 }: {
   ariaLabel?: string;
   titleLines?: readonly PracticeTitleLine[];
+  mobileTitleLines?: readonly PracticeTitleLine[];
   questions?: readonly { no: string; q: string; a: string }[];
 } = {}) {
   return (
     <section className="jg-aff" aria-label={ariaLabel}>
       <InViewSectionTitle
-        className="jg-aff-title"
+        className={mobileTitleLines ? "jg-aff-title jg-aff-title--desktop" : "jg-aff-title"}
         ariaLabel={ariaLabel}
         lines={titleLines}
       />
+      {mobileTitleLines ? (
+        <InViewSectionTitle
+          className="jg-aff-title jg-aff-title--mobile"
+          ariaLabel={ariaLabel}
+          lines={mobileTitleLines}
+        />
+      ) : null}
       <div className="jg-aff-list is-top">
         <strong className="jg-aff-cat">{questions[0].no}</strong>
         <ol className="jg-aff-items">

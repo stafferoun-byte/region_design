@@ -72,7 +72,7 @@ function CaseCard({ item }: { item: WinningCaseItem }) {
         <div className="case-card__center">
           <span className="case-card__mark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo.black.png" alt="" draggable={false} />
+            <img src="/images/logo-black.png" alt="" draggable={false} />
           </span>
           <span>{item.center}</span>
         </div>

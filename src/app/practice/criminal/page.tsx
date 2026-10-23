@@ -159,8 +159,8 @@ export default function CriminalPracticePage() {
     <div className={`${ibmSans.variable} practice-rhythm`}>
       <SitePageFrame tone="none">
         <PracticeShareSection
-          ariaLabel="그날의 일이, 남은 삶을 결정하지 않도록."
-          titleLines={["그날의 일이,", "남은 삶을 결정하지 않도록."]}
+          ariaLabel="그날의 일이, 삶을 결정하지 않도록."
+          titleLines={["그날의 일이,", "삶을 결정하지 않도록."]}
           columns={SHARE_COLUMNS}
           imageSrc="/images/practice/criminal-hero.jpg"
           ctaSide="start"

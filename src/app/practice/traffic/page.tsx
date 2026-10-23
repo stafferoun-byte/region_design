@@ -158,10 +158,10 @@ export default function TrafficPracticePage() {
     <div className={`${ibmSans.variable} practice-rhythm traffic-page`}>
       <SitePageFrame tone="none">
         <PracticeShareSection
-          ariaLabel="그날의 사건으로, 평온한 일상이 흔들리지 않도록."
-          titleLines={["그날의 사건으로,", "평온한 일상이 흔들리지 않도록."]}
+          ariaLabel="그날의 사건으로, 일상이 흔들리지 않도록."
+          titleLines={["그날의 사건으로,", "일상이 흔들리지 않도록."]}
           columns={SHARE_COLUMNS}
-          imageSrc="/images/practice/traffic-hero.jpg"
+          imageSrc="/images/practice/traffic-hero.jpg?v=3"
         />
         <PracticeAffiliateSection
           ariaLabel="사고 이후, 가장 먼저 확인하고 싶은 것들."
@@ -171,6 +171,19 @@ export default function TrafficPracticePage() {
               { text: "가장", color: "#5DC39B" },
               { text: "먼저", color: "#5DC39B" },
               { text: "확인하고", color: "#5DC39B" },
+              { text: "싶은", color: "#5DC39B" },
+              { text: "것", color: "#5DC39B", glue: true },
+              "들.",
+            ],
+          ]}
+          mobileTitleLines={[
+            ["사고", "이후,"],
+            [
+              { text: "가장", color: "#5DC39B" },
+              { text: "먼저", color: "#5DC39B" },
+              { text: "확인하고", color: "#5DC39B" },
+            ],
+            [
               { text: "싶은", color: "#5DC39B" },
               { text: "것", color: "#5DC39B", glue: true },
               "들.",
@@ -201,9 +214,18 @@ export default function TrafficPracticePage() {
           items={AREAS}
           close={
             <>
-              하나의 사고에 서로 다른 법적 기준이 적용되는 만큼,
-              <br />
-              책임의 근거와 대응 방법도 구분되어야 합니다.
+              <span className="hidden md:inline">
+                하나의 사고에 서로 다른 법적 기준이 적용되는 만큼,
+                <br />
+                책임의 근거와 대응 방법도 구분되어야 합니다.
+              </span>
+              <span className="md:hidden">
+                법적 기준이 다른 만큼,
+                <br />
+                책임의 근거와 대응 방법도
+                <br />
+                구분되어야 합니다.
+              </span>
             </>
           }
         />
@@ -238,9 +260,18 @@ export default function TrafficPracticePage() {
           steps={STEPS}
           close={
             <>
-              이로운 파트너스는 사고의 결과에 가려진 사실관계를 확인하고,
-              <br />
-              책임의 범위가 추측이나 일방적인 주장으로 정해지지 않도록 대응합니다.
+              <span className="hidden md:inline">
+                이로운 파트너스는 사고의 결과에 가려진 사실관계를 확인하고,
+                <br />
+                책임의 범위가 추측이나 일방적인 주장으로 정해지지 않도록 대응합니다.
+              </span>
+              <span className="md:hidden">
+                가려진 사실관계를 확인하고,
+                <br />
+                추측이나 일방적 주장으로
+                <br />
+                정해지지 않도록 대응합니다.
+              </span>
             </>
           }
         />

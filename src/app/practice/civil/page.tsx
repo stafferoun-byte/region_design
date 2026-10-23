@@ -158,8 +158,8 @@ export default function CivilPracticePage() {
     <div className={`${ibmSans.variable} practice-rhythm civil-page`}>
       <SitePageFrame tone="none">
         <PracticeShareSection
-          ariaLabel="당연히 받아야 할 금원을, 거듭 부탁하는 일이 더는 없도록."
-          titleLines={["당연히 받아야 할 금원을,", "거듭 부탁하는 일이 더는 없도록."]}
+          ariaLabel="당연히 받아야 할 금원을, 거듭 부탁하지 않도록."
+          titleLines={["당연히 받아야 할 금원을,", "거듭 부탁하지 않도록."]}
           columns={SHARE_COLUMNS}
         />
         <PracticeAffiliateSection
@@ -178,6 +178,21 @@ export default function CivilPracticePage() {
               "들이",
               "있습니다.",
             ],
+          ]}
+          mobileTitleLines={[
+            [
+              { text: "권리를", color: "#5DC39B" },
+              { text: "주장하기", color: "#5DC39B" },
+              { text: "전", color: "#5DC39B", glue: true },
+              "에,",
+            ],
+            [
+              { text: "확인하고", color: "#5DC39B" },
+              { text: "싶은", color: "#5DC39B" },
+              { text: "것", color: "#5DC39B", glue: true },
+              "들이",
+            ],
+            ["있습니다."],
           ]}
           questions={QUESTIONS}
         />

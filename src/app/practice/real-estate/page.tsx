@@ -178,8 +178,8 @@ export default function RealEstatePracticePage() {
     <div className={`${ibmSans.variable} practice-rhythm realestate-page`}>
       <SitePageFrame tone="none">
         <PracticeShareSection
-          ariaLabel="같은 부동산을 두고도, 지켜야 할 권리는 서로 다릅니다."
-          titleLines={["같은 부동산을 두고도,", "지켜야 할 권리는 서로 다릅니다."]}
+          ariaLabel="같은 부동산을 두고도, 권리는 서로 다릅니다."
+          titleLines={["같은 부동산을 두고도,", "권리는 서로 다릅니다."]}
           columns={SHARE_COLUMNS}
           imageSrc="/images/practice/realestate-hero.jpg"
           ctaSide="start"
@@ -192,6 +192,19 @@ export default function RealEstatePracticePage() {
               { text: "답이", color: "#5DC39B" },
               { text: "나오지", color: "#5DC39B" },
               { text: "않는", color: "#5DC39B" },
+              { text: "문제들", color: "#5DC39B", glue: true },
+              "이",
+              "있습니다.",
+            ],
+          ]}
+          mobileTitleLines={[
+            ["계약서만", "봐서는,"],
+            [
+              { text: "답이", color: "#5DC39B" },
+              { text: "나오지", color: "#5DC39B" },
+              { text: "않는", color: "#5DC39B" },
+            ],
+            [
               { text: "문제들", color: "#5DC39B", glue: true },
               "이",
               "있습니다.",
@@ -220,9 +233,18 @@ export default function RealEstatePracticePage() {
           items={AREAS}
           close={
             <>
-              상대방이 먼저 제시한 계약 해석이나
-              <br />
-              정산금액을 사건의 출발점으로 삼지 않습니다.
+              <span className="hidden md:inline">
+                상대방이 먼저 제시한 계약 해석이나
+                <br />
+                정산금액을 사건의 출발점으로 삼지 않습니다.
+              </span>
+              <span className="md:hidden">
+                상대방이 먼저 제시한 해석이나
+                <br />
+                정산금액을 출발점으로
+                <br />
+                삼지 않습니다.
+              </span>
             </>
           }
         />
@@ -255,9 +277,18 @@ export default function RealEstatePracticePage() {
           steps={STEPS}
           close={
             <>
-              분쟁이 생긴 뒤 보이는 현재의 등기와 점유, 상대방의 정산표만이 아니라
-              <br />
-              그 상태가 만들어진 과정까지 법률관계로 되돌려 놓습니다.
+              <span className="hidden md:inline">
+                분쟁이 생긴 뒤 보이는 현재의 등기와 점유, 상대방의 정산표만이 아니라
+                <br />
+                그 상태가 만들어진 과정까지 법률관계로 되돌려 놓습니다.
+              </span>
+              <span className="md:hidden">
+                등기와 점유만이 아니라,
+                <br />
+                그 상태가 만들어진 과정까지
+                <br />
+                법률관계로 되돌려 놓습니다.
+              </span>
             </>
           }
         />

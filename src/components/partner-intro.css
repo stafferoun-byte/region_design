@@ -294,7 +294,7 @@
   font-size: 22px;
   line-height: 38px;
   letter-spacing: 0;
-  margin: 280px 0 71px 0;
+  margin: 96px 0 40px 0;
   color: #000;
   font-weight: 400;
 }
@@ -325,7 +325,7 @@
   height: 41px;
   line-height: 41px;
   background: #5dc39b;
-  font-size: 12px;
+  font-size: 14px;
   color: #fff;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -368,9 +368,9 @@
   overflow: hidden;
   max-width: 1920px;
   width: 100vw;
-  height: calc(100vw * 1380 / 1440);
+  height: calc(100vw * 575 / 1024);
   max-height: none;
-  padding-bottom: 1460px;
+  padding-bottom: 0;
   perspective: 700px;
   transform: translateX(0) scale(0.188, 0.18);
   transform-origin: left top;
@@ -388,7 +388,7 @@
   transition: transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
-.jg-bgM {
+.jg-bg.jg-bgM {
   display: none;
 }
 
@@ -399,8 +399,8 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding-bottom: 100%;
-  background-size: 100% auto;
+  padding-bottom: 0;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: left top;
   opacity: 0;
@@ -488,7 +488,7 @@
   .jg-paragraph {
     font-size: 1.52vw;
     line-height: 2.35vw;
-    margin: 20vw 0 4.93vw 0;
+    margin: 6.8vw 0 2.8vw 0;
   }
   .jg-paragraph .jg-txtLine {
     height: 2.35vw;
@@ -641,8 +641,7 @@
   .jg-paragraph {
     font-size: 4.1vw;
     line-height: 6.8vw;
-    /* Clear the faces and the laptop. Title stays; the body sits lower on the table. */
-    margin: 84vw 0 0;
+    margin: 40vw 0 0;
   }
   .jg-paragraph .jg-txtLine,
   .jg-paragraph .jg-txtLine > span,
@@ -654,8 +653,8 @@
     white-space: normal;
   }
   .jg-paragraph.jg-wHide {
-    margin-left: 14vw;
-    transform: translateX(9vw);
+    margin: 22vw 0 18vw;
+    transform: none;
   }
   .jg-paragraph.jg-wHide,
   .jg-paragraph.jg-wHide .jg-txtLine > span {
@@ -683,7 +682,7 @@
     display: none;
   }
 
-  .jg-bgM {
+  .jg-bg.jg-bgM {
     display: block;
   }
 
@@ -696,7 +695,7 @@
     height: auto;
     margin-top: 0;
     margin-left: -10.66vw;
-    aspect-ratio: 768 / 1024;
+    aspect-ratio: 819 / 1024;
     min-height: 0;
     padding-bottom: 0;
     overflow: hidden;
@@ -720,20 +719,21 @@
   }
 
   .jg-btnView {
-    width: 29.2vw;
-    height: 9.06vw;
-    line-height: 9.06vw;
-    font-size: 2.93vw;
+    width: 28vw;
+    height: 7.6vw;
+    line-height: 7.6vw;
+    font-size: 3vw;
   }
 
   .jg-btnView span {
-    padding-left: 4vw;
+    padding-left: 2.8vw;
+    padding-right: 7vw;
   }
 
   .jg-btnView span::after {
-    width: 4vw;
-    height: 2.4vw;
-    right: 4vw;
+    width: 3vw;
+    height: 1.8vw;
+    right: 2.4vw;
     background-size: contain;
   }
 

@@ -38,6 +38,10 @@
   display: none;
 }
 
+.jg-aff-title--mobile {
+  display: none;
+}
+
 .jg-aff-list {
   position: relative;
   margin: 0 120px;
@@ -255,6 +259,14 @@ button.jg-aff-link:hover::after {
     font-size: 8vw;
     line-height: 12.26vw;
     white-space: nowrap;
+  }
+
+  .jg-aff-title--desktop {
+    display: none;
+  }
+
+  .jg-aff-title--mobile {
+    display: block;
   }
 
   .jg-aff-wHide {

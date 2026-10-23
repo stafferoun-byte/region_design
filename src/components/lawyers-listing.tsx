@@ -26,7 +26,7 @@ const ATTORNEYS = [
     href: "/lawyers/kang",
     label: "강누리 파트너변호사",
     nameEn: "Nuri Kang",
-    image: "/images/attorneys/kang-nuri-profile.png",
+    image: "/images/attorneys/kang-nuri.jpg",
   },
 ] as const;
 

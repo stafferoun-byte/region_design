@@ -49,18 +49,18 @@ const EASE = [0.19, 1, 0.22, 1] as const;
  * Right (6–11): locked — do not change yellow/sky tuning.
  */
 const CIRCLE_SRCS = [
-  "/images/pastel-teal-woman-sunglasses-head-transparent.png", // 0 mint left
-  "/images/pastel-purple-real-male-student-transparent.png", // 1 purple bottom-left
-  "/images/navy-young-woman-ponytail-different-v2.png", // 2 dark top-left
-  "/images/pastel-purple-natural-baby-v2.png", // 3 purple mid-left
-  "/images/navy-smiling-woman-transparent.png", // 4 dark bottom
-  "/images/pastel-teal-fresh-female-student-transparent.png", // 5 mint top
-  "/images/pastel-yellow-woman-full-v2.png", // 6 CENTER yellow
-  "/images/pastel-yellow-natural-woman-60s-transparent.png", // 7 yellow upper-right
-  "/images/pastel-skyblue-natural-young-man-transparent.png", // 8 sky bottom
-  "/images/pastel-skyblue-man-transparent.png", // 9 sky top-right
-  "/images/pastel-yellow-neighbor-man-60s-transparent.png", // 10 yellow bottom-right
-  "/images/pastel-skyblue-humble-grandfather-v2.png", // 11 sky far-right
+  "/images/people/mint-sunglasses.png", // 0 mint left
+  "/images/people/purple-student.png", // 1 purple bottom-left
+  "/images/people/navy-ponytail.png", // 2 dark top-left
+  "/images/people/purple-baby.png", // 3 purple mid-left
+  "/images/people/navy-smile.png", // 4 dark bottom
+  "/images/people/mint-student.png", // 5 mint top
+  "/images/people/yellow-center.png", // 6 CENTER yellow
+  "/images/people/yellow-woman.png", // 7 yellow upper-right
+  "/images/people/sky-young-man.png", // 8 sky bottom
+  "/images/people/sky-man.png", // 9 sky top-right
+  "/images/people/yellow-neighbor.png", // 10 yellow bottom-right
+  "/images/people/sky-grandfather.png", // 11 sky far-right
 ] as const;
 
 type CircleNode = {

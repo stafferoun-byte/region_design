@@ -17,6 +17,8 @@ const OFFICES = [
     id: "seoul",
     label: "서울주사무소",
     lines: ["서울 강남구 청담동 53-4", "파라곤빌딩 5층"],
+    mobileLines: ["서울 강남구 청담동 53-4 파라곤빌딩 5층"],
+    note: "(청담역 13번 출구, 도보 10분)",
     lat: 37.5245752,
     lng: 127.0532769,
   },
@@ -24,6 +26,11 @@ const OFFICES = [
     id: "namyangju",
     label: "남양주분사무소",
     lines: ["경기 남양주시 다산중앙로82번안길 152", "중앙법조타워 2층 202호"],
+    mobileLines: [
+      "경기 남양주시 다산중앙로82번안길 152",
+      "중앙법조타워 2층 202호",
+    ],
+    note: null,
     lat: 37.6129192,
     lng: 127.1684121,
   },
@@ -37,17 +44,23 @@ const easeOut = [0.22, 1, 0.36, 1] as const;
 function OfficeToggle({
   label,
   lines,
+  note,
   open,
   controls,
   onClick,
   accordion = true,
+  enlargeLabel = false,
+  nowrap = false,
 }: {
   label: string;
   lines: readonly string[];
+  note?: string | null;
   open: boolean;
   controls: string;
   onClick: () => void;
   accordion?: boolean;
+  enlargeLabel?: boolean;
+  nowrap?: boolean;
 }) {
   const Tag = accordion ? "button" : "div";
   return (
@@ -60,7 +73,9 @@ function OfficeToggle({
     >
       <span className="flex min-h-7 items-center gap-2">
         <span
-          className="text-[13px] leading-none font-bold tracking-[-0.03em] text-[#616161] transition-colors group-hover:text-[#242424] md:text-[14px] md:font-semibold"
+          className={`leading-none font-bold tracking-[-0.03em] text-[#616161] transition-colors group-hover:text-[#242424] md:font-semibold ${
+            enlargeLabel ? "text-[15px]" : "text-[13px] md:text-[14px]"
+          }`}
           style={{ fontFamily: FONT }}
         >
           {label}
@@ -93,10 +108,15 @@ function OfficeToggle({
         style={{ fontFamily: FONT }}
       >
         {lines.map((line) => (
-          <span key={line} className="block">
+          <span key={line} className={nowrap ? "block whitespace-nowrap" : "block"}>
             {line}
           </span>
         ))}
+        {note ? (
+          <span className="mt-1 block text-[13px] leading-[1.4] font-medium tracking-[-0.03em] text-[#616161]">
+            {note}
+          </span>
+        ) : null}
       </span>
     </Tag>
   );
@@ -298,10 +318,13 @@ export function LocationSection() {
             <div className="grid w-full grid-cols-1 items-stretch gap-8 sm:grid-cols-2 sm:gap-x-10 md:w-[min(100%,760px)] md:gap-x-14">
               {OFFICES.map((office) => (
                 <div key={office.id} className="min-w-0">
-                  <div className="md:hidden">
+                  <div className={`md:hidden${office.id === "seoul" ? " mb-6 sm:mb-0" : ""}`}>
                     <OfficeToggle
                       label={office.label}
-                      lines={office.lines}
+                      lines={office.mobileLines}
+                      note={office.note}
+                      enlargeLabel
+                      nowrap={office.id === "seoul"}
                       open={mobileOpen[office.id]}
                       controls={`${office.id}-map-m`}
                       accordion={office.id !== "seoul"}
@@ -312,12 +335,21 @@ export function LocationSection() {
                         }))
                       }
                     />
+                    {office.id === "seoul" ? (
+                      <div className="mt-5 overflow-hidden rounded-[18px] bg-[#F3F3EF] shadow-[0_16px_40px_-28px_rgba(0,0,0,0.28)]">
+                        <img
+                          src="/images/locations/seoul-paragon.jpg"
+                          alt="서울주사무소 파라곤빌딩"
+                          className="aspect-[3/4] w-full object-cover object-[center_42%]"
+                        />
+                      </div>
+                    ) : null}
                     <OfficeMap
                       office={office}
                       open={office.id === "seoul" || mobileOpen[office.id]}
                       mapId={`${office.id}-map-m`}
                       reduceMotion={!!reduceMotion}
-                      className="mt-5 grid-rows-[1fr]"
+                      className={`${office.id === "seoul" ? "mt-3" : "mt-5"} grid-rows-[1fr]`}
                     />
                   </div>
                   <div className="hidden md:block">

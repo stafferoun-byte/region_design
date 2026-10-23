@@ -130,7 +130,7 @@ export function AttorneysEthics({
                 <span className="jg-value-thumb">
                   <span>
                     <img
-                      src="/images/hiring.png?v=4"
+                      src="/images/team/hiring.png"
                       alt="이로운 변호사들"
                       style={{ objectPosition: "center 40%" }}
                     />
